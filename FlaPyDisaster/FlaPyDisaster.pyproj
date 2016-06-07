@@ -31,6 +31,21 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="app.py" />
+    <Compile Include="asteroid_routes.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="explosion\asteroid\math.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="explosion\asteroid\__init__.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="explosion\math.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="explosion\__init__.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="hurricane\hurricane_math.py" />
     <Compile Include="hurricane\__init__.py">
       <SubType>Code</SubType>
@@ -44,10 +59,13 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="requirements.txt" />
+    <Content Include="templates\asteroid.html" />
     <Content Include="templates\HomePage.html" />
     <Content Include="templates\hurricane.html" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="explosion\" />
+    <Folder Include="explosion\asteroid\" />
     <Folder Include="hurricane\" />
     <Folder Include="templates\" />
   </ItemGroup>

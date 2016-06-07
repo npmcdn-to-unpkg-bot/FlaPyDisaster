@@ -1,6 +1,7 @@
 from flask import Flask, url_for, request, render_template, redirect
 from app import app
 from hurricane_routes import *
+from asteroid_routes import *
 
 # server root
 @app.route('/')

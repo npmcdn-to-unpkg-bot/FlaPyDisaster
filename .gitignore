@@ -243,3 +243,6 @@ ModelManifest.xml
 
 # FAKE - F# Make
 .fake/
+/FlaPyDisaster/hurricane/hurricane_math.py
+/FlaPyDisaster/hurricane/__pycache__/hurricane_math.cpython-35.pyc
+/FlaPyDisaster/__pycache__/HurricaneMath.cpython-35.pyc

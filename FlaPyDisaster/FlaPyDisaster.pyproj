@@ -60,6 +60,7 @@
   <ItemGroup>
     <Content Include="requirements.txt" />
     <Content Include="templates\asteroid.html" />
+    <Content Include="templates\asteroid_results.html" />
     <Content Include="templates\HomePage.html" />
     <Content Include="templates\hurricane.html" />
   </ItemGroup>

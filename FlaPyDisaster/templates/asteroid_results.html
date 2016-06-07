@@ -1,0 +1,20 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title>Asteroid results</title>
+</head>
+<body>
+    <h2>Results</h2>
+    <h4>Diameter: {{ t_diameter_m }}</h4>
+    <h4>Angle: {{ t_angle_deg }}</h4>
+    <h4>Velocity: {{ t_velocity_kms }}</h4>
+    <h4>Density:  {{ t_density_kgm3 }}</h4>
+    <h4>Target Density: {{ t_target_density_kgm3 }}</h4>
+    <br />
+    <div>
+        <a href="{{ url_for('asteroid_page') }}">Back to input</a>
+    </div>
+</body>
+</html>

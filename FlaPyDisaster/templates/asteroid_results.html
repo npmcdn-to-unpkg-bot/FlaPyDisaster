@@ -6,12 +6,14 @@
     <title>Asteroid results</title>
 </head>
 <body>
+    <h2>Input</h2>
+    <p>Diameter: {{ t_diameter_m }}</p>
+    <p>Angle: {{ t_angle_deg }}</p>
+    <p>Velocity: {{ t_velocity_kms }}</p>
+    <p>Density:  {{ t_density_kgm3 }}</p>
     <h2>Results</h2>
-    <h4>Diameter: {{ t_diameter_m }}</h4>
-    <h4>Angle: {{ t_angle_deg }}</h4>
-    <h4>Velocity: {{ t_velocity_kms }}</h4>
-    <h4>Density:  {{ t_density_kgm3 }}</h4>
-    <h4>Target Density: {{ t_target_density_kgm3 }}</h4>
+    <p>Breakup Altitude (m): {{ t_breakup_alt_m }}</p>
+    <p>Airburst Altitude (m): {{ t_airburst_alt_m }}</p>
     <br />
     <div>
         <a href="{{ url_for('asteroid_page') }}">Back to input</a>

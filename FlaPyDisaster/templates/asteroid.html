@@ -9,25 +9,26 @@
     <h2>Asteroid</h2>
     <form name="input_params_form" method="post" action="{{ url_for('asteroid_input_params_form') }}">
         <div>
-            <h4>Diameter (m)</h4>
+            <p>Diameter (m)</p>
             <input type="text" name="diameter_m" />
         </div>
         <div>
-            <h4>Angle (deg)</h4>
+            <p>Angle (deg)</p>
             <input type="text" name="angle_deg" />
         </div>
         <div>
-            <h4>Velocity (km/s)</h4>
+            <p>Velocity (km/s)</p>
             <input type="text" name="velocity_kms" />
         </div>
         <div>
-            <h4>Density (kg/m3)</h4>
+            <p>Density (kg/m3)</p>
             <input type="text" name="density_kgm3" />
         </div>
         <div>
-            <h4>Target Density (kg/m3)</h4>
+            <p>Target Density (kg/m3)</p>
             <input type="text" name="target_density_kgm3" />
         </div>
+        <br />
         <button type="submit">Submit Input Parameters</button>
     </form>
     <br />

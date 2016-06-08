@@ -1,4 +1,4 @@
-import math
+﻿import math
 #############
 # Constants #
 #############
@@ -6,10 +6,13 @@ import math
 JoulesPerMegatonTNT = 4184000000000000
 # Surface atmospheric density, kg/m^3
 RhoZero = 1
-
+# Scale height, assumed to be 8000m on average
 H = 8000
+# Drag coefficient for pre-breakup phase
 CD = 2
+# "Pancake Factor", represents the ratio of diameter to debris dispersion after airburst
 FP = 7
+# Pi...
 PI = 3.1415
 
 def hello():
@@ -52,10 +55,10 @@ def BreakupAltitude(impactorDensity_kgpm3, diameter_m, velocity_kmps, angle_rad)
     :param diameter: Impactor diameter in meters
     :param velocity: impactor velocity in km/s
     :param angle: impactor approach angle above tangent plane in radians. 90 deg, PI/2 is straight down
-    :returns: breakup altitude in km.
+    :returns: breakup altitude in m.
     """
 
-    Yi = YieldStrengthYi(impactorDensity_kgpm3)
+    Yi = YieldStrength(impactorDensity_kgpm3)
     If = max(IfTerm(impactorDensity_kgpm3, diameter_m, velocity_kmps, angle_rad), 0)
     
     Zstar = 0
@@ -83,7 +86,7 @@ def IfTerm(impactorDensity_kgpm3, diameter_m, velocity_mps, angle_rad):
     :returns: If term for breakup altitude equation
     """
 
-    numerator = 4.07 * CD * H * YieldStrengthYi(impactorDensity_kgpm3)
+    numerator = 4.07 * CD * H * YieldStrength(impactorDensity_kgpm3)
     denominator = impactorDensity_kgpm3 * diameter_m * (velocity_mps * velocity_mps) * math.sin(angle_rad)
     return numerator / denominator
 
@@ -97,8 +100,8 @@ def AirburstAltitude(breakupAltitude_m, diameter_m, impactorDensity_kgpm3, angle
     :returns: Airbust height in meters.  If zero, there is no airburst
     """
 
-    AirDensityAtBreakup = math.exp(-1 * breakupAltitude_m / H)
-    L = impactorDensity_kgpm3 * math.sin(angle_rad) * math.sqrt(impactorDensity_kgpm3 / (CD * AirDensityAtBreakup))
+    AirDensityAtBreakup = RhoZero * math.exp(-1 * breakupAltitude_m / H)
+    L = diameter_m * math.sin(angle_rad) * math.sqrt(impactorDensity_kgpm3 / (CD * AirDensityAtBreakup))
     SecondTerm = 2 * H * math.log( 1 + ((L / (2 * H)) * math.sqrt((FP * FP) - 1)))
 
     if breakupAltitude_m > SecondTerm:

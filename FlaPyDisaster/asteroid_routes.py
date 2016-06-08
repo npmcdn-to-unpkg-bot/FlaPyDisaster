@@ -1,7 +1,7 @@
 from flask import Flask, url_for, request, render_template, redirect
 from app import app
-from explosion import math as exmath
-from explosion.asteroid import math as astermath
+from explosion import explosion_math
+from explosion.asteroid import asteroid_math
 
 # Asteroid Pages
 #asteroid main
@@ -12,8 +12,8 @@ def asteroid_page():
 # Asteroid Functions
 @app.route('/asteroid_main_function', methods = ['POST'])
 def asteroid_function_form():
-    exmath.hello()
-    astermath.hello()
+    explosion_math.hello()
+    asteroid_math.hello()
     return redirect(url_for('asteroid_page'))
 
 @app.route('/asteroid_input_params_function', methods = ['POST'])

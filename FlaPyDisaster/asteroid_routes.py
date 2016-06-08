@@ -3,6 +3,7 @@ from app import app
 from explosion import explosion_math
 from explosion.asteroid import asteroid_math
 import math
+from general_math import unit_conversions
 
 # Asteroid Pages
 #asteroid main
@@ -19,16 +20,36 @@ def asteroid_function_form():
 
 @app.route('/asteroid_input_params_function', methods = ['POST'])
 def asteroid_input_params_form():
-    diameter_m = request.form['diameter_m']
-    angle_deg = request.form['angle_deg']
-    angle_rad = math.radians(float(angle_deg))
-    velocity_kms = request.form['velocity_kms']
+    diameter_in = request.form['diameter']
+    diameter_unit = request.form['diameter_unit']
+
+    angle_in = request.form['angle']
+    angle_unit = request.form['angle_unit']
+
+    velocity_in = request.form['velocity']
+    velocity_unit = request.form['velocity_unit']
+
     density_kgm3 = request.form['density_kgm3']
     target_density_kgm3 = request.form['target_density_kgm3']
 
-    breakup_alt = asteroid_math.BreakupAltitude(float(density_kgm3), float(diameter_m), float(velocity_kms) * 1000, angle_rad)
-    airburst_alt = asteroid_math.AirburstAltitude(breakup_alt, float(diameter_m), float(density_kgm3), float(angle_rad))
+    # run any necessary unit conversions
+    angle_rad = 0
+    if angle_unit == 'deg':
+        angle_rad = math.radians(float(angle_in))
 
-    print('airburst altitude: ' + str(airburst_alt))
+    diameter_m = unit_conversions.distance_conversion(float(diameter_in), diameter_unit, unit_conversions.DistanceUnits.m)
+    velocity_mps = unit_conversions.velocity_conversion(float(velocity_in), velocity_unit, unit_conversions.VelocityUnits.mps)
+
+    # calculate breakup and airburst altitudes in meters
+    breakup_alt_m = asteroid_math.BreakupAltitude(float(density_kgm3), diameter_m, velocity_mps, angle_rad)
+    airburst_alt_m = asteroid_math.AirburstAltitude(breakup_alt_m, diameter_m, float(density_kgm3), float(angle_rad))
+
+    print('airburst altitude: ' + str(airburst_alt_m))
     # return redirect(url_for('asteroid_page'))
-    return render_template('asteroid_results.html', t_diameter_m=diameter_m, t_angle_deg=angle_deg, t_velocity_kms=velocity_kms, t_density_kgm3=density_kgm3, t_target_density_kgm3=target_density_kgm3, t_breakup_alt_m=str(breakup_alt), t_airburst_alt_m=str(airburst_alt))
+    return render_template( 'asteroid_results.html', t_diameter_m = (diameter_in + " " + diameter_unit)
+                                                   , t_angle_deg = (angle_in + " " + angle_unit)
+                                                   , t_velocity_kms = (velocity_in + " " + velocity_unit)
+                                                   , t_density_kgm3 = (density_kgm3 + " kg/m^3")
+                                                   , t_target_density_kgm3 = (target_density_kgm3 + " kg/m^3")
+                                                   , t_breakup_alt_m = (str(breakup_alt_m) + " m")
+                                                   , t_airburst_alt_m = (str(airburst_alt_m) + " m") )

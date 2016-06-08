@@ -46,6 +46,12 @@
     <Compile Include="explosion\__init__.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="general_math\unit_conversions.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="general_math\__init__.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="hurricane\hurricane_math.py" />
     <Compile Include="hurricane\__init__.py">
       <SubType>Code</SubType>
@@ -78,6 +84,7 @@
     <Folder Include="Documentation\Explosion\Asteroid\" />
     <Folder Include="explosion\" />
     <Folder Include="explosion\asteroid\" />
+    <Folder Include="general_math\" />
     <Folder Include="hurricane\" />
     <Folder Include="Documentation\" />
     <Folder Include="templates\" />

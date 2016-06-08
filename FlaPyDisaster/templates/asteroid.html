@@ -10,15 +10,28 @@
     <form name="input_params_form" method="post" action="{{ url_for('asteroid_input_params_form') }}">
         <div>
             <p>Diameter (m)</p>
-            <input type="text" name="diameter_m" />
+            <input type="text" name="diameter" />
+            <select name="diameter_unit">
+                <option value="meter">Meters</option>
+                <option value="feet">Feet</option>
+            </select>
         </div>
         <div>
             <p>Angle (deg)</p>
-            <input type="text" name="angle_deg" />
+            <input type="text" name="angle" />
+            <select name="angle_unit">
+                <option value="deg">Degrees</option>
+                <option value="rad">Radians</option>
+            </select>
         </div>
         <div>
             <p>Velocity (km/s)</p>
-            <input type="text" name="velocity_kms" />
+            <input type="text" name="velocity" />
+            <select name="velocity_unit">
+                <option value="km/s">km/s</option>
+                <option value="m/s">m/s</option>
+                <option value="mph">mph</option>
+            </select>
         </div>
         <div>
             <p>Density (kg/m3)</p>

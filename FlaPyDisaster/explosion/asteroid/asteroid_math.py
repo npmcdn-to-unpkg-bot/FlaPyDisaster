@@ -48,22 +48,22 @@ def ReturnPeriodEarth(energy_j):
 
     return 109 * (energy_j ** 0.78)
 
-def BreakupAltitude(impactorDensity_kgpm3, diameter_m, velocity_kmps, angle_rad):
+def BreakupAltitude(impactorDensity_kgpm3, diameter_m, velocity_mps, angle_rad):
     """
     Altitude where air stagnation pressure surpasses Asteriod strength.  Precursor to Airburst.
     :param impactorDensity_kgpm3: Impactor Density in kg/m^3
     :param diameter: Impactor diameter in meters
-    :param velocity: impactor velocity in km/s
+    :param velocity: impactor velocity in m/s
     :param angle: impactor approach angle above tangent plane in radians. 90 deg, PI/2 is straight down
     :returns: breakup altitude in m.
     """
 
     Yi = YieldStrength(impactorDensity_kgpm3)
-    If = max(IfTerm(impactorDensity_kgpm3, diameter_m, velocity_kmps, angle_rad), 0)
+    If = max(IfTerm(impactorDensity_kgpm3, diameter_m, velocity_mps, angle_rad), 0)
     
     Zstar = 0
     if If <= 1:
-        Zstar = -H * ( math.log(Yi / (velocity_kmps * velocity_kmps)) + 1.308 - (0.314 * If) - (1.303 * math.sqrt(1 - If)) )
+        Zstar = -H * ( math.log(Yi / (velocity_mps * velocity_mps)) + 1.308 - (0.314 * If) - (1.303 * math.sqrt(1 - If)) )
 
     return Zstar
 

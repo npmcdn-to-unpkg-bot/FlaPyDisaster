@@ -58,6 +58,15 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Documentation\Explosion\Asteroid\ChelyabinskAirburst.pdf" />
+    <Content Include="Documentation\Explosion\Asteroid\EarthImpactEffects.pdf" />
+    <Content Include="Documentation\Explosion\Asteroid\MesoscaleModellingOfImpact.pdf" />
+    <Content Include="Documentation\Explosion\Asteroid\web_links.txt" />
+    <Content Include="Documentation\Explosion\BlastEffectCalculation.pdf" />
+    <Content Include="Documentation\Explosion\Effects-of-Nuclear-Weapons-1977-3rd-edition-complete.pdf" />
+    <Content Include="Documentation\Explosion\ModellingExplosionEffectiveness.pdf" />
+    <Content Include="Documentation\Explosion\NuclearBlastOverpressure.pdf" />
+    <Content Include="Documentation\Explosion\web_links.txt" />
     <Content Include="requirements.txt" />
     <Content Include="templates\asteroid.html" />
     <Content Include="templates\asteroid_results.html" />
@@ -65,9 +74,12 @@
     <Content Include="templates\hurricane.html" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Documentation\Explosion\" />
+    <Folder Include="Documentation\Explosion\Asteroid\" />
     <Folder Include="explosion\" />
     <Folder Include="explosion\asteroid\" />
     <Folder Include="hurricane\" />
+    <Folder Include="Documentation\" />
     <Folder Include="templates\" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.Web.targets" />

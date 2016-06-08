@@ -12,8 +12,10 @@
     <p>Velocity: {{ t_velocity_kms }}</p>
     <p>Density:  {{ t_density_kgm3 }}</p>
     <h2>Results</h2>
-    <p>Breakup Altitude (m): {{ t_breakup_alt_m }}</p>
-    <p>Airburst Altitude (m): {{ t_airburst_alt_m }}</p>
+    <p>Breakup Altitude: {{ t_breakup_alt_m }}</p>
+    <p>Airburst Altitude: {{ t_airburst_alt_m }}</p>
+    <p>Event Kenetic Energy: {{ t_energy_MtTnt }}</p>
+    <p>Return period: {{ t_retperiod_yr }}</p>
     <br />
     <div>
         <a href="{{ url_for('asteroid_page') }}">Back to input</a>

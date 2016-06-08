@@ -7,48 +7,56 @@ feet_per_meter = 3.28084
 # Velocity
 mps_per_mph = 0.44704
 
+# Energy
+joules_per_megatontnt = 0.000000000000000239
+
 #####################
 # Converion "Enums" #
 #####################
 class DistanceUnits():
-    ft = 'feet'
-    m = 'meter'
-    km = 'kilometer'
+    feet = 'ft'
+    meter = 'm'
+    kilometer = 'km'
 
 class VelocityUnits():
     kmps = 'km/s'
     mps = 'm/s'
     mph = 'mph'
 
+class EnergyUnits():
+    joules = 'J'
+    Megaton_TNT = 'Mt-TNT'
+    Kiloton_TNT = 'Kt-TNT'
+
 def distance_conversion(value_in, unit_in, unit_out):
     value_out = None
 
-    if unit_in == DistanceUnits.ft:
-        if unit_out == DistanceUnits.ft:
+    if unit_in == DistanceUnits.feet:
+        if unit_out == DistanceUnits.feet:
             value_out = value_in
-        elif unit_out == DistanceUnits.m:
+        elif unit_out == DistanceUnits.meter:
             value_out = value_in / feet_per_meter
-        elif unit_out == DistanceUnits.km:
+        elif unit_out == DistanceUnits.kilometer:
             value_out = value_in / feet_per_meter / 1000
         else:
             raise ValueError("Output Unit Not Supported: " + unit_out)
             return None
-    elif unit_in == DistanceUnits.m:
-        if unit_out == DistanceUnits.ft:
+    elif unit_in == DistanceUnits.meter:
+        if unit_out == DistanceUnits.feet:
             value_out = value_in * feet_per_meter
-        elif unit_out == DistanceUnits.m:
+        elif unit_out == DistanceUnits.meter:
             value_out = value_in
-        elif unit_out == DistanceUnits.km:
+        elif unit_out == DistanceUnits.kilometer:
             value_out = value_in / 1000
         else:
             raise ValueError("Output Unit Not Supported: " + unit_out)
             return None
-    elif unit_in == DistanceUnits.km:
-        if unit_out == DistanceUnits.ft:
+    elif unit_in == DistanceUnits.kilometer:
+        if unit_out == DistanceUnits.feet:
             value_out = value_in * 1000 * feet_per_meter
-        elif unit_out == DistanceUnits.m:
+        elif unit_out == DistanceUnits.meter:
             value_out = value_in * 1000
-        elif unit_out == DistanceUnits.km:
+        elif unit_out == DistanceUnits.kilometer:
             value_out = value_in
         else:
             raise ValueError("Output Unit Not Supported: " + unit_out)
@@ -88,6 +96,44 @@ def velocity_conversion(value_in, unit_in, unit_out):
         elif unit_out == VelocityUnits.mps:
             value_out = value_in * 1000
         elif unit_out == VelocityUnits.kmps:
+            value_out = value_in
+        else:
+            raise ValueError("Output Unit Not Supported: " + unit_out)
+            return None
+    else:
+        raise ValueError("Input Unit Not Supported: " + unit_in)
+        return None
+
+    return value_out
+
+def energy_conversion(value_in, unit_in, unit_out):
+    value_out = None
+    if unit_in == EnergyUnits.joules:
+        if unit_out == EnergyUnits.joules:
+            value_out = value_in
+        elif unit_out == EnergyUnits.Megaton_TNT:
+            value_out = value_in * joules_per_megatontnt
+        elif unit_out == EnergyUnits.Kiloton_TNT:
+            value_out = value_in * joules_per_megatontnt * 1000
+        else:
+            raise ValueError("Output Unit Not Supported: " + unit_out)
+            return None
+    elif unit_in == EnergyUnits.Megaton_TNT:
+        if unit_out == EnergyUnits.joules:
+            value_out = value_in / joules_per_megatontnt
+        elif unit_out == EnergyUnits.Megaton_TNT:
+            value_out = value_in
+        elif unit_out == EnergyUnits.Kiloton_TNT:
+            value_out = value_in * 1000
+        else:
+            raise ValueError("Output Unit Not Supported: " + unit_out)
+            return None
+    elif unit_in == EnergyUnits.Kiloton_TNT:
+        if unit_out == EnergyUnits.joules:
+            value_out = value_in / 1000 / joules_per_megatontnt
+        elif unit_out == EnergyUnits.Megaton_TNT:
+            value_out = value_in / 1000
+        elif unit_out == EnergyUnits.Kiloton_TNT:
             value_out = value_in
         else:
             raise ValueError("Output Unit Not Supported: " + unit_out)

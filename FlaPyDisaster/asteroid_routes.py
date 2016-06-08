@@ -37,12 +37,15 @@ def asteroid_input_params_form():
     if angle_unit == 'deg':
         angle_rad = math.radians(float(angle_in))
 
-    diameter_m = unit_conversions.distance_conversion(float(diameter_in), diameter_unit, unit_conversions.DistanceUnits.m)
+    diameter_m = unit_conversions.distance_conversion(float(diameter_in), diameter_unit, unit_conversions.DistanceUnits.meter)
     velocity_mps = unit_conversions.velocity_conversion(float(velocity_in), velocity_unit, unit_conversions.VelocityUnits.mps)
 
-    # calculate breakup and airburst altitudes in meters
+    # calculate energy (Megaton TNT), breakup altitude (m), and airburst altitude (m)
+    
     breakup_alt_m = asteroid_math.BreakupAltitude(float(density_kgm3), diameter_m, velocity_mps, angle_rad)
     airburst_alt_m = asteroid_math.AirburstAltitude(breakup_alt_m, diameter_m, float(density_kgm3), float(angle_rad))
+    energy_MtTnt = unit_conversions.energy_conversion(asteroid_math.KeneticEnergy(float(density_kgm3), diameter_m, velocity_mps), unit_conversions.EnergyUnits.joules, unit_conversions.EnergyUnits.Megaton_TNT)
+    ret_period_yr = asteroid_math.ReturnPeriodEarth(energy_MtTnt)
 
     print('airburst altitude: ' + str(airburst_alt_m))
     # return redirect(url_for('asteroid_page'))
@@ -52,4 +55,6 @@ def asteroid_input_params_form():
                                                    , t_density_kgm3 = (density_kgm3 + " kg/m^3")
                                                    , t_target_density_kgm3 = (target_density_kgm3 + " kg/m^3")
                                                    , t_breakup_alt_m = (str(breakup_alt_m) + " m")
-                                                   , t_airburst_alt_m = (str(airburst_alt_m) + " m") )
+                                                   , t_airburst_alt_m = (str(airburst_alt_m) + " m") 
+                                                   , t_energy_MtTnt = (str(energy_MtTnt)) + " " + unit_conversions.EnergyUnits.Megaton_TNT
+                                                   , t_retperiod_yr = (str(ret_period_yr)) + " yr" )

@@ -47,14 +47,22 @@ def asteroid_input_params_form():
     energy_MtTnt = unit_conversions.energy_conversion(asteroid_math.KeneticEnergy(float(density_kgm3), diameter_m, velocity_mps), unit_conversions.EnergyUnits.joules, unit_conversions.EnergyUnits.Megaton_TNT)
     ret_period_yr = asteroid_math.ReturnPeriodEarth(energy_MtTnt)
 
+    breakup_velocity_mps = asteroid_math.VelocityAtAltitude_PreBreakup(breakup_alt_m, velocity_mps, diameter_m, float(density_kgm3), angle_rad)
+    airburst_velocity_mps = asteroid_math.PostBreakupVelocity(breakup_alt_m, breakup_velocity_mps, diameter_m, float(density_kgm3), angle_rad, (airburst_alt_m > 0))
+    airburst_energy_MtTnt = unit_conversions.energy_conversion(asteroid_math.KeneticEnergy(float(density_kgm3), diameter_m, airburst_velocity_mps), unit_conversions.EnergyUnits.joules, unit_conversions.EnergyUnits.Megaton_TNT)
+
     print('airburst altitude: ' + str(airburst_alt_m))
     # return redirect(url_for('asteroid_page'))
-    return render_template( 'asteroid_results.html', t_diameter_m = (diameter_in + " " + diameter_unit)
-                                                   , t_angle_deg = (angle_in + " " + angle_unit)
-                                                   , t_velocity_kms = (velocity_in + " " + velocity_unit)
-                                                   , t_density_kgm3 = (density_kgm3 + " kg/m^3")
-                                                   , t_target_density_kgm3 = (target_density_kgm3 + " kg/m^3")
-                                                   , t_breakup_alt_m = (str(breakup_alt_m) + " m")
-                                                   , t_airburst_alt_m = (str(airburst_alt_m) + " m") 
-                                                   , t_energy_MtTnt = (str(energy_MtTnt)) + " " + unit_conversions.EnergyUnits.Megaton_TNT
-                                                   , t_retperiod_yr = (str(ret_period_yr)) + " yr" )
+    return render_template('asteroid_results.html'
+                           , t_diameter_m = (diameter_in + " " + diameter_unit)
+                           , t_angle_deg = (angle_in + " " + angle_unit)
+                           , t_velocity_kms = (velocity_in + " " + velocity_unit)
+                           , t_density_kgm3 = (density_kgm3 + " kg/m^3")
+                           , t_target_density_kgm3 = (target_density_kgm3 + " kg/m^3")
+                           # start calculated parameters
+                           , t_breakup_alt_m = (str(breakup_alt_m) + " m")
+                           , t_airburst_alt_m = (str(airburst_alt_m) + " m") 
+                           , t_energy_MtTnt = (str(energy_MtTnt) + " " + unit_conversions.EnergyUnits.Megaton_TNT)
+                           , t_retperiod_yr = (str(ret_period_yr) + " yr")
+                           , t_airburst_velocity_mps = (str(airburst_velocity_mps) + " m/s")
+                           , t_airburst_energy_MtTnt = (str(airburst_energy_MtTnt) + " Mt-TNT") )

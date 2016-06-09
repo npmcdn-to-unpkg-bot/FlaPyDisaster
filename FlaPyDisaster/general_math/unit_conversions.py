@@ -1,4 +1,4 @@
-#############
+﻿#############
 # Constants #
 #############
 # Distance
@@ -14,21 +14,29 @@ joules_per_megatontnt = 0.000000000000000239
 # Converion "Enums" #
 #####################
 class DistanceUnits():
+    """Enum like class containing the supported distance units"""
     feet = 'ft'
     meter = 'm'
     kilometer = 'km'
 
 class VelocityUnits():
+    """Enum like class containing the supported velocity units"""
     kmps = 'km/s'
     mps = 'm/s'
     mph = 'mph'
 
 class EnergyUnits():
+    """Enum like class containing the supported energy units"""
     joules = 'J'
     Megaton_TNT = 'Mt-TNT'
     Kiloton_TNT = 'Kt-TNT'
 
+def hello():
+    ret_string = "This is the unit conversion package! This will contain some help text."
+    print(ret_string)
+
 def distance_conversion(value_in, unit_in, unit_out):
+    """Convert value from one supported distance unit to another"""
     value_out = None
 
     if unit_in == DistanceUnits.feet:
@@ -68,6 +76,7 @@ def distance_conversion(value_in, unit_in, unit_out):
     return value_out
 
 def velocity_conversion(value_in, unit_in, unit_out):
+    """Convert value from one supported velocity unit to another"""
     value_out = None
 
     if unit_in == VelocityUnits.mph:
@@ -107,6 +116,7 @@ def velocity_conversion(value_in, unit_in, unit_out):
     return value_out
 
 def energy_conversion(value_in, unit_in, unit_out):
+    """Convert value from one supported energy unit to another"""
     value_out = None
     if unit_in == EnergyUnits.joules:
         if unit_out == EnergyUnits.joules:

@@ -1,4 +1,5 @@
 ﻿import math
+import explosion.explosion_math
 #############
 # Constants #
 #############
@@ -90,6 +91,14 @@ def IfTerm(impactorDensity_kgpm3, diameter_m, velocity_mps, angle_rad):
     denominator = impactorDensity_kgpm3 * diameter_m * (velocity_mps * velocity_mps) * math.sin(angle_rad)
     return numerator / denominator
 
+def AtmosphericDensity(altitude_m):
+    """
+    Returns the atmospheric density at a given height in kg/m^3
+    :param altitude: input height in meters
+    :returns: density of atmosphere in kg.m^3
+    """
+    return RhoZero * math.exp(-1 * altitude_m / H)
+
 def AirburstAltitude(breakupAltitude_m, diameter_m, impactorDensity_kgpm3, angle_rad):
     """
     Altitude of Airburst, occurs after Breakup.
@@ -100,7 +109,7 @@ def AirburstAltitude(breakupAltitude_m, diameter_m, impactorDensity_kgpm3, angle
     :returns: Airbust height in meters.  If zero, there is no airburst
     """
 
-    AirDensityAtBreakup = RhoZero * math.exp(-1 * breakupAltitude_m / H)
+    AirDensityAtBreakup = AtmosphericDensity(breakupAltitude_m)
     L = diameter_m * math.sin(angle_rad) * math.sqrt(impactorDensity_kgpm3 / (CD * AirDensityAtBreakup))
     SecondTerm = 2 * H * math.log( 1 + ((L / (2 * H)) * math.sqrt((FP * FP) - 1)))
 
@@ -109,87 +118,37 @@ def AirburstAltitude(breakupAltitude_m, diameter_m, impactorDensity_kgpm3, angle
     else:
         return 0
 
-def NewmarkOverpressure(energy_tnt, radius_km):
+def VelocityAtAltitude_PreBreakup(altitude_m, init_velocity_mps, diameter_m, impactor_density_kgpm3, angle_rad):
     """
-    Newmark-Hansen Overpressure formula.  Intended for surface blasts, but adapted to air-bursts.
-    :param energy_j: Energy in Megatons TNT
-    :param radius_km: Actual distance from blast in km
+    Calculates the velocity at a given height, as the object experiences drag, valid before the impactor breaks up.
+    :param altitude_m: input height in meters
+    :param init_velocity_mps: Velocity when first impacting the atmosphere.
+    :param impactor_density_kgpm3: impactor density in kg/m^3
+    :param angle_rad: impactor angle in radians
+    :returns: velocity at the given height in m/s
     """
+    return init_velocity_mps * math.exp((-3 * AtmosphericDensity(altitude_m) * CD * H)/(4 * impactor_density_kgpm3 * diameter_m * math.sin(angle_rad)))
 
-    energy_tnt = energy_tnt * 1000000
-    radius_m = radius_km * 1000
-    return (6784 * (energy_tnt / math.pow(radius_m, 3))) + (93 * (math.pow((energy_tnt / math.pow(radius_m, 3)), 0.5)))
-
-def RadiusFromOverpressure(overpressure_bar, energy_tnt, radiusUpperBound_km = 1000, errorThreshold = 0.0001, maxInterations = 100):
+def PostBreakupVelocity(breakup_altitude_m, breakup_velocity_mps, diameter_m, impactor_density_kgpm3, angle_rad, is_airburst):
     """
-    Find the radius of a given overpressure for a given event energy.  Lower limit of 1 
-    Uses a bisection search to solve the Newmark-Hansen Ovepressure Formula
-    :param overpressure_bar: Overpressure in Bars
-    :param energy_tnt: Energy in Megatons TNT
-    :param radiusUpperBound_km: Upper bound for radius in kilometers. Default value of 1000 km
-    :param errorThreshold: Error threshold (percentage) to stop bisection search at. Default value of 0.0001
-    :param maxInterations: Maximum number of bisection search iterations to run. Default value of 100
+    Calculates the velocity directly after a breakup or airburst occurs.
+    :param breakup_altitude_m: Height that the breakup occurs in meters
+    :param breakup_velocity_mps: Velocity when breakup occurs in m/s
+    :param diameter_m: Impactor diameter in meters
+    :param impactor_density_kgpm3: Impactor density in kg/m^3
+    :param angle_rad: Impactor appreak angle in radians
+    :param is_airburst: Whether the event is an airburst.  If an airburst occurs, a the velocity given is the velocity directly after the airburst.
+                        If no airburst occurs, the velocity given is the velocity at impact.  
     """
-
-    XUpper = radiusUpperBound_km
-    XLower = 0.1
-    XMid = 0
-
-    YMid = 0
-    XOld = 1
-    iter = 0
-    Error = 100
-
-    while True:
-        XMid = (XUpper + XLower / 2)
-        Ymid = NewmarkOverpressure(energy_tnt, XMid)
-
-        if XMid != 0:
-            Error = math.abs((XMid - XOld) / XMid) * 100
-
-        if YMid < overpressure_bar:
-            Xupper = XMid
-
-        elif YMid  > overpressure_bar:
-            XLower = XMid
-
-        else:
-            return XMid
-
-        iter = iter + 1
-
-        if Error <= errorThreshold or iter > maxInterations:
-            return XMid
-
-def FindHypotenuseRightTriangle(side1, side2):
-    """
-    Find the hypotenuse of a triangle.
-    :returns: Hypotenuse or -1 if error
-    """
-    if (Side1 != 0 and Side2 != 0):
-        return math.sqrt( (Side1 * Side1) + (Side2 * Side2) )
+    second_term = 0
+    atmo_density_at_breakup = AtmosphericDensity(breakup_altitude_m)
+    l_term = diameter_m * math.sin(angle_rad) * math.sqrt(impactor_density_kgpm3 / (CD * atmo_density_at_breakup))
+    if is_airburst:
+        alpha_term = math.sqrt((FP * FP) - 1)
+        second_term = (l_term * diameter_m * diameter_m * alpha_term / 24) * ( (8 * (3 + (alpha_term * alpha_term))) + ((3 * alpha_term * l_term / H) * (2 + (alpha_term * alpha_term))) )
     else:
-        return -1
+        second_term = ((H ** 3) * diameter_m * diameter_m) / (3 * l_term * l_term) * ( (3 * (4 + ((l_term/H)**2)) * math.exp(breakup_altitude_m/H)) + (6 * math.exp(2 * breakup_altitude_m / H)) - (16 * math.exp(2 * breakup_altitude_m / H)) - (3 * ((l_term/H)**2)) - 2)
 
-def FindBottomRightTriangle(Height, Hypotenuse):
-    """
-    Find third non-hypotenuse side of a triangle.
-    :returns: Side length or -1 if error
-    """
-    if (Height != 0 and Hypotenuse != 0 and Hypotenuse > Height):
-        return math.sqrt( (Hypotenuse * Hypotenuse) - (Height * Height) )
-    else:
-        return -1
+    airburst_velocity_mps = breakup_velocity_mps * math.exp((-3 * atmo_density_at_breakup * CD) / (4 * impactor_density_kgpm3 * (diameter_m ** 3) * math.sin(angle_rad)) * second_term)
+    return airburst_velocity_mps
 
-def GeneralBombEquation(mass_kg, radius_m):
-    """
-    General Sadovsky bomb overpressure equation, surface explosion at standard atmospheric condidtions.
-    :param mass_kg: Mass in kg TNT
-    :param radius_m: Distance from explosion in meters
-    :returns: Overpressure in atmospheres
-    """
-    if (dRadiusM == 0 or mass_Kg == 0):
-        return -1
-    return ( (0.95 * (math.pow(mass_kg, .33333) / radius_m))
-            + (3.9 * math.pow( (mass_kg * mass_kg), .33333 ) / (radius_m * radius_m))
-            + (13.0 * mass_kg / math.pow(radius_m, 3.0)) )

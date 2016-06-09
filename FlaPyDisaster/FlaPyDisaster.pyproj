@@ -46,6 +46,9 @@
     <Compile Include="explosion\__init__.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="general_math\general_geometry.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="general_math\unit_conversions.py">
       <SubType>Code</SubType>
     </Compile>

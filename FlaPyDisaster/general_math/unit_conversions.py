@@ -19,6 +19,12 @@ class DistanceUnits():
     meter = 'm'
     kilometer = 'km'
 
+    def get_units_list():
+        return [DistanceUnits.feet, DistanceUnits.meter, DistanceUnits.kilometer]
+    
+    def get_pretty_units():
+        return ['feet', 'meter', 'kilometer']
+
 class VelocityUnits():
     """Enum like class containing the supported velocity units"""
     kmps = 'km/s'

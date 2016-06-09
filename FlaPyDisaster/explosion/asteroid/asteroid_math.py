@@ -1,5 +1,6 @@
 ﻿import math
 import explosion.explosion_math
+
 #############
 # Constants #
 #############
@@ -16,6 +17,9 @@ FP = 7
 # Pi...
 PI = 3.1415
 
+#############
+# Functions #
+#############
 def hello():
     ret_string = "This is the asteroid math package!  Some help info is below."
     print(ret_string)

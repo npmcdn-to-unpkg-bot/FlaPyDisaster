@@ -12,8 +12,9 @@
             <p>Diameter (m)</p>
             <input type="text" name="diameter" />
             <select name="diameter_unit">
-                <option value="m">Meters</option>
-                <option value="ft">Feet</option>
+                {% for o in distance_units %}
+                    <option value="{{ o }}">{{ o }}</option>
+                {% endfor %}
             </select>
         </div>
         <div>

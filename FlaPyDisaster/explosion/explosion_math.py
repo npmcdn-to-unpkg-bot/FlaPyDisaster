@@ -4,7 +4,6 @@ def hello():
     ret_string = "This is the explosion math package!  Some help info is below."
     print(ret_string)
 
-
 def GeneralBombEquation(mass_kg, radius_m):
     """
     General Sadovsky bomb overpressure equation, surface explosion at standard atmospheric condidtions.

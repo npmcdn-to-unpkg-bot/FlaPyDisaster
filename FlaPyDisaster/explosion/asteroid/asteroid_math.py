@@ -27,6 +27,7 @@ def KeneticEnergy(impactorDensity_kgpm3, diameter_m, initialVelocity_mps):
     :param diameter_m: impactor diameter in meters
     :param initialVelocity_mps: initial velocity in m/s
     :returns: Kenitic energy in Joules (kg-m^2/s^2)
+    :Reference: EarthImpactEffect.pdf, Equation 1*
     """
 
     return (PI / 12) * impactorDensity_kgpm3 * (diameter_m ** 3) * (initialVelocity_mps * initialVelocity_mps)
@@ -45,6 +46,7 @@ def ReturnPeriodEarth(energy_j):
     Return period of Asteroid/Comet of a given energy (Megatons TNT) in Years.
     :param energy_j: Energy in Megatons TNT
     :returns: Return period of given energy level in years
+    :Reference: EarthImpactEffect.pdf, Equation 3*
     """
 
     return 109 * (energy_j ** 0.78)
@@ -57,6 +59,7 @@ def BreakupAltitude(impactorDensity_kgpm3, diameter_m, velocity_mps, angle_rad):
     :param velocity: impactor velocity in m/s
     :param angle: impactor approach angle above tangent plane in radians. 90 deg, PI/2 is straight down
     :returns: breakup altitude in m.
+    :Reference: EarthImpactEffect.pdf, Equation 11*
     """
 
     Yi = YieldStrength(impactorDensity_kgpm3)
@@ -73,6 +76,7 @@ def YieldStrength(impactorDensity_kgpm3):
     Yield strength equation for breakup altitude calculation. Only valid for density range 1000 to 8000.
     :param impactorDensity_kgpm3: Impactor density in kg/m^3
     :returns: Yield Strength in Pascals.
+    :Reference: EarthImpactEffect.pdf, Equation 10
     """
 
     return 10 ** ( 2.107 + (0.0624 * math.sqrt(impactorDensity_kgpm3)) )
@@ -85,6 +89,7 @@ def IfTerm(impactorDensity_kgpm3, diameter_m, velocity_mps, angle_rad):
     :param velocity_mps: Impactor velocity in km/s
     :param angle_rad: impactor approach angle above tangent plane in radians. 90 deg, PI/2 is straight down
     :returns: If term for breakup altitude equation
+    :Reference: EarthImpactEffect.pdf, Equation 12*
     """
 
     numerator = 4.07 * CD * H * YieldStrength(impactorDensity_kgpm3)
@@ -96,6 +101,7 @@ def AtmosphericDensity(altitude_m):
     Returns the atmospheric density at a given height in kg/m^3
     :param altitude: input height in meters
     :returns: density of atmosphere in kg.m^3
+    :Reference: EarthImpactEffect.pdf, Equation 5
     """
     return RhoZero * math.exp(-1 * altitude_m / H)
 
@@ -126,6 +132,7 @@ def VelocityAtAltitude_PreBreakup(altitude_m, init_velocity_mps, diameter_m, imp
     :param impactor_density_kgpm3: impactor density in kg/m^3
     :param angle_rad: impactor angle in radians
     :returns: velocity at the given height in m/s
+    :Reference: EarthImpactEffect.pdf, Equation 8
     """
     return init_velocity_mps * math.exp((-3 * AtmosphericDensity(altitude_m) * CD * H)/(4 * impactor_density_kgpm3 * diameter_m * math.sin(angle_rad)))
 
@@ -139,6 +146,7 @@ def PostBreakupVelocity(breakup_altitude_m, breakup_velocity_mps, diameter_m, im
     :param angle_rad: Impactor appreak angle in radians
     :param is_airburst: Whether the event is an airburst.  If an airburst occurs, a the velocity given is the velocity directly after the airburst.
                         If no airburst occurs, the velocity given is the velocity at impact.  
+    :Reference: EarthImpactEffect.pdf, Equation 17*, 19*, 20; Fig. 2 a, b
     """
     second_term = 0
     atmo_density_at_breakup = AtmosphericDensity(breakup_altitude_m)

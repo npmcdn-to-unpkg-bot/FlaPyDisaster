@@ -11,12 +11,13 @@ def GeneralBombEquation(mass_kg, radius_m):
     :param mass_kg: Mass in kg TNT
     :param radius_m: Distance from explosion in meters
     :returns: Overpressure in atmospheres
+    :Reference: BlastEffectCalculation.pdf, Equation 2
     """
     if (dRadiusM == 0 or mass_Kg == 0):
         return -1
     return ( (0.95 * (math.pow(mass_kg, .33333) / radius_m))
             + (3.9 * math.pow( (mass_kg * mass_kg), .33333 ) / (radius_m * radius_m))
-            + (13.0 * mass_kg / math.pow(radius_m, 3.0)) )
+            + (13.0 * mass_kg / (radius_m ** 3.0)) )
 
 def NewmarkOverpressure(energy_MtTnt, radius_m):
     """
@@ -24,10 +25,11 @@ def NewmarkOverpressure(energy_MtTnt, radius_m):
     :param energy_j: Energy in Megatons TNT
     :param radius_km: Actual distance from blast in km
     :returns: overpressure in bar
+    :Reference: NuclearBlastOverpressure.pdf, Equation 3
     """
 
     energy_tnt = energy_MtTnt * 1000000
-    return (6784 * (energy_tnt / math.pow(radius_m, 3))) + (93 * (math.pow((energy_tnt / math.pow(radius_m, 3)), 0.5)))
+    return ( 6784 * (energy_tnt / (radius_m ** 3)) ) + ( 93 * (math.sqrt(energy_tnt / (radius_m ** 3))) )
 
 def RadiusFromOverpressure(overpressure_bar, energy_tnt, radiusUpperBound_km = 1000, errorThreshold = 0.0001, maxInterations = 100):
     """

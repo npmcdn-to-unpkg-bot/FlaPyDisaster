@@ -3,7 +3,7 @@ from app import app
 from explosion import explosion_math
 from explosion.asteroid import asteroid_math
 import math
-from general_math import unit_conversions
+from general_math import unit_conversions, general_geometry
 
 # Asteroid Pages
 #asteroid main
@@ -32,6 +32,9 @@ def asteroid_input_params_form():
     density_kgm3 = request.form['density_kgm3']
     target_density_kgm3 = request.form['target_density_kgm3']
 
+    radius_obs_in = request.form['radius_obs']
+    radius_obs_unit = request.form['radius_obs_unit']
+
     # run any necessary unit conversions
     angle_rad = 0
     if angle_unit == 'deg':
@@ -39,6 +42,8 @@ def asteroid_input_params_form():
 
     diameter_m = unit_conversions.distance_conversion(float(diameter_in), diameter_unit, unit_conversions.DistanceUnits.meter)
     velocity_mps = unit_conversions.velocity_conversion(float(velocity_in), velocity_unit, unit_conversions.VelocityUnits.mps)
+    radius_obs_m = unit_conversions.distance_conversion(float(radius_obs_in), radius_obs_unit, unit_conversions.DistanceUnits.meter)
+    
 
     # calculate energy (Megaton TNT), breakup altitude (m), and airburst altitude (m)
     
@@ -50,6 +55,9 @@ def asteroid_input_params_form():
     breakup_velocity_mps = asteroid_math.VelocityAtAltitude_PreBreakup(breakup_alt_m, velocity_mps, diameter_m, float(density_kgm3), angle_rad)
     airburst_velocity_mps = asteroid_math.PostBreakupVelocity(breakup_alt_m, breakup_velocity_mps, diameter_m, float(density_kgm3), angle_rad, (airburst_alt_m > 0))
     airburst_energy_MtTnt = unit_conversions.energy_conversion(asteroid_math.KeneticEnergy(float(density_kgm3), diameter_m, airburst_velocity_mps), unit_conversions.EnergyUnits.joules, unit_conversions.EnergyUnits.Megaton_TNT)
+
+    radius_obs_m = general_geometry.FindHypotenuseRightTriangle(radius_obs_m, airburst_alt_m)
+    overpressure_obs_bar = explosion_math.NewmarkOverpressure(airburst_energy_MtTnt, radius_obs_m)
 
     print('airburst altitude: ' + str(airburst_alt_m))
     # return redirect(url_for('asteroid_page'))
@@ -65,4 +73,6 @@ def asteroid_input_params_form():
                            , t_energy_MtTnt = (str(energy_MtTnt) + " " + unit_conversions.EnergyUnits.Megaton_TNT)
                            , t_retperiod_yr = (str(ret_period_yr) + " yr")
                            , t_airburst_velocity_mps = (str(airburst_velocity_mps) + " m/s")
-                           , t_airburst_energy_MtTnt = (str(airburst_energy_MtTnt) + " Mt-TNT") )
+                           , t_airburst_energy_MtTnt = (str(airburst_energy_MtTnt) + " Mt-TNT")
+                           , t_radius_obs = (radius_obs_in + radius_obs_unit)
+                           , t_overpressure_obs_bar = (str(overpressure_obs_bar) + " bar") )

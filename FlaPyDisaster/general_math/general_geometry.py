@@ -1,3 +1,5 @@
+import math
+
 def hello():
     ret_string = "This is the general geometry package! This will contain some help text."
     print(ret_string)
@@ -7,8 +9,8 @@ def FindHypotenuseRightTriangle(side1, side2):
     Find the hypotenuse of a triangle.
     :returns: Hypotenuse or -1 if error
     """
-    if (Side1 != 0 and Side2 != 0):
-        return math.sqrt( (Side1 * Side1) + (Side2 * Side2) )
+    if (side1 != 0 and side2 != 0):
+        return math.sqrt( (side1 * side1) + (side2 * side2) )
     else:
         return -1
 

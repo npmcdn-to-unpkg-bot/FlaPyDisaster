@@ -22,7 +22,7 @@ def NewmarkOverpressure(energy_MtTnt, radius_m):
     """
     Newmark-Hansen Overpressure formula.  Intended for surface blasts, but adapted to air-bursts.
     :param energy_j: Energy in Megatons TNT
-    :param radius_km: Actual distance from blast in km
+    :param radius_m: Actual distance from blast in k
     :returns: overpressure in bar
     :Reference: NuclearBlastOverpressure.pdf, Equation 3
     """
@@ -39,9 +39,10 @@ def RadiusFromOverpressure(overpressure_bar, energy_tnt, radiusUpperBound_km = 1
     :param radiusUpperBound_km: Upper bound for radius in kilometers. Default value of 1000 km
     :param errorThreshold: Error threshold (percentage) to stop bisection search at. Default value of 0.0001
     :param maxInterations: Maximum number of bisection search iterations to run. Default value of 100
+    :returns: Radius in km and calculation error in a tuple, in that order
     """
 
-    XUpper = radiusUpperBound_km
+    XUpper = radiusUpperBound_km * 1000
     XLower = 0.1
     XMid = 0
 
@@ -62,11 +63,10 @@ def RadiusFromOverpressure(overpressure_bar, energy_tnt, radiusUpperBound_km = 1
 
         elif YMid  > overpressure_bar:
             XLower = XMid
-
         else:
-            return XMid
+            return (XMid/1000, Error)
 
         iter = iter + 1
 
         if Error <= errorThreshold or iter > maxInterations:
-            return XMid
+            return (XMid/1000, Error)

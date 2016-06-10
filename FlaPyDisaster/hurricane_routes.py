@@ -1,6 +1,6 @@
 from flask import Flask, url_for, request, render_template, redirect
 from app import app
-from hurricane import hurricane_math
+# from hurricane import hurricane_math
 
 
 # hurricane main
@@ -16,5 +16,5 @@ def hurricane_file_form():
 
 @app.route('/hurricane_main_function', methods = ['POST'])
 def hurricane_function_form():
-    hurricane_math.HelloHurricane()
+    # hurricane_math.HelloHurricane()
     return redirect(url_for('hurricane_page'))

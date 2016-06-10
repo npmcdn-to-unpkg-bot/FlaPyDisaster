@@ -77,6 +77,7 @@
     <Content Include="Documentation\Explosion\NuclearBlastOverpressure.pdf" />
     <Content Include="Documentation\Explosion\web_links.txt" />
     <Content Include="requirements.txt" />
+    <Content Include="static\scripts\hello.js" />
     <Content Include="templates\asteroid.html" />
     <Content Include="templates\asteroid_results.html" />
     <Content Include="templates\HomePage.html" />
@@ -90,6 +91,8 @@
     <Folder Include="general_math\" />
     <Folder Include="hurricane\" />
     <Folder Include="Documentation\" />
+    <Folder Include="static\" />
+    <Folder Include="static\scripts\" />
     <Folder Include="templates\" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.Web.targets" />

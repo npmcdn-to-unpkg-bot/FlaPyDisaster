@@ -4,8 +4,14 @@
 <head>
     <meta charset="utf-8" />
     <title>Asteroid results</title>
+    <script src="../static/scripts/unit_conversions.js"></script>
+    <script src="../static/scripts/inits.js"></script>
+    <script type=text/javascript src="../static/JQuery/jquery-3.0.0.js"></script>
+    <script type=text/javascript>
+        var $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+    </script>
 </head>
-<body>
+<body onload="asteroid_result_init()">
     <h2>Input</h2>
     <p>Diameter: {{ t_diameter_m }}</p>
     <p>Angle: {{ t_angle_deg }}</p>
@@ -23,5 +29,15 @@
     <div>
         <a href="{{ url_for('asteroid_page') }}">Back to input</a>
     </div>
+    <br />
+    <div>
+        <p id="sel_text">Text here</p>
+        <select id="sel_sel" name="sel_test" onchange="unit_conversion('sel_sel', 'sel_text')">
+            <option value="km">Kilometer</option>
+            <option value="m">Meters</option>
+            <option value="ft">Feet</option>
+        </select>
+    </div>
+    
 </body>
 </html>

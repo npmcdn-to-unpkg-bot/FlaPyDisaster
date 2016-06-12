@@ -25,17 +25,38 @@ class DistanceUnits():
     def get_pretty_units():
         return ['feet', 'meter', 'kilometer']
 
+    def get_units_pair():
+        return [('feet', 'ft'), ('meter', 'm'), ('kilometer', 'km')]
+
 class VelocityUnits():
     """Enum like class containing the supported velocity units"""
-    kmps = 'km/s'
-    mps = 'm/s'
+    kmps = 'kmps'
+    mps = 'mps'
     mph = 'mph'
+
+    def get_units_list():
+        return [VelocityUnits.kmps, VelocityUnits.mps, VelocityUnits.mph]
+    
+    def get_pretty_units():
+        return ['km/s', 'm/s', 'mph']
+
+    def get_units_pair():
+        return [('km/s', 'kmps'), ('m/s', 'mps'), ('mph', 'mph')]
 
 class EnergyUnits():
     """Enum like class containing the supported energy units"""
-    joules = 'J'
-    Megaton_TNT = 'Mt-TNT'
-    Kiloton_TNT = 'Kt-TNT'
+    joules = 'j'
+    Megaton_TNT = 'mt_tnt'
+    Kiloton_TNT = 'kt_tnt'
+
+    def get_units_list():
+        return [EnergyUnits.kmps, EnergyUnits.mps, EnergyUnits.mph]
+    
+    def get_pretty_units():
+        return ['J', 'Mt-TNT', 'Kt-TNT']
+
+    def get_units_pair():
+        return [('J', 'j'), ('Mt-TNT', 'mt_tnt'), ('Kt-TNT', 'kt_tnt')]
 
 def hello():
     ret_string = "This is the unit conversion package! This will contain some help text."

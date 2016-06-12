@@ -10,7 +10,11 @@ from general_math import unit_conversions
 def main_page():
     return render_template('HomePage.html')
 
-# JQuery routes
+###############
+# Test routes #
+###############
+
+# JQuery function route
 @app.route('/distance_unit_conversion')
 def unit_conversion_route():
     number = request.args.get('number', 0, type=float)
@@ -19,6 +23,7 @@ def unit_conversion_route():
     new_num = unit_conversions.distance_conversion(number, unit_in, unit_out)
     return jsonify(result = new_num)
 
+# asteroid result page route
 @app.route('/asteroid_result_test')
 def asteroid_result_test():
     return render_template('asteroid_results.html'

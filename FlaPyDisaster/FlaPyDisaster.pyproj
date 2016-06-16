@@ -34,6 +34,9 @@
     <Compile Include="asteroid_routes.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="explosion\asteroid\asteroid_event.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="explosion\asteroid\asteroid_math.py">
       <SubType>Code</SubType>
     </Compile>
@@ -46,13 +49,16 @@
     <Compile Include="explosion\__init__.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="general_math\general_geometry.py">
+    <Compile Include="general\general_geometry.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="general_math\unit_conversions.py">
+    <Compile Include="general\general_objects.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="general_math\__init__.py">
+    <Compile Include="general\unit_conversions.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="general\__init__.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="hurricane\hurricane_math.py" />
@@ -88,7 +94,7 @@
     <Folder Include="Documentation\Explosion\Asteroid\" />
     <Folder Include="explosion\" />
     <Folder Include="explosion\asteroid\" />
-    <Folder Include="general_math\" />
+    <Folder Include="general\" />
     <Folder Include="hurricane\" />
     <Folder Include="Documentation\" />
     <Folder Include="static\" />

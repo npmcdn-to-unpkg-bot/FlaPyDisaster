@@ -77,7 +77,10 @@
     <Content Include="Documentation\Explosion\NuclearBlastOverpressure.pdf" />
     <Content Include="Documentation\Explosion\web_links.txt" />
     <Content Include="requirements.txt" />
+    <Content Include="static\JQuery\jquery-3.0.0.js" />
     <Content Include="static\scripts\hello.js" />
+    <Content Include="static\scripts\inits.js" />
+    <Content Include="static\scripts\unit_conversions.js" />
     <Content Include="templates\asteroid.html" />
     <Content Include="templates\asteroid_results.html" />
     <Content Include="templates\HomePage.html" />
@@ -92,6 +95,7 @@
     <Folder Include="hurricane\" />
     <Folder Include="Documentation\" />
     <Folder Include="static\" />
+    <Folder Include="static\JQuery\" />
     <Folder Include="static\scripts\" />
     <Folder Include="templates\" />
   </ItemGroup>

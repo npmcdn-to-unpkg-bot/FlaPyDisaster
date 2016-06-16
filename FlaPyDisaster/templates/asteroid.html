@@ -9,16 +9,16 @@
     <h2>Asteroid</h2>
     <form name="input_params_form" method="post" action="{{ url_for('asteroid_input_params_form') }}">
         <div>
-            <p>Diameter (m)</p>
+            <p>Diameter</p>
             <input type="text" name="diameter" />
             <select name="diameter_unit">
                 {% for o in distance_units %}
-                    <option value="{{ o }}">{{ o }}</option>
+                    <option value="{{ o[1] }}">{{ o[0] }}</option>
                 {% endfor %}
             </select>
         </div>
         <div>
-            <p>Angle (deg)</p>
+            <p>Angle</p>
             <input type="text" name="angle" />
             <select name="angle_unit">
                 <option value="deg">Degrees</option>
@@ -26,12 +26,12 @@
             </select>
         </div>
         <div>
-            <p>Velocity (km/s)</p>
+            <p>Velocity</p>
             <input type="text" name="velocity" />
             <select name="velocity_unit">
-                <option value="km/s">km/s</option>
-                <option value="m/s">m/s</option>
-                <option value="mph">mph</option>
+                {% for o in velocity_units %}
+                    <option value="{{ o[1] }}">{{ o[0] }}</option>
+                {% endfor %}
             </select>
         </div>
         <div>

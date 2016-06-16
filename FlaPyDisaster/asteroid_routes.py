@@ -9,7 +9,9 @@ from general_math import unit_conversions, general_geometry
 #asteroid main
 @app.route('/asteroid', methods = ['GET'])
 def asteroid_page():
-    return render_template('asteroid.html', distance_units = unit_conversions.DistanceUnits.get_pretty_units())
+    return render_template('asteroid.html'
+                           , distance_units = unit_conversions.DistanceUnits.get_units_pair()
+                           , velocity_units = unit_conversions.VelocityUnits.get_units_pair())
 
 # Asteroid Functions
 @app.route('/asteroid_main_function', methods = ['POST'])
@@ -59,7 +61,7 @@ def asteroid_input_params_form():
     radius_obs_m = general_geometry.FindHypotenuseRightTriangle(radius_obs_m, airburst_alt_m)
     overpressure_obs_bar = explosion_math.NewmarkOverpressure(airburst_energy_MtTnt, radius_obs_m)
 
-    print('airburst altitude: ' + str(airburst_alt_m))
+    # print('airburst altitude: ' + str(airburst_alt_m))
     # return redirect(url_for('asteroid_page'))
     return render_template('asteroid_results.html'
                            , t_diameter_m = (diameter_in + " " + diameter_unit)

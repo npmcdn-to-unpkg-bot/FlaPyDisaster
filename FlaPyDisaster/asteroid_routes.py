@@ -10,7 +10,9 @@ from general import unit_conversions, general_geometry
 #asteroid main
 @app.route('/asteroid', methods = ['GET'])
 def asteroid_page():
-    return render_template('asteroid.html', distance_units = unit_conversions.DistanceUnits.get_pretty_units())
+    return render_template('asteroid.html'
+                           , distance_units = unit_conversions.DistanceUnits.get_units_pair()
+                           , velocity_units = unit_conversions.VelocityUnits.get_units_pair())
 
 # Asteroid Functions
 @app.route('/asteroid_main_function', methods = ['POST'])

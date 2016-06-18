@@ -21,8 +21,8 @@ def GeneralBombEquation(mass_kg, radius_m):
 def NewmarkOverpressure(energy_MtTnt, radius_m):
     """
     Newmark-Hansen Overpressure formula.  Intended for surface blasts, but adapted to air-bursts.
-    :param energy_j: Energy in Megatons TNT
-    :param radius_m: Actual distance from blast in k
+    :param energy_MtTnt: Energy in Megatons TNT
+    :param radius_m: Actual distance from blast in m (hypotenuse distance for airburst events).
     :returns: overpressure in bar
     :Reference: NuclearBlastOverpressure.pdf, Equation 3
     """

@@ -55,6 +55,9 @@
     <Compile Include="general\general_objects.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="general\gen_image.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="general\unit_conversions.py">
       <SubType>Code</SubType>
     </Compile>

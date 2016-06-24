@@ -76,6 +76,7 @@
     <Content Include="Documentation\Explosion\ModellingExplosionEffectiveness.pdf" />
     <Content Include="Documentation\Explosion\NuclearBlastOverpressure.pdf" />
     <Content Include="Documentation\Explosion\web_links.txt" />
+    <Content Include="Documentation\MapboxFlaPyDisasterKey.txt" />
     <Content Include="requirements.txt" />
     <Content Include="static\JQuery\jquery-3.0.0.js" />
     <Content Include="static\leaflet\images\layers-2x.png" />
@@ -89,11 +90,13 @@
     <Content Include="static\leaflet\leaflet.js" />
     <Content Include="static\scripts\hello.js" />
     <Content Include="static\scripts\inits.js" />
+    <Content Include="static\scripts\leaflet_test.js" />
     <Content Include="static\scripts\unit_conversions.js" />
     <Content Include="templates\asteroid.html" />
     <Content Include="templates\asteroid_results.html" />
     <Content Include="templates\HomePage.html" />
     <Content Include="templates\hurricane.html" />
+    <Content Include="templates\leaflet_test.html" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Documentation\Explosion\" />

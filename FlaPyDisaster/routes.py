@@ -14,6 +14,10 @@ def main_page():
 # Test routes #
 ###############
 
+@app.route('/leaflet')
+def leaflet_redirect():
+    return render_template('leaflet_test.html')
+
 # JQuery function route
 @app.route('/distance_unit_conversion')
 def unit_conversion_route():

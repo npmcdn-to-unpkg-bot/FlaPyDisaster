@@ -78,6 +78,15 @@
     <Content Include="Documentation\Explosion\web_links.txt" />
     <Content Include="requirements.txt" />
     <Content Include="static\JQuery\jquery-3.0.0.js" />
+    <Content Include="static\leaflet\images\layers-2x.png" />
+    <Content Include="static\leaflet\images\layers.png" />
+    <Content Include="static\leaflet\images\marker-icon-2x.png" />
+    <Content Include="static\leaflet\images\marker-icon.png" />
+    <Content Include="static\leaflet\images\marker-shadow.png" />
+    <Content Include="static\leaflet\leaflet-src.js" />
+    <Content Include="static\leaflet\leaflet-src.map" />
+    <Content Include="static\leaflet\leaflet.css" />
+    <Content Include="static\leaflet\leaflet.js" />
     <Content Include="static\scripts\hello.js" />
     <Content Include="static\scripts\inits.js" />
     <Content Include="static\scripts\unit_conversions.js" />
@@ -96,6 +105,8 @@
     <Folder Include="Documentation\" />
     <Folder Include="static\" />
     <Folder Include="static\JQuery\" />
+    <Folder Include="static\leaflet\" />
+    <Folder Include="static\leaflet\images\" />
     <Folder Include="static\scripts\" />
     <Folder Include="templates\" />
   </ItemGroup>

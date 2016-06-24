@@ -4,7 +4,8 @@ from explosion import explosion_math
 from explosion.asteroid import asteroid_math
 from explosion.asteroid import asteroid_event
 import math
-from general import unit_conversions, general_geometry
+from general import unit_conversions, general_geometry, general_objects, gen_image
+import os
 
 # Asteroid Pages
 #asteroid main
@@ -48,9 +49,20 @@ def asteroid_input_params_form():
     radius_obs_m = unit_conversions.distance_conversion(float(radius_obs_in), radius_obs_unit, unit_conversions.DistanceUnits.meter)
     
     # create asteroid event from input parameters
-    event = asteroid_event.AsteroidEvent(diameter_m, angle_rad, velocity_mps, density_kgpm3, target_density_kgpm3, None) 
-
+    latlon_grid = general_objects.LatLonGrid(20, 10, 10, 30, 2, 2)
+    event = asteroid_event.AsteroidEvent(diameter_m, angle_rad, velocity_mps, density_kgpm3, target_density_kgpm3, latlon_grid, (15, 15)) 
+    grid_res = event.get_effect_2d_grid(True, 5)
     # return redirect(url_for('asteroid_page'))
+    
+    os.remove("test_out.txt")
+    with open("test_out.txt", "w") as write_file:
+        for row in grid_res:
+            out = ""
+            for val in row:
+                out = out + val + "\t"
+            out.rstrip()
+            write_file.write(out + "\n")
+
     return render_template('asteroid_results.html'
                            , t_diameter_m = (diameter_in + " " + diameter_unit)
                            , t_angle_deg = (angle_in + " " + angle_unit)
@@ -65,4 +77,4 @@ def asteroid_input_params_form():
                            , t_airburst_velocity_mps = (str(round(event.airburst_velocity_mps, 2)) + " " + unit_conversions.VelocityUnits.mps)
                            , t_airburst_energy_MtTnt = (str(round(unit_conversions.energy_conversion(event.airburst_energy_j, unit_conversions.EnergyUnits.joules, unit_conversions.EnergyUnits.Megaton_TNT), 2)) + " " + unit_conversions.EnergyUnits.Megaton_TNT)
                            , t_radius_obs = (radius_obs_in + radius_obs_unit)
-                           , t_overpressure_obs_bar = (str(round(event.get_overpressure(radius_obs_m), 2)) + " bar") )
+                           , t_overpressure_obs_bar = (str(round(event.get_newmark_overpressure(radius_obs_m), 2)) + " bar") )

@@ -9,6 +9,7 @@
 *.pyc
 FlaPyDisaster/web.config
 FlaPyDisaster/web.debug.config
+*.pyproj
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs

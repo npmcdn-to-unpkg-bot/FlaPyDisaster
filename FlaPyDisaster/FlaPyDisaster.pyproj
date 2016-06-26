@@ -62,6 +62,9 @@
     <Compile Include="hurricane_routes.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="leaflet_routes.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="routes.py">
       <SubType>Code</SubType>
     </Compile>
@@ -76,6 +79,7 @@
     <Content Include="Documentation\Explosion\ModellingExplosionEffectiveness.pdf" />
     <Content Include="Documentation\Explosion\NuclearBlastOverpressure.pdf" />
     <Content Include="Documentation\Explosion\web_links.txt" />
+    <Content Include="Documentation\MapboxFlaPyDisasterKey.txt" />
     <Content Include="requirements.txt" />
     <Content Include="static\JQuery\jquery-3.0.0.js" />
     <Content Include="static\leaflet\images\layers-2x.png" />
@@ -89,11 +93,13 @@
     <Content Include="static\leaflet\leaflet.js" />
     <Content Include="static\scripts\hello.js" />
     <Content Include="static\scripts\inits.js" />
+    <Content Include="templates\js\leaflet_test.js" />
     <Content Include="static\scripts\unit_conversions.js" />
     <Content Include="templates\asteroid.html" />
     <Content Include="templates\asteroid_results.html" />
     <Content Include="templates\HomePage.html" />
     <Content Include="templates\hurricane.html" />
+    <Content Include="templates\leaflet_test.html" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Documentation\Explosion\" />
@@ -109,6 +115,7 @@
     <Folder Include="static\leaflet\images\" />
     <Folder Include="static\scripts\" />
     <Folder Include="templates\" />
+    <Folder Include="templates\js\" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.Web.targets" />
   <!-- Specify pre- and post-build commands in the BeforeBuild and 

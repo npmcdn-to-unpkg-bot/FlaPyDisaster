@@ -2,6 +2,7 @@
 from app import app
 from hurricane_routes import *
 from asteroid_routes import *
+from leaflet_routes import *
 from general_math import unit_conversions
 
 # server root
@@ -13,10 +14,6 @@ def main_page():
 ###############
 # Test routes #
 ###############
-
-@app.route('/leaflet')
-def leaflet_redirect():
-    return render_template('leaflet_test.html')
 
 # JQuery function route
 @app.route('/distance_unit_conversion')
@@ -45,3 +42,4 @@ def asteroid_result_test():
                            , t_airburst_energy_MtTnt = "200 Mt-TNT"
                            , t_radius_obs = "300 m"
                            , t_overpressure_obs_bar = "100 bar" )
+

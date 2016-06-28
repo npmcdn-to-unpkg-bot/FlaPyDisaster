@@ -2,15 +2,18 @@
 var mymap;
 var popup = L.popup();
 var last_point_clicked;
-disableScrollPropagation('mapid')
+var mainLayer;
 
-
-function leaflet_init() {
-    //window.alert("Hello Leaflet")
+function init_map() {
     mymap = L.map('mapid',
         {
             zoomControl: 'True'
         }).setView([42.39, -71.11], 13);
+}
+
+function leaflet_init() {
+    //window.alert("Hello Leaflet")
+    init_map();
 
     //L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
     //    attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
@@ -25,6 +28,8 @@ function leaflet_init() {
         accessToken: 'pk.eyJ1IjoidW5nYXdhdGt0IiwiYSI6ImNpcHU1aXJ0bDA5MHJma20yN3QwaGthZW8ifQ.oCspKOOXmELA6ETDQK8J1w'
     }).addTo(mymap);
 
+    mainLayer = L.layerGroup().addTo(mymap)
+    console.log("Did that")
     add_handlers()
 }
 
@@ -35,10 +40,10 @@ function add_handlers() {
 }
 
 function onMapClick(e) {
-    popup
-        .setLatLng(e.latlng)
-        .setContent("You clicked the map at " + e.latlng.toString())
-        .openOn(mymap);
+    //popup
+    //    .setLatLng(e.latlng)
+    //    .setContent("You clicked the map at " + e.latlng.toString())
+    //    .openOn(mymap);
 
     last_point_clicked = e.latlng;
 }
@@ -61,11 +66,16 @@ function place_marker(latlng, log_point) {
             , url: "{{ url_for('leaflet_test_latlng') }}"
             , data: JSON.stringify(data, null, '\t')
             , contentType: 'application/json;charset=UTF-8'
-            , success: function (result) { /*console.log(result);*/ }
-            });
+            , success: function (result) { return undefined }
+        });
     }
+    mainLayer.addLayer(latlng);
 }
 
 function place_last_marker_test() {
     place_marker(last_point_clicked, true)
+}
+
+function clear_markers() {
+    mainLayer.removeLayers();
 }

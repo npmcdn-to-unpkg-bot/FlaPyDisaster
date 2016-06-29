@@ -45,15 +45,15 @@ def JoulesToMegatonTNT(energy_j):
 
     return energy_j / JoulesPerMegatonTNT
 
-def ReturnPeriodEarth(energy_j):
+def ReturnPeriodEarth(energy_MtTnt):
     """
     Return period of Asteroid/Comet of a given energy (Megatons TNT) in Years.
-    :param energy_j: Energy in Megatons TNT
+    :param energy_MtTnt: Energy in Megatons TNT
     :returns: Return period of given energy level in years
     :Reference: EarthImpactEffect.pdf, Equation 3*
     """
 
-    return 109 * (energy_j ** 0.78)
+    return 109 * (energy_MtTnt ** 0.78)
 
 def BreakupAltitude(impactorDensity_kgpm3, diameter_m, velocity_mps, angle_rad):
     """

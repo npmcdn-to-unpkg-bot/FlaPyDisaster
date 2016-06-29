@@ -1,4 +1,4 @@
-import math
+﻿import math
 
 def hello():
     ret_string = "This is the general geometry package! This will contain some help text."

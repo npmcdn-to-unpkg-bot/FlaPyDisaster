@@ -122,4 +122,4 @@ class AsteroidEvent:
             write_file_inf.write("Left lon\t" + str(self.grid.left_lon_x) + "\n")
             write_file_inf.write("Block per degree X\t" + str(self.grid.block_per_degree_x) + "\n")
             write_file_inf.write("Block per degree y\t" + str(self.grid.block_per_degree_t) + "\n")
-            write_file_inf.write("create date\t" + 
+            # write_file_inf.write("create date\t" + 

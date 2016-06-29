@@ -61,6 +61,11 @@ function onMapClick(e) {
     //    .openOn(mymap);
 
     last_point_clicked = e.latlng;
+
+    var add_point_cbx = document.getElementById('add_marker');
+    if (add_point_cbx.checked) {
+        place_marker(e.latlng, true)
+    }
 }
 
 function place_last_marker_test() {
@@ -90,4 +95,10 @@ function place_marker(latlng, log_point) {
 
 function clear_markers() {
     clear_layer('marker_layer')
+}
+
+function alert_state() {
+    var cb = document.getElementById('add_marker');
+    
+    console.log(cb.checked)
 }

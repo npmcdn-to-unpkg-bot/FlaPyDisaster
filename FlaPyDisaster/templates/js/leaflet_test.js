@@ -30,6 +30,8 @@ function leaflet_init() {
     }).addTo(mymap);
 
     create_layer('marker_layer')
+    var myLayer = L.geoJson().addTo(mymap);
+    layers['geoJSON'] = myLayer
 
     //add handlers
     add_handlers()
@@ -95,10 +97,85 @@ function place_marker(latlng, log_point) {
 
 function clear_markers() {
     clear_layer('marker_layer')
+    clear_layer('geoJSON')
 }
 
 function alert_state() {
     var cb = document.getElementById('add_marker');
     
     console.log(cb.checked)
+}
+
+function geojson_test() {
+    $.getJSON("{{ url_for('leaflet_geojson_test') }}", {},
+        function (data) {
+
+            //myStyle = get_simple_style_test();
+
+            // Add new jsoon to layer
+            layers['geoJSON'].addData(data.result).setStyle(
+                function(feature){
+                    return {
+                        color: get_graduated_style_test(feature, data.max, data.min),
+                        weight: 5,
+                        opacity: 1
+                    }
+                })
+            /*
+             var geojson_layer = L.geoJSON(data.result, {
+                style: function(feature){
+                    return {
+                        color: get_graduated_style_test(feature, data.max, data.min),
+                        weight: 5,
+                        opacity: 1
+                    }
+                }
+            }).addTo(mymap);
+             */
+        }
+    )
+}
+
+function get_simple_style_test() {
+    var myStyle = {
+        "color": "#ff7800",
+        "weight": 5,
+        "opacity": 0.65
+    };
+
+    return myStyle;
+}
+
+function get_graduated_style_test(feature, max, min) {
+    c = color_interp(feature.properties.value, max, min)
+    return "rgb(" + c.r + ", " + c.g + ", " + c.b + ")"
+
+}
+
+function color_interp(value, max, min, color_max, color_min, incl_a) {
+    incl_a = typeof incl_a !== 'undefined' ? color_max : false
+    color_max = typeof color_max !== 'undefined' ? color_max : { a: 255, r: 255, g: 0, b: 0 }
+    color_min = typeof color_min !== 'undefined' ? color_min : { a: 255, r: 0, g: 0, b: 255 }
+    max = typeof max !== 'undefined' ? max : 100
+    min = typeof min !== 'undefined' ? min : 0
+
+    if (value >= max) {
+        return color_max;
+    }
+
+    if (value <= min) {
+        return color_min
+    }
+
+    a_new = incl_a ? Math.round(linear_interpolate(value, min, max, Math.min(color_min.a, color_max.a), Math.max(color_min.a, color_max.a))) : 255
+    r_new = Math.round(linear_interpolate(value, min, max, Math.min(color_min.r, color_max.r), Math.max(color_min.r, color_max.r)))
+    g_new = Math.round(linear_interpolate(value, min, max, Math.min(color_min.g, color_max.g), Math.max(color_min.g, color_max.g)))
+    b_new = Math.round(linear_interpolate(value, min, max, Math.min(color_min.b, color_max.b), Math.max(color_min.b, color_max.b)))
+
+    return { a: a_new, r: r_new, g: g_new, b: b_new }
+}
+
+function linear_interpolate(x, x0, x1, y0, y1)
+{
+    return  y0 + ((y1 - y0)*((x-x0) / (x1-x0)))
 }

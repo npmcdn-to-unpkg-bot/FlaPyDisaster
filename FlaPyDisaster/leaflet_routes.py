@@ -22,14 +22,27 @@ def leaflet_test_js():
 @app.route('/leaflet_geojson_test')
 def leaflet_geojson_test():
     # 42.4, -71.15   42.4, -71.12        42.4, -71.05
-    point_1 = geojson.Point((-71.15, 42.4));
-    point_2 = geojson.Point((-71.12, 42.4));
-    point_3 = geojson.Point((-71.05, 42.4));
+    points = []
+    points.append((-71.15, 42.4))
+    points.append((-71.12, 42.4));
+    points.append((-71.05, 42.4));
 
-    multi_pt = geojson.MultiPoint(point_1, point_2, point_3)
-
-    line_str = geojson.LineString([(-71.15, 42.4), (-71.12, 42.4), (-71.05, 42.4)])
+    line_str = geojson.LineString(points)
 
     line_feature = geojson.Feature(geometry = line_str, properties = {"value":5})
 
     return jsonify(result = line_feature, max = 10, min = 2)
+
+@app.route('/leaflet_geojson_points_test')
+def leaflet_geojson_points_test():
+    # 42.4, -71.15   42.4, -71.12        42.4, -71.05
+    points = []
+    points.append((-71.15, 42.4))
+    points.append((-71.12, 42.4));
+    points.append((-71.05, 42.4));
+
+    multi_pt = geojson.MultiPoint(points)
+
+    pt_feature = geojson.Feature(geometry = multi_pt, properties = {"value":1})
+
+    return jsonify(result = pt_feature, max = 10, min = 2)

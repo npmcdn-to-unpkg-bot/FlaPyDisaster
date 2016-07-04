@@ -1,6 +1,9 @@
 ﻿import math
 
 def hello():
+    """
+    Hello message to get some info on the package.
+    """
     ret_string = "This is the general geometry package! This will contain some help text."
     print(ret_string)
 

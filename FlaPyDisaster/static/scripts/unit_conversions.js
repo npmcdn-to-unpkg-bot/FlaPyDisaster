@@ -1,4 +1,10 @@
-﻿function unit_conversion(source_id, target_id) {
+﻿
+/*
+Function to convert one unit to another.
+Uses JQuery to send an asychronous(?) AJAX request to the server.
+Updates the page value without requiring a full page re-render.
+*/
+function unit_conversion(source_id, target_id) {
     var me = $("#" + source_id);
 
     if (me.val() != me.data("prev")) {

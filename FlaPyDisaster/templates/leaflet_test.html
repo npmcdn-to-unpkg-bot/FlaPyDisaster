@@ -17,11 +17,12 @@
     <div id="controls">
         <button type="button" onclick="place_last_marker_test()">Add maker at last point</button>
         <br />
-        <button type="button" onclick="clear_markers()">Clear map</button>
+        <button type="button" onclick="clear_map()">Clear map</button>
         <br />
-        <input type="checkbox" name="add_marker" id="add_marker" onclick="alert_state()"/><label for="add_marker">Add Marker</label>
+        <input type="checkbox" name="add_marker_CBX" id="add_marker_CBX" onclick="alert_state()"/><label for="add_marker">Add Marker</label>
         <br />
         <button type="button" onclick="geojson_test()">GeoJson Test</button>
+        <button type="button" onclick="geojson_points_test()">GeoJson Points Test</button>
     </div>
     <div id="mapid" style="height: 500px"></div>
 </body>

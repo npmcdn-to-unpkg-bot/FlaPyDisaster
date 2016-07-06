@@ -1,6 +1,7 @@
 ﻿from flask import Flask, url_for, request, render_template, redirect,jsonify
 from app import app
 import geojson
+import mapping.leaflet_map as lm
 
 @app.route('/leaflet')
 def leaflet_redirect():
@@ -44,5 +45,7 @@ def leaflet_geojson_points_test():
     multi_pt = geojson.MultiPoint(points)
 
     pt_feature = geojson.Feature(geometry = multi_pt, properties = {"value":1})
+
+    pt_feature_dict = lm.create_feature(points, lm.geojson_geometry.multipoint, 1)
 
     return jsonify(result = pt_feature, max = 10, min = 2)

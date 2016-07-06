@@ -74,6 +74,9 @@
     <Compile Include="leaflet_routes.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="mapping\__init__.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="mapping\leaflet_map.py">
       <SubType>Code</SubType>
     </Compile>

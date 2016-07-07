@@ -42,10 +42,10 @@ def leaflet_geojson_points_test():
     points.append((-71.12, 42.4));
     points.append((-71.05, 42.4));
 
-    multi_pt = geojson.MultiPoint(points)
+    # multi_pt = geojson.MultiPoint(points)
 
-    pt_feature = geojson.Feature(geometry = multi_pt, properties = {"value":1})
+    # pt_feature = geojson.Feature(geometry = multi_pt, properties = {"value":1})
 
     pt_feature_dict = lm.create_feature(points, lm.geojson_geometry.multipoint, 1)
 
-    return jsonify(result = pt_feature, max = 10, min = 2)
+    return jsonify(result = pt_feature_dict['geojson'], max = 10, min = 2)

@@ -1,4 +1,4 @@
-﻿from flask import Flask, url_for, request, render_template, redirect
+﻿from flask import Flask, url_for, request, render_template, redirect, jsonify
 from app import app
 from explosion import explosion_math
 from explosion.asteroid import asteroid_math
@@ -50,7 +50,8 @@ def asteroid_input_params_form():
     
     # create asteroid event from input parameters
     latlon_grid = general_objects.LatLonGrid(20, 10, 10, 30, 2, 2)
-    event = asteroid_event.AsteroidEvent(diameter_m, angle_rad, velocity_mps, density_kgpm3, target_density_kgpm3, latlon_grid, (15, 15)) 
+    global event
+    event = asteroid_event.AsteroidEvent(diameter_m, angle_rad, velocity_mps, density_kgpm3, target_density_kgpm3, latlon_grid, (15, 15))
     grid_res = event.get_effect_2d_grid(True, 5)
     # return redirect(url_for('asteroid_page'))
     
@@ -59,7 +60,7 @@ def asteroid_input_params_form():
         for row in grid_res:
             out = ""
             for val in row:
-                out = out + val + "\t"
+                out = out + val[0] + "\t"
             out.rstrip()
             write_file.write(out + "\n")
 
@@ -78,3 +79,8 @@ def asteroid_input_params_form():
                            , t_airburst_energy_MtTnt = (str(round(unit_conversions.energy_conversion(event.airburst_energy_j, unit_conversions.EnergyUnits.joules, unit_conversions.EnergyUnits.Megaton_TNT), 2)) + " " + unit_conversions.EnergyUnits.Megaton_TNT)
                            , t_radius_obs = (radius_obs_in + radius_obs_unit)
                            , t_overpressure_obs_bar = (str(round(event.get_newmark_overpressure(radius_obs_m), 2)) + " bar") )
+
+@app.route('/asteroid_map_event')
+def asteroid_map_event():
+    geo = event.grid_to_geojson(0, 0, 0)
+    return jsonify(result = geo, max = 10, min = 2)

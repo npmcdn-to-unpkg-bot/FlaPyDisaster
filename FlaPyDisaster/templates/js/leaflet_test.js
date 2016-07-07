@@ -32,6 +32,7 @@ function leaflet_init() {
             var geojsonMarkerOptions = {
                 radius: 8,
                 fillColor: "#ff7800",
+                //fillColor: get_interpolated_color(feature.properties.value, 10, 2),
                 color: "#000",
                 weight: 1,
                 opacity: 1,
@@ -197,6 +198,18 @@ funtion to get a geoJSON multipoint layer from the server and plot it on the lea
 */
 function geojson_points_test() {
     $.getJSON("{{ url_for('leaflet_geojson_points_test') }}", {},
+        function (data) {
+            // Add with static style.  Need to implement dynamic styles somehow
+            layers['point_geoJSON'].addData(data.result)
+        }
+    )
+}
+
+/*
+funtion to get a geoJSON multipoint layer from the asteroid event and plot it on the leaflet map.
+*/
+function geojson_asteroid_points_test() {
+    $.getJSON("{{ url_for('asteroid_map_event') }}", {},
         function (data) {
             // Add with static style.  Need to implement dynamic styles somehow
             layers['point_geoJSON'].addData(data.result)

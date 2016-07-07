@@ -52,7 +52,7 @@ def create_feature(geometry, geo_type, val, id = None, color = (255, 0,0), weigh
     :param color: a 3 value tuple containing an rgb value
     :param weight: for lines/polygons, line width; for points, point size
     :param opacity: opacity of layer in leaflet, 1.0 = 100%, 0 = 0%
-    :returns: dictionary with geojson string and a leaflet style created from input parameters
+    :returns: dictionary with geojson feature string and a leaflet style created from input parameters
     """
 
     geo = None

@@ -4,6 +4,7 @@ from general.general_objects import BoundingBox, LatLonGrid
 from general import unit_conversions, general_geometry
 import math
 import os
+import mapping.leaflet_map as lm
 
 class AsteroidEvent:
     """
@@ -47,6 +48,7 @@ class AsteroidEvent:
         Get the peak overpressure at each point of the event grid in a 2d structure (list of list).
         :param as_string: makes the outpu values strings instead of floats
         :param num_digits: rounds the string values to the specified number of digits.  default is 2
+        :returns: peak overpressure in a list of lists
         """
         block_grid = []
         y_max = self.grid.get_block_width_y()
@@ -62,7 +64,8 @@ class AsteroidEvent:
                     point_info = (newmark_pressure)
                     if as_string:
                         point_info = str(format(round(point_info, num_digits), 'f'))
-                    grid_col.append(point_info)
+                    point_lng_lat = (lat_lon[0], lat_lon[1])
+                    grid_col.append((point_info, point_lng_lat))
                 # endfor
                 block_grid.append(grid_col)
             # endfor
@@ -123,3 +126,14 @@ class AsteroidEvent:
             write_file_inf.write("Block per degree X\t" + str(self.grid.block_per_degree_x) + "\n")
             write_file_inf.write("Block per degree y\t" + str(self.grid.block_per_degree_t) + "\n")
             # write_file_inf.write("create date\t" + 
+
+    def grid_to_geojson(self, max, min, step):
+        grid = self.get_effect_2d_grid()
+        points = []
+
+        for row in grid:
+            for block in row:
+                points.append(block[1])
+
+        ret = lm.create_feature(points, lm.geojson_geometry.multipoint, 5)
+        return ret['geojson']

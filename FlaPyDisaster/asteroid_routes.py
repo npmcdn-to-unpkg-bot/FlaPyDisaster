@@ -49,9 +49,9 @@ def asteroid_input_params_form():
     radius_obs_m = unit_conversions.distance_conversion(float(radius_obs_in), radius_obs_unit, unit_conversions.DistanceUnits.meter)
     
     # create asteroid event from input parameters
-    latlon_grid = general_objects.LatLonGrid(20, 10, 10, 30, 2, 2)
+    latlon_grid = general_objects.LatLonGrid(30, 20, 10, 30, 2, 2)
     global event
-    event = asteroid_event.AsteroidEvent(diameter_m, angle_rad, velocity_mps, density_kgpm3, target_density_kgpm3, latlon_grid, (15, 15))
+    event = asteroid_event.AsteroidEvent(diameter_m, angle_rad, velocity_mps, density_kgpm3, target_density_kgpm3, latlon_grid, (25, 20))
     grid_res = event.get_effect_2d_grid(True, 5)
     # return redirect(url_for('asteroid_page'))
     
@@ -60,7 +60,8 @@ def asteroid_input_params_form():
         for row in grid_res:
             out = ""
             for val in row:
-                out = out + val[0] + "\t"
+                curr_str = str(format(round(val[0], 5), 'f'))
+                out = out + curr_str + "\t"
             out.rstrip()
             write_file.write(out + "\n")
 
@@ -82,5 +83,14 @@ def asteroid_input_params_form():
 
 @app.route('/asteroid_map_event')
 def asteroid_map_event():
-    geo = event.grid_to_geojson(0, 0, 0)
+    geo = event.grid_to_geojson()
+    geo_collect = event.grid_to_geojson_collection(.00001)
     return jsonify(result = geo, max = 10, min = 2)
+
+@app.route('/asteroid_map_event_geojsoncollection')
+def asteroid_map_event_geojsoncollection():
+    step_val = .00001
+    maxmin = event.get_event_res_maxmin()
+    geo_collect = event.grid_to_geojson_collection(step_val, maxmin[0] + step_val)
+    values = list(map((lambda x: x.properties['value']), geo_collect))
+    return jsonify(result = geo_collect, max = maxmin[0] + step, min = maxmin[1])#, val_list = values)

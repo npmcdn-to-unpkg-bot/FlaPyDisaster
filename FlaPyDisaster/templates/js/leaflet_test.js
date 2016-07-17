@@ -61,10 +61,10 @@ Also stores the click location for debugging
 */
 function onMapClick(e) {
     // Popup example
-    //popup
-    //    .setLatLng(e.latlng)
-    //    .setContent("You clicked the map at " + e.latlng.toString())
-    //    .openOn(mymap);
+    popup
+        .setLatLng(e.latlng)
+        .setContent("You clicked the map at " + e.latlng.toString())
+        .openOn(mymap);
 
     last_point_clicked = e.latlng;
 
@@ -81,7 +81,8 @@ function init_map() {
     mymap = L.map('mapid',
         {
             zoomControl: 'True'
-        }).setView([42.39, -71.11], 13);
+            //}).setView([42.39, -71.11], 13);
+        }).setView([25, 20], 13);
 }
 
 /*
@@ -217,6 +218,38 @@ function geojson_asteroid_points_test() {
     )
 }
 
+function geojson_asteroid_points_test_style() {
+    $.getJSON("{{ url_for('asteroid_map_event_geojsoncollection') }}", {},
+        function (data) {
+            // Add with static style.  Need to implement dynamic styles somehow
+
+            if (!layers.hasOwnProperty('point_geoJSON_style')) {
+                var pointsLayer = L.geoJson([], {
+                    pointToLayer: function (feature, latlng) {
+                        var geojsonMarkerOptions = {
+                            radius: 8,
+                            //fillColor: "#ff7800",
+                            fillColor: get_interpolated_color(feature.properties.value, data.max, data.min),
+                            color: "#000",
+                            weight: 1,
+                            opacity: 1,
+                            fillOpacity: 1.0
+                        };
+                        return L.circleMarker(latlng, geojsonMarkerOptions);
+                    }
+                }).addTo(mymap)
+                layers['point_geoJSON_style'] = pointsLayer
+            }
+
+            for (var i = 0; i < data.result.length; i++) {
+                var geojson = data.result[i]
+                layers['point_geoJSON_style'].addData(geojson)
+            }
+            
+        }
+    )
+}
+
 /*
 function to get an example leaflet style
 */
@@ -233,8 +266,8 @@ function get_simple_style_test() {
 /*
 return the interpolated color in rgb format for a leaflet style
 */
-function get_interpolated_color(feature, max, min) {
-    c = color_interp(value, max, min)
+function get_interpolated_color(value, max, min) {
+    var c = color_interp(value, max, min)
     return "rgb(" + c.r + ", " + c.g + ", " + c.b + ")"
 
 }
@@ -271,4 +304,17 @@ function color_interp(value, max, min, color_max, color_min, incl_a) {
 function linear_interpolate(x, x0, x1, y0, y1)
 {
     return  y0 + ((y1 - y0)*((x-x0) / (x1-x0)))
+}
+
+function color_pretty_breaks(value, max, min, bins) {
+    step = (max - min) / bins
+    var a = 0
+    var b = 0
+    var c = 0
+
+    if (value <= min) {
+        return 
+    }
+
+    return "rgb(" + c.r + ", " + c.g + ", " + c.b + ")"
 }

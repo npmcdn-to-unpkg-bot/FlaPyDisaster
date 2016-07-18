@@ -55,15 +55,16 @@ def asteroid_input_params_form():
     grid_res = event.get_effect_2d_grid(True, 5)
     # return redirect(url_for('asteroid_page'))
     
-    os.remove("test_out.txt")
-    with open("test_out.txt", "w") as write_file:
-        for row in grid_res:
-            out = ""
-            for val in row:
-                curr_str = str(format(round(val[0], 5), 'f'))
-                out = out + curr_str + "\t"
-            out.rstrip()
-            write_file.write(out + "\n")
+    if(os.path.isfile("test_out.txt")):
+        os.remove("test_out.txt")
+        with open("test_out.txt", "w") as write_file:
+            for row in grid_res:
+                out = ""
+                for val in row:
+                    curr_str = str(format(round(val[0], 5), 'f'))
+                    out = out + curr_str + "\t"
+                out.rstrip()
+                write_file.write(out + "\n")
 
     return render_template('asteroid_results.html'
                            , t_diameter_m = (diameter_in + " " + diameter_unit)
@@ -93,4 +94,4 @@ def asteroid_map_event_geojsoncollection():
     maxmin = event.get_event_res_maxmin()
     geo_collect = event.grid_to_geojson_collection(step_val, maxmin[0] + step_val)
     values = list(map((lambda x: x.properties['value']), geo_collect))
-    return jsonify(result = geo_collect, max = maxmin[0] + step, min = maxmin[1])#, val_list = values)
+    return jsonify(result = geo_collect, max = maxmin[0] + step_val, min = maxmin[1])#, val_list = values)

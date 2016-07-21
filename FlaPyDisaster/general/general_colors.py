@@ -10,7 +10,7 @@ class ColorPalettes:
         :param scalar: Number to scale the rgb values.  255 gives the channel values scaled from 0-255
         :param as_int: Boolean whether to truncate numbers to an int or not.
         """        
-        returnlist(map(lambda x: list(map(lambda y: int(y * scalar) if as_int else (y * scalar), colors.hex2color(x))), palette))
+        return list(map(lambda x: list(map(lambda y: int(y * scalar) if as_int else (y * scalar), colors.hex2color(x))), palette))
 
     def even_value_breaks(values, num_breaks):
         """

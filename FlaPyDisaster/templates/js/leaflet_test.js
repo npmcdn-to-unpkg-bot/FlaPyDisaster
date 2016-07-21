@@ -115,17 +115,12 @@ function clear_layer(layer_name) {
 }
 
 /*
- * Remove all layers from the map.  Need to convert this to a loop
+ * Remove all layers from the map (excluding map tile layers).
  */
 function clear_map() {
-    clear_layer('marker_layer')
-    clear_layer('geoJSON')
-    clear_layer('point_geoJSON')
-
-    // for layer in layers {clear layer} ?
-    //for (var layer in layers) {
-    //    clear_layer(layer[0])
-    //}
+    for (var layer in layers) {
+        clear_layer(layer)
+    }
 }
 
 /*

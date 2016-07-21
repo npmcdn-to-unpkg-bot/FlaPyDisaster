@@ -4,7 +4,7 @@ from explosion import explosion_math
 from explosion.asteroid import asteroid_math
 from explosion.asteroid import asteroid_event
 import math
-from general import unit_conversions, general_geometry, general_objects, gen_image
+from general import unit_conversions, general_geometry, general_objects, general_image, general_colors
 import os
 
 # Asteroid Pages
@@ -90,8 +90,14 @@ def asteroid_map_event():
 
 @app.route('/asteroid_map_event_geojsoncollection')
 def asteroid_map_event_geojsoncollection():
+
+    color_ramp = general_colors.ColorPalettes.hex_to_rgb(general_colors.ColorPalettes.simple_escalating_5, 255)
+
     step_val = .00001
     maxmin = event.get_event_res_maxmin()
     geo_collect = event.grid_to_geojson_collection(step_val, maxmin[0] + step_val)
-    values = list(map((lambda x: x.properties['value']), geo_collect))
-    return jsonify(result = geo_collect, max = maxmin[0] + step_val, min = maxmin[1])#, val_list = values)
+    sorted_values = list(map((lambda x: x.properties['value']), geo_collect))
+    sorted_values.sort()
+    value_bins = general_colors.ColorPalettes.even_value_breaks(sorted_values, len(color_ramp))
+    # return jsonify(result = geo_collect, max = maxmin[0] + step_val, min = maxmin[1])#, val_list = values)
+    return jsonify(result = geo_collect, colors = color_ramp, bins = value_bins)

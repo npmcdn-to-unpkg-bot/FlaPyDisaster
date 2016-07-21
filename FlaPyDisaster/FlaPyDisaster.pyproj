@@ -49,13 +49,16 @@
     <Compile Include="explosion\__init__.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="general\general_colors.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="general\general_geometry.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="general\general_objects.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="general\gen_image.py">
+    <Compile Include="general\general_image.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="general\unit_conversions.py">

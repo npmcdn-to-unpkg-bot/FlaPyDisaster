@@ -27,6 +27,9 @@
     <p>Overpressure at {{ t_radius_obs }}: {{ t_overpressure_obs_bar }}</p>
     <br />
     <div>
+        <a href="{{ url_for('leaflet_redirect') }}">To Map</a>
+    </div>
+    <div>
         <a href="{{ url_for('asteroid_page') }}">Back to input</a>
     </div>
     <br />
@@ -39,9 +42,7 @@
             <option value="ft">Feet</option>
         </select>
     </div>
-    <div>
-        <a href="{{ url_for('leaflet_redirect') }}">To Map</a>
-    </div>
+    
     
 </body>
 </html>

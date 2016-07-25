@@ -85,7 +85,7 @@ def asteroid_input_params_form():
 @app.route('/asteroid_map_event')
 def asteroid_map_event():
     geo = event.grid_to_geojson()
-    geo_collect = event.grid_to_geojson_collection(.00001)
+    geo_collect = event.grid_to_geojson_collection_stepped(.00001)
     return jsonify(result = geo, max = 10, min = 2)
 
 @app.route('/asteroid_map_event_geojsoncollection')
@@ -95,7 +95,8 @@ def asteroid_map_event_geojsoncollection():
 
     step_val = .00001
     maxmin = event.get_event_res_maxmin()
-    geo_collect = event.grid_to_geojson_collection(step_val, maxmin[0] + step_val)
+    # geo_collect = event.grid_to_geojson_collection(step_val, maxmin[0] + step_val)
+    geo_collect = event.grid_to_geojson_collection()
     sorted_values = list(map((lambda x: x.properties['value']), geo_collect))
     sorted_values.sort()
     value_bins = general_colors.ColorPalettes.even_value_breaks(sorted_values, len(color_ramp))

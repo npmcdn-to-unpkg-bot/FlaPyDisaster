@@ -157,7 +157,7 @@ class AsteroidEvent:
         ret = lm.create_feature(points, lm.geojson_geometry.multipoint, val)
         return ret['geojson']
 
-    def grid_to_geojson_collection(self, step = 1, max_val = None, min_val = None):
+    def grid_to_geojson_collection_stepped(self, step = 1, max_val = None, min_val = None):
         """
         min <= value < max
         geojson val is max of bin
@@ -184,6 +184,13 @@ class AsteroidEvent:
             curr_max = curr_max + step
             curr_min = curr_min + step
         
+        return geojson_collection
+
+    def grid_to_geojson_collection(self):
+        flat_grid = self.get_effect_flat_grid()    
+
+        geojson_collection = list(map((lambda x: lm.create_feature(x[1], lm.geojson_geometry.point, x[0])['geojson']), flat_grid))
+
         return geojson_collection
 
     def get_event_res_maxmin(self):

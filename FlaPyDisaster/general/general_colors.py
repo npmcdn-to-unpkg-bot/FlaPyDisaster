@@ -35,5 +35,5 @@ class ColorPalettes:
                 iter = iter + 1
 
         return ret_breaks
-                
+
     

@@ -1,0 +1,20 @@
+Things to do:
+	- Leaflet/Mapping/Javascript
+		-) Add leaflet draw
+		-) Add more user control to web page
+			-] hide layers
+			-] layer access in general
+			-] change breaks/colors from the mapping page
+		-) figure out why you sometimes cant add stuff twice (eps. 'Asteroid Test Style')
+		-) Start making things not 'Test' anymore
+	- Python
+		-) add more to color palettes
+		-) make mapping "api" more useful
+		-) make event inheritance work a bit better
+	- Application
+		-) Put routes into a separate package (may need to create package and copy file contents instead of move contents)
+		-) maybe subpackage this whole program?
+		-) move html in templates into an 'html' folder
+	- Science
+		-) validate asteroid calculations with something?
+		-) implement math for a hurricane model

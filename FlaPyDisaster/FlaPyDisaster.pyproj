@@ -99,6 +99,7 @@
     <Content Include="Documentation\Explosion\web_links.txt" />
     <Content Include="Documentation\MapboxFlaPyDisasterKey.txt" />
     <Content Include="requirements.txt" />
+    <Content Include="Scratch\ToDo.txt" />
     <Content Include="static\JQuery\jquery-3.0.0.js" />
     <Content Include="static\leaflet\images\layers-2x.png" />
     <Content Include="static\leaflet\images\layers.png" />

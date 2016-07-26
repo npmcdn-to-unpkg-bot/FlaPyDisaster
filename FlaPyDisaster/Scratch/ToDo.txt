@@ -7,14 +7,22 @@ Things to do:
 			-] change breaks/colors from the mapping page
 		-) figure out why you sometimes cant add stuff twice (eps. 'Asteroid Test Style')
 		-) Start making things not 'Test' anymore
+		-) better 'create event' tools needed, probably need draw for it first
+			-] use draw to define bounding box
+			-] move and save event (when appropriate)
+		-) D3 visualizations...?
 	- Python
 		-) add more to color palettes
-		-) make mapping "api" more useful
+		-) make mapping "api" routes more useful
 		-) make event inheritance work a bit better
 	- Application
 		-) Put routes into a separate package (may need to create package and copy file contents instead of move contents)
 		-) maybe subpackage this whole program?
 		-) move html in templates into an 'html' folder
+		-) add a save/load component
+			-] Need to save load from compact format (images)
+			-] Need an associated ini file probably
+			-] Maybe explore geodatabase
 	- Science
 		-) validate asteroid calculations with something?
 		-) implement math for a hurricane model

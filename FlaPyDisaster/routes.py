@@ -10,7 +10,7 @@ from general import unit_conversions
 @app.route('/')
 @app.route('/home')
 def main_page():
-    return render_template('HomePage.html')
+    return render_template('html/HomePage.html')
 
 ###############
 # Test routes #
@@ -28,7 +28,7 @@ def unit_conversion_route():
 # asteroid result page route
 @app.route('/asteroid_result_test')
 def asteroid_result_test():
-    return render_template('asteroid_results.html'
+    return render_template('html/asteroid_results.html'
                            , t_diameter_m = "10 m"
                            , t_angle_deg = "90 deg"
                            , t_velocity_kms = "10 mps"

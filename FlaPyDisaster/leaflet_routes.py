@@ -5,7 +5,7 @@ import mapping.leaflet_map as lm
 
 @app.route('/leaflet')
 def leaflet_redirect():
-    return render_template('leaflet_test.html')
+    return render_template('html/leaflet_test.html')
 
 @app.route('/leaflet_test_latlng', methods = ['POST'])
 def leaflet_test_latlng():

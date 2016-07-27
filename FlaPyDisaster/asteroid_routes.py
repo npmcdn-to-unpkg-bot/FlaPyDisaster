@@ -11,7 +11,7 @@ import os
 #asteroid main
 @app.route('/asteroid', methods = ['GET'])
 def asteroid_page():
-    return render_template('asteroid.html'
+    return render_template('html/asteroid.html'
                            , distance_units = unit_conversions.DistanceUnits.get_units_pair()
                            , velocity_units = unit_conversions.VelocityUnits.get_units_pair())
 
@@ -66,7 +66,7 @@ def asteroid_input_params_form():
                 out.rstrip()
                 write_file.write(out + "\n")
 
-    return render_template('asteroid_results.html'
+    return render_template('html/asteroid_results.html'
                            , t_diameter_m = (diameter_in + " " + diameter_unit)
                            , t_angle_deg = (angle_in + " " + angle_unit)
                            , t_velocity_kms = (velocity_in + " " + velocity_unit)

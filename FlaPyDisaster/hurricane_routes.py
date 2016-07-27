@@ -6,7 +6,7 @@ from app import app
 # hurricane main
 @app.route('/hurricane', methods = ['GET'])
 def hurricane_page():
-    return render_template('hurricane.html')
+    return render_template('html/hurricane.html')
     
 @app.route('/hurricane_main_file', methods = ['POST'])
 def hurricane_file_form():

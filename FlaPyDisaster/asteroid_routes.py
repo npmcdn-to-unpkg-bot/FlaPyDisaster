@@ -16,13 +16,13 @@ def asteroid_page():
                            , velocity_units = unit_conversions.VelocityUnits.get_units_pair())
 
 # Asteroid Functions
-@app.route('/asteroid_main_function', methods = ['POST'])
+@app.route('/asteroid/main_function', methods = ['POST'])
 def asteroid_function_form():
     explosion_math.hello()
     asteroid_math.hello()
     return redirect(url_for('asteroid_page'))
 
-@app.route('/asteroid_input_params_function', methods = ['POST'])
+@app.route('/asteroid/input_params_function', methods = ['POST'])
 def asteroid_input_params_form():
     diameter_in = request.form['diameter']
     diameter_unit = request.form['diameter_unit']
@@ -82,13 +82,13 @@ def asteroid_input_params_form():
                            , t_radius_obs = (radius_obs_in + radius_obs_unit)
                            , t_overpressure_obs_bar = (str(round(event.get_newmark_overpressure(radius_obs_m), 2)) + " bar") )
 
-@app.route('/asteroid_map_event')
+@app.route('/asteroid/map_event')
 def asteroid_map_event():
     geo = event.grid_to_geojson()
     geo_collect = event.grid_to_geojson_collection_stepped(.00001)
     return jsonify(result = geo, max = 10, min = 2)
 
-@app.route('/asteroid_map_event_geojsoncollection')
+@app.route('/asteroid/map_event_geojsoncollection')
 def asteroid_map_event_geojsoncollection():
 
     color_ramp = general_colors.ColorPalettes.hex_to_rgb(general_colors.ColorPalettes.simple_escalating_5, 255)

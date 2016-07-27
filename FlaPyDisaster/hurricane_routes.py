@@ -8,13 +8,13 @@ from app import app
 def hurricane_page():
     return render_template('html/hurricane.html')
     
-@app.route('/hurricane_main_file', methods = ['POST'])
+@app.route('/hurricane/main_file', methods = ['POST'])
 def hurricane_file_form():
     filename = request.form['file_uri']
     print(filename)
     return redirect(url_for('hurricane_page'))
 
-@app.route('/hurricane_main_function', methods = ['POST'])
+@app.route('/hurricane/main_function', methods = ['POST'])
 def hurricane_function_form():
     # hurricane_math.HelloHurricane()
     return redirect(url_for('hurricane_page'))

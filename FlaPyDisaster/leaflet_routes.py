@@ -7,7 +7,7 @@ import mapping.leaflet_map as lm
 def leaflet_redirect():
     return render_template('html/leaflet_test.html')
 
-@app.route('/leaflet_test_latlng', methods = ['POST'])
+@app.route('/leaflet/test_latlng', methods = ['POST'])
 def leaflet_test_latlng():
     print("leaflet test in Flask.")
     lat = request.json['lat']
@@ -16,11 +16,11 @@ def leaflet_test_latlng():
     print("lng: " + lng)
     return "Success"
 
-@app.route('/leaflet_test_js')
+@app.route('/leaflet/test_js')
 def leaflet_test_js():
     return render_template('/js/leaflet_test.js')
 
-@app.route('/leaflet_geojson_test')
+@app.route('/leaflet/geojson_test')
 def leaflet_geojson_test():
     # 42.4, -71.15   42.4, -71.12        42.4, -71.05
     points = []
@@ -34,7 +34,7 @@ def leaflet_geojson_test():
 
     return jsonify(result = line_feature, max = 10, min = 2)
 
-@app.route('/leaflet_geojson_points_test')
+@app.route('/leaflet/geojson_points_test')
 def leaflet_geojson_points_test():
     # 42.4, -71.15   42.4, -71.12        42.4, -71.05
     points = []

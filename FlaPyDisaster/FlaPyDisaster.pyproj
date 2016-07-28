@@ -68,6 +68,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="hurricane\hurricane_math.py" />
+    <Compile Include="hurricane\hurricane_nws23.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="hurricane\__init__.py">
       <SubType>Code</SubType>
     </Compile>
@@ -97,7 +100,10 @@
     <Content Include="Documentation\Explosion\ModellingExplosionEffectiveness.pdf" />
     <Content Include="Documentation\Explosion\NuclearBlastOverpressure.pdf" />
     <Content Include="Documentation\Explosion\web_links.txt" />
+    <Content Include="Documentation\Hurricane\AIRCurrents__Wind_Profiles_in_Parametric_Hurricane_Models.pdf" />
     <Content Include="Documentation\Hurricane\NOAA_NWS_23.pdf" />
+    <Content Include="Documentation\Hurricane\RadialDecay_Rmax_Inward.PNG" />
+    <Content Include="Documentation\Hurricane\RadialDecay_Rmax_Outward.PNG" />
     <Content Include="Documentation\Hurricane\Willoughby_ParametricHurricaneVortex_pt1.pdf" />
     <Content Include="Documentation\Hurricane\Willoughby_ParametricHurricaneVortex_pt2.pdf" />
     <Content Include="Documentation\MapboxFlaPyDisasterKey.txt" />

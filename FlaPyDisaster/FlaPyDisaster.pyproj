@@ -97,6 +97,9 @@
     <Content Include="Documentation\Explosion\ModellingExplosionEffectiveness.pdf" />
     <Content Include="Documentation\Explosion\NuclearBlastOverpressure.pdf" />
     <Content Include="Documentation\Explosion\web_links.txt" />
+    <Content Include="Documentation\Hurricane\NOAA_NWS_23.pdf" />
+    <Content Include="Documentation\Hurricane\Willoughby_ParametricHurricaneVortex_pt1.pdf" />
+    <Content Include="Documentation\Hurricane\Willoughby_ParametricHurricaneVortex_pt2.pdf" />
     <Content Include="Documentation\MapboxFlaPyDisasterKey.txt" />
     <Content Include="requirements.txt" />
     <Content Include="Scratch\ToDo.txt" />
@@ -135,6 +138,7 @@
   <ItemGroup>
     <Folder Include="Documentation\Explosion\" />
     <Folder Include="Documentation\Explosion\Asteroid\" />
+    <Folder Include="Documentation\Hurricane\" />
     <Folder Include="explosion\" />
     <Folder Include="explosion\asteroid\" />
     <Folder Include="general\" />

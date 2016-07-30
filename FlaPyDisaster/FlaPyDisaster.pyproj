@@ -104,6 +104,7 @@
     <Content Include="Documentation\Hurricane\NOAA_NWS_23.pdf" />
     <Content Include="Documentation\Hurricane\RadialDecay_Rmax_Inward.PNG" />
     <Content Include="Documentation\Hurricane\RadialDecay_Rmax_Outward.PNG" />
+    <Content Include="Documentation\Hurricane\web_links.txt" />
     <Content Include="Documentation\Hurricane\Willoughby_ParametricHurricaneVortex_pt1.pdf" />
     <Content Include="Documentation\Hurricane\Willoughby_ParametricHurricaneVortex_pt2.pdf" />
     <Content Include="Documentation\MapboxFlaPyDisasterKey.txt" />

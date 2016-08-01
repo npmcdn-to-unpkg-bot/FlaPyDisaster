@@ -49,13 +49,16 @@
     <Compile Include="explosion\__init__.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="general\general_colors.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="general\general_geometry.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="general\general_objects.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="general\gen_image.py">
+    <Compile Include="general\general_image.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="general\unit_conversions.py">
@@ -65,6 +68,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="hurricane\hurricane_math.py" />
+    <Compile Include="hurricane\hurricane_nws23.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="hurricane\__init__.py">
       <SubType>Code</SubType>
     </Compile>
@@ -72,6 +78,12 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="leaflet_routes.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="mapping\__init__.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="mapping\leaflet_map.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="routes.py">
@@ -88,8 +100,22 @@
     <Content Include="Documentation\Explosion\ModellingExplosionEffectiveness.pdf" />
     <Content Include="Documentation\Explosion\NuclearBlastOverpressure.pdf" />
     <Content Include="Documentation\Explosion\web_links.txt" />
+    <Content Include="Documentation\Hurricane\AIRCurrents__Wind_Profiles_in_Parametric_Hurricane_Models.pdf" />
+    <Content Include="Documentation\Hurricane\NOAA_NWS_23.pdf" />
+    <Content Include="Documentation\Hurricane\RadialDecay_Rmax_Inward.PNG" />
+    <Content Include="Documentation\Hurricane\RadialDecay_Rmax_Outward.PNG" />
+    <Content Include="Documentation\Hurricane\web_links.txt" />
+    <Content Include="Documentation\Hurricane\Willoughby_ParametricHurricaneVortex_pt1.pdf" />
+    <Content Include="Documentation\Hurricane\Willoughby_ParametricHurricaneVortex_pt2.pdf" />
     <Content Include="Documentation\MapboxFlaPyDisasterKey.txt" />
     <Content Include="requirements.txt" />
+    <Content Include="Scratch\ToDo.txt" />
+    <Content Include="static\d3\API.md" />
+    <Content Include="static\d3\CHANGES.md" />
+    <Content Include="static\d3\d3.js" />
+    <Content Include="static\d3\d3.min.js" />
+    <Content Include="static\d3\LICENSE" />
+    <Content Include="static\d3\README.md" />
     <Content Include="static\JQuery\jquery-3.0.0.js" />
     <Content Include="static\leaflet\images\layers-2x.png" />
     <Content Include="static\leaflet\images\layers.png" />
@@ -101,32 +127,43 @@
     <Content Include="static\leaflet\leaflet.css" />
     <Content Include="static\leaflet\leaflet.js" />
     <Content Include="Scratch\EarthImpacts_AirburstScratch.docx" />
+    <Content Include="static\leaflet\leaflet_draw-master\images\spritesheet-2x.png" />
+    <Content Include="static\leaflet\leaflet_draw-master\images\spritesheet.png" />
+    <Content Include="static\leaflet\leaflet_draw-master\leaflet.draw-src.js" />
+    <Content Include="static\leaflet\leaflet_draw-master\leaflet.draw.css" />
+    <Content Include="static\leaflet\leaflet_draw-master\leaflet.draw.js" />
     <Content Include="static\scripts\hello.js" />
     <Content Include="static\scripts\inits.js" />
     <Content Include="templates\js\leaflet_test.js" />
     <Content Include="static\scripts\unit_conversions.js" />
-    <Content Include="templates\asteroid.html" />
-    <Content Include="templates\asteroid_results.html" />
-    <Content Include="templates\HomePage.html" />
-    <Content Include="templates\hurricane.html" />
-    <Content Include="templates\leaflet_test.html" />
+    <Content Include="templates\html\asteroid.html" />
+    <Content Include="templates\html\asteroid_results.html" />
+    <Content Include="templates\html\HomePage.html" />
+    <Content Include="templates\html\hurricane.html" />
+    <Content Include="templates\html\leaflet_test.html" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Documentation\Explosion\" />
     <Folder Include="Documentation\Explosion\Asteroid\" />
+    <Folder Include="Documentation\Hurricane\" />
     <Folder Include="explosion\" />
     <Folder Include="explosion\asteroid\" />
     <Folder Include="general\" />
     <Folder Include="hurricane\" />
     <Folder Include="Documentation\" />
+    <Folder Include="mapping\" />
     <Folder Include="Scratch\" />
     <Folder Include="static\" />
+    <Folder Include="static\d3\" />
     <Folder Include="static\JQuery\" />
     <Folder Include="static\leaflet\" />
     <Folder Include="static\leaflet\images\" />
+    <Folder Include="static\leaflet\leaflet_draw-master\" />
+    <Folder Include="static\leaflet\leaflet_draw-master\images\" />
     <Folder Include="static\scripts\" />
     <Folder Include="templates\" />
     <Folder Include="templates\js\" />
+    <Folder Include="templates\html\" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.Web.targets" />
   <!-- Specify pre- and post-build commands in the BeforeBuild and 

@@ -1,28 +1,28 @@
-﻿from flask import Flask, url_for, request, render_template, redirect
+﻿from flask import Flask, url_for, request, render_template, redirect, jsonify
 from app import app
 from explosion import explosion_math
 from explosion.asteroid import asteroid_math
 from explosion.asteroid import asteroid_event
 import math
-from general import unit_conversions, general_geometry, general_objects, gen_image
+from general import unit_conversions, general_geometry, general_objects, general_image, general_colors
 import os
 
 # Asteroid Pages
 #asteroid main
 @app.route('/asteroid', methods = ['GET'])
 def asteroid_page():
-    return render_template('asteroid.html'
+    return render_template('html/asteroid.html'
                            , distance_units = unit_conversions.DistanceUnits.get_units_pair()
                            , velocity_units = unit_conversions.VelocityUnits.get_units_pair())
 
 # Asteroid Functions
-@app.route('/asteroid_main_function', methods = ['POST'])
+@app.route('/asteroid/main_function', methods = ['POST'])
 def asteroid_function_form():
     explosion_math.hello()
     asteroid_math.hello()
     return redirect(url_for('asteroid_page'))
 
-@app.route('/asteroid_input_params_function', methods = ['POST'])
+@app.route('/asteroid/input_params_function', methods = ['POST'])
 def asteroid_input_params_form():
     diameter_in = request.form['diameter']
     diameter_unit = request.form['diameter_unit']
@@ -49,21 +49,24 @@ def asteroid_input_params_form():
     radius_obs_m = unit_conversions.distance_conversion(float(radius_obs_in), radius_obs_unit, unit_conversions.DistanceUnits.meter)
     
     # create asteroid event from input parameters
-    latlon_grid = general_objects.LatLonGrid(20, 10, 10, 30, 2, 2)
-    event = asteroid_event.AsteroidEvent(diameter_m, angle_rad, velocity_mps, density_kgpm3, target_density_kgpm3, latlon_grid, (15, 15)) 
+    latlon_grid = general_objects.LatLonGrid(30, 20, 10, 30, 2, 2)
+    global event
+    event = asteroid_event.AsteroidEvent(diameter_m, angle_rad, velocity_mps, density_kgpm3, target_density_kgpm3, latlon_grid, (25, 20))
     grid_res = event.get_effect_2d_grid(True, 5)
     # return redirect(url_for('asteroid_page'))
     
-    os.remove("test_out.txt")
-    with open("test_out.txt", "w") as write_file:
-        for row in grid_res:
-            out = ""
-            for val in row:
-                out = out + val + "\t"
-            out.rstrip()
-            write_file.write(out + "\n")
+    if(os.path.isfile("test_out.txt")):
+        os.remove("test_out.txt")
+        with open("test_out.txt", "w") as write_file:
+            for row in grid_res:
+                out = ""
+                for val in row:
+                    curr_str = str(format(round(val[0], 5), 'f'))
+                    out = out + curr_str + "\t"
+                out.rstrip()
+                write_file.write(out + "\n")
 
-    return render_template('asteroid_results.html'
+    return render_template('html/asteroid_results.html'
                            , t_diameter_m = (diameter_in + " " + diameter_unit)
                            , t_angle_deg = (angle_in + " " + angle_unit)
                            , t_velocity_kms = (velocity_in + " " + velocity_unit)
@@ -78,3 +81,24 @@ def asteroid_input_params_form():
                            , t_airburst_energy_MtTnt = (str(round(unit_conversions.energy_conversion(event.airburst_energy_j, unit_conversions.EnergyUnits.joules, unit_conversions.EnergyUnits.Megaton_TNT), 2)) + " " + unit_conversions.EnergyUnits.Megaton_TNT)
                            , t_radius_obs = (radius_obs_in + radius_obs_unit)
                            , t_overpressure_obs_bar = (str(round(event.get_newmark_overpressure(radius_obs_m), 2)) + " bar") )
+
+@app.route('/asteroid/map_event')
+def asteroid_map_event():
+    geo = event.grid_to_geojson()
+    geo_collect = event.grid_to_geojson_collection_stepped(.00001)
+    return jsonify(result = geo, max = 10, min = 2)
+
+@app.route('/asteroid/map_event_geojsoncollection')
+def asteroid_map_event_geojsoncollection():
+
+    color_ramp = general_colors.ColorPalettes.hex_to_rgb(general_colors.ColorPalettes.simple_escalating_5, 255)
+
+    step_val = .00001
+    maxmin = event.get_event_res_maxmin()
+    # geo_collect = event.grid_to_geojson_collection(step_val, maxmin[0] + step_val)
+    geo_collect = event.grid_to_geojson_collection()
+    sorted_values = list(map((lambda x: x.properties['value']), geo_collect))
+    sorted_values.sort()
+    value_bins = general_colors.ColorPalettes.even_value_breaks(sorted_values, len(color_ramp))
+    # return jsonify(result = geo_collect, max = maxmin[0] + step_val, min = maxmin[1])#, val_list = values)
+    return jsonify(result = geo_collect, colors = color_ramp, bins = value_bins)

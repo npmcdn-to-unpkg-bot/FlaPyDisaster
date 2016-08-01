@@ -10,14 +10,14 @@ from general import unit_conversions
 @app.route('/')
 @app.route('/home')
 def main_page():
-    return render_template('HomePage.html')
+    return render_template('html/HomePage.html')
 
 ###############
 # Test routes #
 ###############
 
 # JQuery function route
-@app.route('/distance_unit_conversion')
+@app.route('/test/distance_unit_conversion')
 def unit_conversion_route():
     number = request.args.get('number', 0, type=float)
     unit_in = request.args.get('unit_in', '', type=str)
@@ -26,9 +26,9 @@ def unit_conversion_route():
     return jsonify(result = new_num)
 
 # asteroid result page route
-@app.route('/asteroid_result_test')
+@app.route('/test/asteroid_result')
 def asteroid_result_test():
-    return render_template('asteroid_results.html'
+    return render_template('html/asteroid_results.html'
                            , t_diameter_m = "10 m"
                            , t_angle_deg = "90 deg"
                            , t_velocity_kms = "10 mps"

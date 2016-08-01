@@ -1,0 +1,64 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title>Asteroid</title>
+</head>
+<body>
+    <h2>Asteroid</h2>
+    <form name="input_params_form" method="post" action="{{ url_for('asteroid_input_params_form') }}">
+        <div>
+            <p>Diameter</p>
+            <input type="text" name="diameter" />
+            <select name="diameter_unit">
+                {% for o in distance_units %}
+                    <option value="{{ o[1] }}">{{ o[0] }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div>
+            <p>Angle</p>
+            <input type="text" name="angle" />
+            <select name="angle_unit">
+                <option value="deg">Degrees</option>
+                <option value="rad">Radians</option>
+            </select>
+        </div>
+        <div>
+            <p>Velocity</p>
+            <input type="text" name="velocity" />
+            <select name="velocity_unit">
+                {% for o in velocity_units %}
+                    <option value="{{ o[1] }}">{{ o[0] }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div>
+            <p>Density (kg/m3)</p>
+            <input type="text" name="density_kgm3" />
+        </div>
+        <div>
+            <p>Target Density (kg/m3)</p>
+            <input type="text" name="target_density_kgm3" />
+        </div>
+        <div>
+            <p>Distance from event</p>
+            <input type="text" name="radius_obs" />
+            <select name="radius_obs_unit">
+                <option value="km">Kilometer</option>
+                <option value="m">Meters</option>
+                <option value="ft">Feet</option>
+            </select>
+        </div>
+        <br />
+        <button type="submit">Submit Input Parameters</button>
+    </form>
+    <br />
+    <form name="function_form" method="post" action="{{ url_for('asteroid_function_form') }}">
+        <div>
+            <button type="submit">Test Function!</button>
+        </div>
+    </form>
+</body>
+</html>

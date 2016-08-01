@@ -24,6 +24,23 @@ Pw_SPH_kPa = 100.8
 Pw_PMH_kPa = 102.0
 Rho0_kPa = 101.325 # Mean Sea Level Pressure
 
+def radial_decay(Rmax, r):
+    DistanceRatio = r / Rmax
+
+    ret = 0
+    if DistanceRatio > 1:
+        # NWS 23 pdf page 53
+        slope = (-0.051 * math.log(Rmax)) + -0.1757
+        intercept = (0.4244 * math.log(Rmax)) + 0.7586
+        ret = (slope * math.log(DistanceRatio)) + intercept
+    else:
+        # NWS 23 pdf page 54
+        ret = 1.2203 / (1 + (160.21 * math.exp(-6.8702 * DistanceRatio)))
+
+    # keep radial decay between 0 and 1
+    ret = max(min(ret, 1), 0)
+    return ret
+
 def CoriolisFrequency(lat_deg):
     w = 2.0 * math.pi / 24.0
     return 2.0 * w * math.sin(w)
@@ -56,6 +73,7 @@ def AsymmetryFactor(Fspeed_mps, r, ):
 def InflowAngle():
     """
     Need imperical inflow angle calculation
+    NWS 23 pdf page 55
     """
     pass
 

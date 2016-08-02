@@ -24,7 +24,15 @@ Pw_SPH_kPa = 100.8
 Pw_PMH_kPa = 102.0
 Rho0_kPa = 101.325 # Mean Sea Level Pressure
 
-def radial_decay(Rmax, r):
+def radial_decay(r, Rmax):
+    """
+    Calculates the radial decay factor for a given radius.
+    Both parameters must be in the same units
+    Rmax < r: NWS 23 pdf page 53, page 27, Figure 2.12, emperical fit
+    Rmax > r: NWS 23 pdf page 54, page 28, Figure 2.13, emperical fit (logistic regression)
+    :param r: Distance from the center of the storm
+    :param Rmax: Radius of maximum winds
+    """
     DistanceRatio = r / Rmax
 
     ret = 0
@@ -45,14 +53,24 @@ def CoriolisFrequency(lat_deg):
     w = 2.0 * math.pi / 24.0
     return 2.0 * w * math.sin(w)
 
-def MaximumGradientWind_AtRadius(Pw, Cp, r, lat_deg):
+def GradientWind_AtRadius(Pw_kPa, Cp_kPa, r_km, lat_deg):
+    """
+    NWS 23 pdf page 49, page 23, equation 2.2
+    Need to confirm units
+    :param Pw: Peripheral Pressure, pressure at edge of storm, should be near MSLP
+    :param Cp: Central Pressure
+    :param r: Radius (distance) from center of storm.  Use Radius of max winds (Rmax) to get maximum gradient wind
+    :param lat_deg: Latitude of hurricane eye
+    """
+
     K = K_WindGradient(lat_deg)
     f = CoriolisFrequency(lat_deg)
-    return K * ((Pw - Cp) ** 0.5) - (r * f)/2
+    return K * ((Pw - Cp) ** 0.5) - (r * f) / 2
 
 def K_WindGradient(lat_deg):
     """
-    This is for the PMH
+    NWS 23 pdf page 50, page 24, figure 2.10, emperical relationship (linear regression)
+    This is for the PMH, We can also improve this relationship
     This is what I thought, but apparently not: (1.0/(Rho0_kPa * math.e)) ** (0.5)
     lat 24, K 68.1; lat 45, K 65
     SPH: (65-68.1)/(45-24) = -0.147619048
@@ -61,10 +79,15 @@ def K_WindGradient(lat_deg):
 
     return 70.1 + -0.185714286 * (lat_deg - 24.0)
 
-def AsymmetryFactor(Fspeed_mps, r, ):
+def AsymmetryFactor(Fspeed_mps, r):
     """
-    To factors: 1 kt, 0.514791 mps, 1.853248 kph, 1.151556 mph
+    NWS 23 pdf page 51, page 25, equation 2.5
+    Factor for a moving hurricane, accounts for effect of forward speed on hurricane winds
+    :param Fspeed_mps: Forward speed of the storm
+    :param r: distance from the center of the storm
+    To conversion factors: 1 kt, 0.514791 mps, 1.853248 kph, 1.151556 mph
     WindAngle_deg: Angle between the track direction and surface wind direction
+    :return: Asymmertry factor
     """
     To = 0.514791
     beta = InflowAngle()
@@ -77,7 +100,27 @@ def InflowAngle():
     """
     pass
 
-def ObMaxWind_10m10min_AtRadius(Cp, r, lat_deg, Fspeed_mps, GWRF = 0.95):
-    Vs = MaximumGradientWind_AtRadius(Cp, r, lat_deg)
-    A = AsymmetryFactor(Fspeed_mps, 0.0)
-    return (GWRF * Vs) + A
+def calc_windspeed(Pw_kPa, Cp_kPa, r_km, lat_deg, Fspeed_mps, Rmax_km, Vmax_mps = None, GWAF = 0.9):
+    """
+    :param Pw: Peripheral Pressure, pressure at edge of storm, should be near MSLP
+    :param Cp: Central Pressure
+    :param r: Radius (distance) from center of storm
+    :param lat_deg: Latitude of hurricane eye
+    :param Fspeed_mps
+    :param Vmax: Input max windspeed to skip the calculation for it.  Useful when Vmax is know for a storm
+    :param GWF: Gradient Wind Adjustment Factor, semi-emprical adjustment to the Gradient Wind. Range 0.75-1.05, Generally between 0.9 and 1. NWS 23 pdf page 50, page 24, 2.2.7.2.1
+    :return: Windspeed at a given radius for the storm
+    """
+
+    # Step 1: Calculate Maximum Gradient Windspeed if unknown, 10m-10min Average
+    if(Vmax == None):
+        Vgx = GradientWind_AtRadius(Pw_kPa, Cp_kPa, Rmax_km, lat_deg)
+    else:
+        Vgx = Vmax
+    # Step 2: Calculate the Radial Decay
+    RadialDecay = radial_decay(r_km, Rmax_km)
+    # Step 3: Calculate the Asymmetry Factor
+    Asym = AsymmetryFactor(Fspeed_mps, r_km)
+
+    # apply all factors and return windspeed at point
+    return (Vgx * GWAF * RadialDecay) + Asym

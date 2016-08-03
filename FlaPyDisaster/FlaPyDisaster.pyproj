@@ -106,6 +106,7 @@
     <Content Include="Documentation\Hurricane\web_links.txt" />
     <Content Include="Documentation\Hurricane\Willoughby_ParametricHurricaneVortex_pt1.pdf" />
     <Content Include="Documentation\Hurricane\Willoughby_ParametricHurricaneVortex_pt2.pdf" />
+    <Content Include="Documentation\Hurricane\WindMesuementGuidence.pdf" />
     <Content Include="Documentation\MapboxFlaPyDisasterKey.txt" />
     <Content Include="requirements.txt" />
     <Content Include="Scratch\ToDo.txt" />

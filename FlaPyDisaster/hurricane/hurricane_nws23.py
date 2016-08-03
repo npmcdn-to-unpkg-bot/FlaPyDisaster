@@ -82,6 +82,7 @@ def K_WindGradient(lat_deg):
 def AsymmetryFactor(Fspeed_mps, r):
     """
     NWS 23 pdf page 51, page 25, equation 2.5
+    NWS 23 pdf page 281, page 257
     Factor for a moving hurricane, accounts for effect of forward speed on hurricane winds
     :param Fspeed_mps: Forward speed of the storm
     :param r: distance from the center of the storm

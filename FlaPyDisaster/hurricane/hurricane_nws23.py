@@ -24,7 +24,7 @@ Pw_SPH_kPa = 100.8
 Pw_PMH_kPa = 102.0
 Rho0_kPa = 101.325 # Mean Sea Level Pressure
 
-def radial_decay(r, Rmax):
+def radial_decay(r_nmi, Rmax_nmi):
     """
     Calculates the radial decay factor for a given radius.
     Both parameters must be in the same units
@@ -120,7 +120,7 @@ def calc_windspeed(Pw_kPa, Cp_kPa, r_km, lat_deg, Fspeed_mps, Rmax_km, Vmax_mps 
     # Step 2: Calculate the Radial Decay
     RadialDecay = radial_decay(r_km, Rmax_km)
     # Step 3: Calculate the Asymmetry Factor
-    Asym = AsymmetryFactor(Fspeed_mps, r_km)
+    Asym = AsymmetryFactor(Fspeed_mps * 0.539957, r_km * 0.539957)
 
     # apply all factors and return windspeed at point
     return (Vgx * GWAF * RadialDecay) + Asym

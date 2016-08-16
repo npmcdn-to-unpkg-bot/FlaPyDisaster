@@ -100,6 +100,7 @@
     <Content Include="Documentation\Explosion\NuclearBlastOverpressure.pdf" />
     <Content Include="Documentation\Explosion\web_links.txt" />
     <Content Include="Documentation\Hurricane\AIRCurrents__Wind_Profiles_in_Parametric_Hurricane_Models.pdf" />
+    <Content Include="Documentation\Hurricane\FlaPyTemp_Inflow_Final.xlsx" />
     <Content Include="Documentation\Hurricane\InflowAngle_PMH.PNG" />
     <Content Include="Documentation\Hurricane\NOAA_NWS_23.pdf" />
     <Content Include="Documentation\Hurricane\RadialDecay_Rmax_Inward.PNG" />

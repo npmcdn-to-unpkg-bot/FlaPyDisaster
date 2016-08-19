@@ -37,17 +37,16 @@ def radial_decay(r_nmi, Rmax_nmi):
     :param r_nmi: Point radius from center of storm in nautical miles
     :param Rmax_nmi: Radius of maximum winds in nautical miles
     """
-    DistanceRatio = r_nmi / Rmax_nmi
 
     ret = 0
-    if DistanceRatio > 1:
+    if r_nmi >  Rmax_nmi:
         # NWS 23 pdf page 53
-        slope = (-0.051 * math.log(Rmax_nmi)) + -0.1757
+        slope = (-0.051 * math.log(Rmax_nmi)) - 0.1757
         intercept = (0.4244 * math.log(Rmax_nmi)) + 0.7586
-        ret = (slope * math.log(DistanceRatio)) + intercept
+        ret = (slope * math.log(r_nmi)) + intercept
     else:
         # NWS 23 pdf page 54
-        ret = 1.2203 / (1 + (160.21 * math.exp(-6.8702 * DistanceRatio)))
+        ret = 1.01231578 / (1 + (-8.612066494 * math.exp(r_nmi - 0.678031222)))
 
     # keep radial decay between 0 and 1
     ret = max(min(ret, 1), 0)

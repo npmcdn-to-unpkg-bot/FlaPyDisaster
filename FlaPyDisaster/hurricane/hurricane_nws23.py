@@ -1,4 +1,4 @@
-import math
+﻿import math
 """
 SPH: Standard Project Hurricane
 PMH: Probable Maximum Hurricane
@@ -28,6 +28,7 @@ Rho0_kPa = 101.325 # Mean Sea Level Pressure
 KmToNmi = 0.539957
 MpsToKts = 1.94384
 KpaToInhg = 0.2953
+DegToRadians
 
 def radial_decay(r_nmi, Rmax_nmi):
     """
@@ -83,7 +84,7 @@ def K_WindGradient(lat_deg):
 
     return 70.1 + -0.185714286 * (lat_deg - 24.0)
 
-def AsymmetryFactor(Fspeed_kts, r_nmi, Rmax_nmi):
+def AsymmetryFactor(Fspeed_kts, r_nmi, Rmax_nmi, anglecenter_deg):
     """
     NWS 23 pdf page 51, page 25, equation 2.5
     NWS 23 pdf page 281, page 257
@@ -96,7 +97,7 @@ def AsymmetryFactor(Fspeed_kts, r_nmi, Rmax_nmi):
     """
     To = 1
     beta = InflowAngle(Rmax_nmi, r_nmi) # need to figure out direction
-    return 1.5 * (Fspeed_mph ** 0.63) * (To ** 0.37) * math.cos(beta)
+    return 1.5 * (Fspeed_mph ** 0.63) * (To ** 0.37) * math.cos(math.radians(beta))
 
 def InflowAngle(Rmax_nmi, r_nmi):
     """
@@ -122,13 +123,15 @@ def InflowAngle(Rmax_nmi, r_nmi):
         Phi = (x3 * ((r_nmi - RmaxThree)**3)) + (x2 * ((r_nmi - RmaxThree)**2)) + (x1 * (r_nmi - RmaxThree)) + c
     return Phi
 
-def calc_windspeed(Cp_kPa, r_km, lat_deg, Fspeed_mps, Rmax_km, Pw_kPa = Pw_PMH_kPa, Vmax_mps = None, GWAF = 0.9):
+def calc_windspeed(Cp_kPa, r_km, lat_deg, Fspeed_mps, Rmax_km, anglecenter_deg, Pw_kPa = Pw_PMH_kPa, Vmax_mps = None, GWAF = 0.9):
     """
-    :param Pw_kPa: Peripheral Pressure, pressure at edge of storm, should be near MSLP
     :param Cp_kPa: Central Pressure in kPa
     :param r_mk: Point radius from center of storm in kilometers
     :param lat_deg: Latitude of hurricane eye
     :param Fspeed_mps: Forward speed of the storm in m/s
+    :param Pw_kPa: Peripheral Pressure, pressure at edge of storm, should be near MSLP
+    :param Rmax_km: Radius of maximum winds in km
+    :param anglecenter_deg: Bearing from the eye to the current point in deg
     :param Vmax_mps: Input max windspeed to skip the calculation for it.  Useful when Vmax is know for a storm. m/s
     :param GWAF: Gradient Wind Adjustment Factor, semi-emprical adjustment to the Gradient Wind. Range 0.75-1.05, Generally between 0.9 and 1. NWS 23 pdf page 50, page 24, 2.2.7.2.1
     :return: Windspeed at a given radius for the storm in mps
@@ -150,8 +153,28 @@ def calc_windspeed(Cp_kPa, r_km, lat_deg, Fspeed_mps, Rmax_km, Pw_kPa = Pw_PMH_k
     # Step 2: Calculate the Radial Decay
     RadialDecay = radial_decay(r_km, Rmax_km) # need to convert to nmi
     # Step 3: Calculate the Asymmetry Factor
-    Asym = AsymmetryFactor(Fspeed_kts, r_nmi)
+    Asym = AsymmetryFactor(Fspeed_kts, r_nmi, anglecenter_deg)
 
     # apply all factors and return windspeed at point
     windspeed_kts = (Vgx * GWAF * RadialDecay) + Asym
     return windspeed_kts / MpsToKts
+
+def CalcBearing_NorthZero(lat_ref, lon_ref, lat_loc, lon_loc):
+    lon_delta = lon_loc - lon_ref
+    lat_delta = lat_loc - lat_ref
+    angle_deg = 0
+
+    if(math.fabs(lon_delta < 0.0001)):
+        angle_deg = 180 if lat_loc < lat_ref else 0
+    else:
+        if(math.fabs(lat_delta) < 0.0001):
+            angle_deg = -90 if lon_loc < lon_ref else 90
+        else:
+            angle_deg = math.radians( math.atan(lon_delta / lat_delta) )
+            
+            if(angle_deg > 0):
+                angle_deg = (angle_deg - 180) if (lat_loc < lat_ref) else angle_deg
+            else:
+                angle_deg = (angle_deg + 180) if (lat_loc < lat_ref) else angle_deg
+
+    return angle_deg

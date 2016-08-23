@@ -1,5 +1,6 @@
 from flask import Flask, url_for, request, render_template, redirect
 from app import app
+import PIL
 # from hurricane import hurricane_math
 
 
@@ -18,3 +19,6 @@ def hurricane_file_form():
 def hurricane_function_form():
     # hurricane_math.HelloHurricane()
     return redirect(url_for('hurricane_page'))
+
+def ImageTest():
+    pass

@@ -67,6 +67,9 @@
     <Compile Include="general\__init__.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="hurricane\hurricane_event.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="hurricane\hurricane_nws23.py">
       <SubType>Code</SubType>
     </Compile>

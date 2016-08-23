@@ -73,6 +73,9 @@
     <Compile Include="hurricane\hurricane_nws23.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="hurricane\hurricane_utils.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="hurricane\__init__.py">
       <SubType>Code</SubType>
     </Compile>
@@ -103,13 +106,15 @@
     <Content Include="Documentation\Explosion\NuclearBlastOverpressure.pdf" />
     <Content Include="Documentation\Explosion\web_links.txt" />
     <Content Include="Documentation\Hurricane\AIRCurrents__Wind_Profiles_in_Parametric_Hurricane_Models.pdf" />
-    <Content Include="Documentation\Hurricane\K_Factor.PNG" />
-    <Content Include="Documentation\Hurricane\NOAA_NWS23_Inflow_Calcs.xlsx" />
-    <Content Include="Documentation\Hurricane\InflowAngle_PMH.PNG" />
-    <Content Include="Documentation\Hurricane\NOAA_NWS_23.pdf" />
-    <Content Include="Documentation\Hurricane\NWS_23_RadialDecay.xlsx" />
-    <Content Include="Documentation\Hurricane\RadialDecay_Rmax_Inward.PNG" />
-    <Content Include="Documentation\Hurricane\RadialDecay_Rmax_Outward.PNG" />
+    <Content Include="Documentation\Hurricane\HURDAT\hurdat2-1851-2015-070616.txt" />
+    <Content Include="Documentation\Hurricane\HURDAT\hurdat2-format-atlantic.pdf" />
+    <Content Include="Documentation\Hurricane\NWS23\K_Factor.PNG" />
+    <Content Include="Documentation\Hurricane\NWS23\NOAA_NWS23_Inflow_Calcs.xlsx" />
+    <Content Include="Documentation\Hurricane\NWS23\InflowAngle_PMH.PNG" />
+    <Content Include="Documentation\Hurricane\NWS23\NOAA_NWS_23.pdf" />
+    <Content Include="Documentation\Hurricane\NWS23\NWS_23_RadialDecay.xlsx" />
+    <Content Include="Documentation\Hurricane\NWS23\RadialDecay_Rmax_Inward.PNG" />
+    <Content Include="Documentation\Hurricane\NWS23\RadialDecay_Rmax_Outward.PNG" />
     <Content Include="Documentation\Hurricane\web_links.txt" />
     <Content Include="Documentation\Hurricane\Willoughby_ParametricHurricaneVortex_pt1.pdf" />
     <Content Include="Documentation\Hurricane\Willoughby_ParametricHurricaneVortex_pt2.pdf" />
@@ -153,6 +158,8 @@
     <Folder Include="Documentation\Explosion\" />
     <Folder Include="Documentation\Explosion\Asteroid\" />
     <Folder Include="Documentation\Hurricane\" />
+    <Folder Include="Documentation\Hurricane\HURDAT\" />
+    <Folder Include="Documentation\Hurricane\NWS23\" />
     <Folder Include="explosion\" />
     <Folder Include="explosion\asteroid\" />
     <Folder Include="general\" />

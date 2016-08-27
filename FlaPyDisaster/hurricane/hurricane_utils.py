@@ -1,4 +1,4 @@
-import datetime
+﻿import datetime
 from collections import namedtuple
 import pandas as pd
 import csv 
@@ -63,6 +63,7 @@ class HurdatCatalog:
         #    LO = "A low that is neither a tropical cyclone, a subtropical cyclone, nor an extratropical cyclone (of any intensity)"
         #    WV = "Tropical Wave (of any intensity)"
         #    DB = "Disturbance (of any intensity)"
+
         class TrackPoint:
             def __init__(self, year, month, day, hour, minute, record_identifier, status, lat_y, hemisphere_ns, lon_x, hemisphere_ew, max_wind_kts, min_pressure_mb, r34_ne_nmi, r34_se_nmi, r34_sw_nmi, r34_nw_nmi, r50_ne_nmi, r50_se_nmi, r50_sw_nmi, r50_nw_nmi, r64_ne_nmi, r64_se_nmi, r64_sw_nmi, r64_nw_nmi ):
                 # Time
@@ -115,11 +116,9 @@ class HurdatCatalog:
             self.track_points = []
 
             if(storm_data != None):
-                self.parse_data_table(storm_data)
+                self.parse_storm_data(storm_data)
 
-        def parse_data_table(self, df):
-            storm_data = pd.DataFrame() # for intellisense hints
-            storm_data = df
+        def parse_storm_data(self, storm_data):
             
             # parse storm level parameters from first row of data table
             self.parse_header_row(storm_data.iloc[[0]])
@@ -132,53 +131,53 @@ class HurdatCatalog:
                parse_data_row(row)
 
         def parse_header_row(self, header_row):
-            self.basin = header_row.iloc[0, 0][:2]
-            self.cyclone_number = int(header_row.iloc[0, 0][2:4])
-            self.year = int(header_row.iloc[0, 0][4:])
-            self.name = header_row.iloc[0, 1]
-            self.track_point_count = int(header_row.iloc[0, 2])
+            self.basin = header_row[0][:2]
+            self.cyclone_number = int(header_row[0][2:4])
+            self.year = int(header_row[0][4:])
+            self.name = header_row[1]
+            self.track_point_count = int(header_row[2])
 
         def parse_data_row(self, data_row):
-             # Time
-                year = int(data_row.iloc[0, 0][:4])
-                month = int(data_row.iloc[0, 0][4:6])
-                day = int(data_row.iloc[0, 0][6:])
-                hour = int(data_row.iloc[0, 1][:2])
-                minute = int(data_row.iloc[0, 1][2:])
+            # Time
+            year = int(data_row[0][:4])
+            month = int(data_row[0][4:6])
+            day = int(data_row[0][6:])
+            hour = int(data_row[1][:2])
+            minute = int(data_row[1][2:])
 
-                # Identifiers
-                record_identifier = data_row.iloc[0, 2]
-                status = data_row.iloc[0, 3]
+            # Identifiers
+            record_identifier = data_row[2]
+            status = data_row[3]
 
-                # Position
-                lat_y = float(data_row.iloc[0, 4][:-1])
-                hemisphere_ns = data_row.iloc[0, 4][-1]
-                lon_x = float(data_row.iloc[0, 5][:-1])
-                hemisphere_ew = data_row.iloc[0, 5][-1]
+            # Position
+            lat_y = float(data_row[4][:-1])
+            hemisphere_ns = data_row[4][-1]
+            lon_x = float(data_row[5][:-1])
+            hemisphere_ew = data_row[5][-1]
 
-                # Intensities
-                max_wind_kts = int(data_row.iloc[0, 6])
-                min_pressure_mb = int(data_row.iloc[0, 7])
+            # Intensities
+            max_wind_kts = int(data_row[6])
+            min_pressure_mb = int(data_row[7])
 
-                # Radius of 34kt winds
-                r34_ne_nmi = int(data_row.iloc[0, 8])
-                r34_se_nmi = int(data_row.iloc[0, 9])
-                r34_sw_nmi = int(data_row.iloc[0, 10])
-                r34_nw_nmi = int(data_row.iloc[0, 11])
+            # Radius of 34kt winds
+            r34_ne_nmi = int(data_row[8])
+            r34_se_nmi = int(data_row[9])
+            r34_sw_nmi = int(data_row[10])
+            r34_nw_nmi = int(data_row[11])
 
-                # Radius of 50kt winds
-                r50_ne_nmi = int(data_row.iloc[0, 12])
-                r50_se_nmi = int(data_row.iloc[0, 13])
-                r50_sw_nmi = int(data_row.iloc[0, 14])
-                r50_nw_nmi = int(data_row.iloc[0, 15])
+            # Radius of 50kt winds
+            r50_ne_nmi = int(data_row[12])
+            r50_se_nmi = int(data_row[13])
+            r50_sw_nmi = int(data_row[14])
+            r50_nw_nmi = int(data_row[15])
 
-                # Radius of 64kt winds
-                r64_ne_nmi = int(data_row.iloc[0, 16])
-                r64_se_nmi = int(data_row.iloc[0, 17])
-                r64_sw_nmi = int(data_row.iloc[0, 18])
-                r64_nw_nmi = int(data_row.iloc[0, 19])
-                # create and store track point
-                self.track_points.append(self.TrackPoint(year, month, day, hour, minute, record_identifier, status, lat_y, hemisphere_ns, lon_x, hemisphere_ew, max_wind_kts, min_pressure_mb, r34_ne_nmi, r34_se_nmi, r34_sw_nmi, r34_nw_nmi, r50_ne_nmi, r50_se_nmi, r50_sw_nmi, r50_nw_nmi, r64_ne_nmi, r64_se_nmi, r64_sw_nmi, r64_nw_nmi))
+            # Radius of 64kt winds
+            r64_ne_nmi = int(data_row[16])
+            r64_se_nmi = int(data_row[17])
+            r64_sw_nmi = int(data_row[18])
+            r64_nw_nmi = int(data_row[19])
+            # create and store track point
+            self.track_points.append(self.TrackPoint(year, month, day, hour, minute, record_identifier, status, lat_y, hemisphere_ns, lon_x, hemisphere_ew, max_wind_kts, min_pressure_mb, r34_ne_nmi, r34_se_nmi, r34_sw_nmi, r34_nw_nmi, r50_ne_nmi, r50_se_nmi, r50_sw_nmi, r50_nw_nmi, r64_ne_nmi, r64_se_nmi, r64_sw_nmi, r64_nw_nmi))
 
     def __init__(self, catalog_file_uri):
         self.catalog_file_uri = catalog_file_uri
@@ -194,21 +193,22 @@ class HurdatCatalog:
         self.storm_data.drop(self.storm_data.columns[-1], 1, inplace=True)
         self.storm_data.fillna('', inplace=True)
 
+        storm_list = self.storm_data.values.tolist()
+
         storm_temp = None
         catalog_iter = 0
-        while catalog_iter < len(self.storm_data):
-
-            curr_row = self.storm_data.iloc[[catalog_iter]]
+        while catalog_iter < len(storm_list):
+            curr_row = storm_list[catalog_iter]
 
             # if row is header row, 4th element will be empty
-            if not curr_row.iloc[0, 3]:
+            if not curr_row[3]:
                 storm_temp = self.HurdatStormSystem()
                 storm_temp.parse_header_row(curr_row)
                 catalog_iter += 1
 
                 storm_count = catalog_iter + storm_temp.track_point_count
                 while catalog_iter < storm_count:
-                    storm_temp.parse_data_row(self.storm_data.iloc[[catalog_iter]])
+                    storm_temp.parse_data_row(storm_list[catalog_iter])
                     catalog_iter += 1
             
             self.storm_catalog.append(storm_temp)

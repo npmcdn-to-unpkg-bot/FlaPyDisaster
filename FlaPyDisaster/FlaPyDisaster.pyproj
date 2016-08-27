@@ -61,6 +61,9 @@
     <Compile Include="general\general_image.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="general\general_utils.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="general\unit_conversions.py">
       <SubType>Code</SubType>
     </Compile>

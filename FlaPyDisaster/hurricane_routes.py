@@ -1,4 +1,4 @@
-from flask import Flask, url_for, request, render_template, redirect
+﻿from flask import Flask, url_for, request, render_template, redirect
 from app import app
 import PIL
 from hurricane import hurricane_utils as hu
@@ -18,11 +18,10 @@ def hurricane_file_form():
 
 @app.route('/hurricane/main_function', methods = ['POST'])
 def hurricane_function_form():
-    # hurricane_math.HelloHurricane()
     return redirect(url_for('hurricane_page'))
 
 @app.route('/hurricane/table_test', methods = ['GET'])
 def table_test():
-    catalog = hu.HurdatCatalog(r'C:\Users\Cameron\MyFiles\Learning\Git\FlaPyDisaster\FlaPyDisaster\Documentation\Hurricane\HURDAT\hurdat2-1851-2015-070616_with_header.txt')
+    catalog = hu.HurdatCatalog(r'Documentation\Hurricane\HURDAT\hurdat2-1851-2015-070616_with_header.txt')
     
     return render_template("html/hurricane_table_test.html", name="Catalog Data Frame", data=catalog.storm_data.head().to_html())

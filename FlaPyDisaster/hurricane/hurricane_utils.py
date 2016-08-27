@@ -30,7 +30,13 @@ def GreatCircleDistance():
     pass
 
 class HurdatCatalog:
+    """
+    Class representing a catalog of hurdat hurricanes
+    """
     class HurdatStormSystem:
+        """
+        Class representing a Hurricane from a hurdat data source
+        """
         hurdat_headers = ["StormID/Date", "Name/Hour", "Rows/SpecialRow", "System Status", "Lat", "Lon", "Max Wind (kts)", "Min Pressure (mBar)", "R34 NE(Nauts; kts)", "R34 SE (Nauts; kts)", "R34 SW (Nauts; kts)", "R34 NW (Nauts; kts)", "R50 NE (Nauts; kts)", "R50 SE (Nauts; kts)", "R50 SW (Nauts; kts)", "R50 NW (Nauts; kts)", "R64 NE (Nauts; kts)", "R64 SE (Nauts; kts)", "R64 SW (Nauts; kts)", "R64 NW (Nauts; kts)"]
         df_hurdat_headers = ["storm_id/date", "name/time", "records/record_identifier", "system_status", "lat", "lon", "max_wind_kts", "min_pressure_mb", "r34_ne_nmi", "r34_se_nmi", "r34_sw_nmi", "r34_nw_nmi", "r50_ne_nmi", "r500_se_nmi", "r50_sw_nmi", "r50_nw_nmi", "r64_ne_nmi", "r64_se_nmi", "r64_sw_nmi", "r64_nw_nmi"]
         model_headers = ["catalog_number", "name", "basin", "year", "month", "day", "hour", "minute", "lat_y", "lon_x", "max_wind_kts", "min_cp_mb", "rmax_nmi", "fspeed_kts", "sequence", "gwaf"]
@@ -66,7 +72,26 @@ class HurdatCatalog:
         #    DB = "Disturbance (of any intensity)"
 
         class TrackPoint:
+            """
+            Class representing a single track point of a hurdat storm
+            """
             def __init__(self, year, month, day, hour, minute, record_identifier, status, lat_y, hemisphere_ns, lon_x, hemisphere_ew, max_wind_kts, min_pressure_mb, r34_ne_nmi, r34_se_nmi, r34_sw_nmi, r34_nw_nmi, r50_ne_nmi, r50_se_nmi, r50_sw_nmi, r50_nw_nmi, r64_ne_nmi, r64_se_nmi, r64_sw_nmi, r64_nw_nmi, sequence ):
+                """
+                :param int year: year of timestamp
+                :param int month: month of timestamp
+                :param int day: day of timestamp
+                :param int hour: hour of timestamp
+                :param int minute: minute of timestamp
+                :param string record_identifier: Special identifier for track point i.e. landfall point, max wind point, etc.
+                :param string status: status identifier for track point, check documentation, not really used currently
+                :param float lat_y: latitude in degrees of track point
+                :param string hemisphere_ns: whether the latitude is in the northern or southern hemisphere
+                :param float lon_x: longitude in degrees of track point
+                :param string hemisphere_ew: whether the longitude is in the eastern or western hemisphere
+                :param float max_wind_kts: Maximum wind of the track point in knots
+                :param float min_pressure_mb: minimum central pressure of track point in milibars
+                :r*_*_nmi: parameters for the wind at radius * in each quadrent of the storm
+                """
                 # Time
                 self.year = year
                 self.month = month
@@ -110,6 +135,9 @@ class HurdatCatalog:
                 self.sequence = sequence
             
             def to_hurdat_list(self):
+                """
+                return the track point as a list in hurdat format
+                """
                 return [str(self.year) + str(self.month).zfill(2) + str(self.day).zfill(2)
                         ,str(self.hour).zfill(2) + str(self.minute).zfill(2)
                         ,self.record_identifier
@@ -132,6 +160,9 @@ class HurdatCatalog:
                         ,self.r64_nw_nmi ]
 
             def to_model_list(self):
+                """
+                return the track point as a list in model format
+                """
                 return [self.year
                         ,self.month
                         ,self.day
@@ -144,6 +175,12 @@ class HurdatCatalog:
                         ,self.sequence ]
 
         def __init__(self, storm_data = None, fspeed_kts = 10, rmax_nmi = 15, gwaf = 0.9):
+            """
+            :param list of list storm_data: list of list representing the raw data rows of the storm import file
+            :param int fspeed_kts: forward speed of the storm.  This will eventually be calculated at each track point
+            :param int rmax_nmi: radius of maximum winds of the storm.  constant for the entiere storm
+            :param float gwaf: Gradient Wind Adjustment Factor.  "fudge factor" for hurricane intensity calculation.  standard is 0.9
+            """
             self.storm_data = storm_data
             self.fspeed_kts = fspeed_kts
             self.rmax_nmi = rmax_nmi

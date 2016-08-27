@@ -31,8 +31,9 @@ def GreatCircleDistance():
 
 class HurdatCatalog:
     class HurdatStormSystem:
-        column_headers = ["StormID/Date", "Name/Hour", "Rows/SpecialRow", "System Status", "Lat", "Lon", "Max Wind (kts)", "Min Pressure (mBar)", "R34 NE(Nauts; kts)", "R34 SE (Nauts; kts)", "R34 SW (Nauts; kts)", "R34 NW (Nauts; kts)", "R50 NE (Nauts; kts)", "R50 SE (Nauts; kts)", "R50 SW (Nauts; kts)", "R50 NW (Nauts; kts)", "R64 NE (Nauts; kts)", "R64 SE (Nauts; kts)", "R64 SW (Nauts; kts)", "R64 NW (Nauts; kts)"]
-        df_headers = ["date", "hour_min", "record_identifier", "system_status", "lat", "lon", "max_wind_kts", "min_pressure_mb", "r34_ne_nmi", "r34_se_nmi", "r34_sw_nmi", "r34_nw_nmi", "r50_ne_nmi", "r500_se_nmi", "r50_sw_nmi", "r50_nw_nmi", "r64_ne_nmi", "r64_se_nmi", "r64_sw_nmi", "r64_nw_nmi"]
+        hurdat_headers = ["StormID/Date", "Name/Hour", "Rows/SpecialRow", "System Status", "Lat", "Lon", "Max Wind (kts)", "Min Pressure (mBar)", "R34 NE(Nauts; kts)", "R34 SE (Nauts; kts)", "R34 SW (Nauts; kts)", "R34 NW (Nauts; kts)", "R50 NE (Nauts; kts)", "R50 SE (Nauts; kts)", "R50 SW (Nauts; kts)", "R50 NW (Nauts; kts)", "R64 NE (Nauts; kts)", "R64 SE (Nauts; kts)", "R64 SW (Nauts; kts)", "R64 NW (Nauts; kts)"]
+        df_hurdat_headers = ["storm_id/date", "name/time", "records/record_identifier", "system_status", "lat", "lon", "max_wind_kts", "min_pressure_mb", "r34_ne_nmi", "r34_se_nmi", "r34_sw_nmi", "r34_nw_nmi", "r50_ne_nmi", "r500_se_nmi", "r50_sw_nmi", "r50_nw_nmi", "r64_ne_nmi", "r64_se_nmi", "r64_sw_nmi", "r64_nw_nmi"]
+        model_headers = ["catalog_number", "name", "basin", "year", "month", "day", "hour", "minute", "lat_y", "lon_x", "max_wind_kts", "min_cp_mb", "rmax_nmi", "fspeed_kts", "sequence", "gwaf"]
         #RecordIdentifier = namedtuple('RecordIdentifier', ['C', 'G', 'I', 'L', 'P', 'R', 'S', 'T', 'W'])
 
         #class RecordIdentifier:
@@ -65,7 +66,7 @@ class HurdatCatalog:
         #    DB = "Disturbance (of any intensity)"
 
         class TrackPoint:
-            def __init__(self, year, month, day, hour, minute, record_identifier, status, lat_y, hemisphere_ns, lon_x, hemisphere_ew, max_wind_kts, min_pressure_mb, r34_ne_nmi, r34_se_nmi, r34_sw_nmi, r34_nw_nmi, r50_ne_nmi, r50_se_nmi, r50_sw_nmi, r50_nw_nmi, r64_ne_nmi, r64_se_nmi, r64_sw_nmi, r64_nw_nmi ):
+            def __init__(self, year, month, day, hour, minute, record_identifier, status, lat_y, hemisphere_ns, lon_x, hemisphere_ew, max_wind_kts, min_pressure_mb, r34_ne_nmi, r34_se_nmi, r34_sw_nmi, r34_nw_nmi, r50_ne_nmi, r50_se_nmi, r50_sw_nmi, r50_nw_nmi, r64_ne_nmi, r64_se_nmi, r64_sw_nmi, r64_nw_nmi, sequence ):
                 # Time
                 self.year = year
                 self.month = month
@@ -106,8 +107,47 @@ class HurdatCatalog:
                 self.r64_sw_nmi = r64_sw_nmi
                 self.r64_nw_nmi = r64_nw_nmi
 
-        def __init__(self, storm_data = None):
+                self.sequence = sequence
+            
+            def to_hurdat_list(self):
+                return [str(self.year) + str(self.month).zfill(2) + str(self.day).zfill(2)
+                        ,str(self.hour).zfill(2) + str(self.minute).zfill(2)
+                        ,self.record_identifier
+                        ,self.status
+                        ,str(self.lat_y) + self.hemisphere_ns
+                        ,str(self.lon_x) + self.hemisphere_ew
+                        ,self.max_wind_kts
+                        ,self.min_pressure_mb
+                        ,self.r34_ne_nmi
+                        ,self.r34_se_nmi
+                        ,self.r34_sw_nmi
+                        ,self.r34_nw_nmi
+                        ,self.r50_ne_nmi
+                        ,self.r50_se_nmi
+                        ,self.r50_sw_nmi
+                        ,self.r50_nw_nmi
+                        ,self.r64_ne_nmi
+                        ,self.r64_se_nmi
+                        ,self.r64_sw_nmi
+                        ,self.r64_nw_nmi ]
+
+            def to_model_list(self):
+                return [self.year
+                        ,self.month
+                        ,self.day
+                        ,self.hour
+                        ,self.minute
+                        ,self.lat_y * -1 if self.hemisphere_ns == 'S' else self.lat_y
+                        ,self.lon_x * -1 if self.hemisphere_ew == 'E' else self.lon_x
+                        ,self.max_wind_kts
+                        ,self.min_pressure_mb
+                        ,self.sequence ]
+
+        def __init__(self, storm_data = None, fspeed_kts = 10, rmax_nmi = 15, gwaf = 0.9):
             self.storm_data = storm_data
+            self.fspeed_kts = fspeed_kts
+            self.rmax_nmi = rmax_nmi
+            self.gwaf = gwaf
             self.basin = None
             self.cyclone_number = None
             self.year = None
@@ -119,12 +159,12 @@ class HurdatCatalog:
                 self.parse_storm_data(storm_data)
 
         def parse_storm_data(self, storm_data):
-            
             # parse storm level parameters from first row of data table
-            self.parse_header_row(storm_data.iloc[[0]])
+            self.parse_header_row(storm_data[0])
 
             # drop first row from local copy of the dataframe
-            storm_data.drop(storm_data.index[[0]], inplace = True)
+            # storm_data.drop(storm_data.index[[0]], inplace = True)
+            storm_data.pop(0)
 
             # parse data rows
             for row in storm_data.iterrows():
@@ -137,7 +177,7 @@ class HurdatCatalog:
             self.name = header_row[1]
             self.track_point_count = int(header_row[2])
 
-        def parse_data_row(self, data_row):
+        def parse_data_row(self, data_row, sequence):
             # Time
             year = int(data_row[0][:4])
             month = int(data_row[0][4:6])
@@ -177,7 +217,37 @@ class HurdatCatalog:
             r64_sw_nmi = int(data_row[18])
             r64_nw_nmi = int(data_row[19])
             # create and store track point
-            self.track_points.append(self.TrackPoint(year, month, day, hour, minute, record_identifier, status, lat_y, hemisphere_ns, lon_x, hemisphere_ew, max_wind_kts, min_pressure_mb, r34_ne_nmi, r34_se_nmi, r34_sw_nmi, r34_nw_nmi, r50_ne_nmi, r50_se_nmi, r50_sw_nmi, r50_nw_nmi, r64_ne_nmi, r64_se_nmi, r64_sw_nmi, r64_nw_nmi))
+            self.track_points.append(self.TrackPoint(year, month, day, hour, minute, record_identifier, status, lat_y, hemisphere_ns, lon_x, hemisphere_ew, max_wind_kts, min_pressure_mb, r34_ne_nmi, r34_se_nmi, r34_sw_nmi, r34_nw_nmi, r50_ne_nmi, r50_se_nmi, r50_sw_nmi, r50_nw_nmi, r64_ne_nmi, r64_se_nmi, r64_sw_nmi, r64_nw_nmi, sequence))
+
+        def header_to_list(self, pad=False):
+            ret =[self.basin + str(self.cyclone_number).zfill(2) + str(self.year)
+                  ,self.name
+                  ,str(self.track_point_count)]
+
+            if pad:
+                ret.append['','','','','','','','','','','','','','','','','']
+
+            return ret
+
+        def to_hurdat_dataframe(self):
+            data = []
+            data.append(self.header_to_list(True))
+            for point in self.track_points:
+                data.append(point.to_hurdat_list())
+            return pd.DataFrame(data, columns=self.df_hurdat_headers)
+   
+        def to_model_dataframe(self):
+            data = []
+            data_front = [self.name
+                          ,self.cyclone_number
+                          ,self.basin]
+            data_back = [self.rmax_nmi
+                         ,self.fspeed_kts
+                         ,self.gwaf]
+            for point in self.track_points:
+                temp_row = data_front + point.to_model_list() + data_back
+                data.append(temp_row)
+            return pd.DataFrame(data, columns=self.model_headers)
 
     def __init__(self, catalog_file_uri):
         self.catalog_file_uri = catalog_file_uri
@@ -190,7 +260,7 @@ class HurdatCatalog:
         self.storm_data = pd.DataFrame()
         self.storm_data = pd.read_csv(catalog_file_uri)
         self.storm_data = self.storm_data.applymap((lambda x:  str.strip(x) if isinstance(x, str) else x))
-        self.storm_data.drop(self.storm_data.columns[-1], 1, inplace=True)
+        self.storm_data.drop(self.storm_data.columns[-1], 1, inplace=True) # dropping last column because hurdat has trailing commas -.-
         self.storm_data.fillna('', inplace=True)
 
         storm_list = self.storm_data.values.tolist()
@@ -205,10 +275,11 @@ class HurdatCatalog:
                 storm_temp = self.HurdatStormSystem()
                 storm_temp.parse_header_row(curr_row)
                 catalog_iter += 1
-
+                seq = 0
                 storm_count = catalog_iter + storm_temp.track_point_count
                 while catalog_iter < storm_count:
-                    storm_temp.parse_data_row(storm_list[catalog_iter])
+                    storm_temp.parse_data_row(storm_list[catalog_iter], seq)
+                    seq += 1
                     catalog_iter += 1
             
             self.storm_catalog.append(storm_temp)

@@ -24,4 +24,6 @@ def hurricane_function_form():
 def table_test():
     catalog = hu.HurdatCatalog(r'Documentation\Hurricane\HURDAT\hurdat2-1851-2015-070616_with_header.txt')
     
-    return render_template("html/hurricane_table_test.html", name="Catalog Data Frame", data=catalog.storm_data.head().to_html())
+    # data_table = catalog.storm_data.head().to_html()
+    storm_data_table = catalog.storm_catalog[0].to_model_dataframe().to_html()
+    return render_template("html/hurricane_table_test.html", name="Catalog Data Frame", data=storm_data_table)

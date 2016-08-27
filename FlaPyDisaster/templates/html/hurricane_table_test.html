@@ -1,0 +1,18 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title>Hurricane Table Test</title>
+</head>
+<body>
+    <h1>Table Test</h1>
+    <div>
+        
+        {% block content %}
+        <h1>{{name}}</h1>
+        {{data | safe}}
+        {% endblock %}
+    </div>
+</body>
+</html>

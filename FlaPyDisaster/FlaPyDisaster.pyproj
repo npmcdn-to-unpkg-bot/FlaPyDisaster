@@ -107,6 +107,7 @@
     <Content Include="Documentation\Explosion\web_links.txt" />
     <Content Include="Documentation\Hurricane\AIRCurrents__Wind_Profiles_in_Parametric_Hurricane_Models.pdf" />
     <Content Include="Documentation\Hurricane\HURDAT\hurdat2-1851-2015-070616.txt" />
+    <Content Include="Documentation\Hurricane\HURDAT\hurdat2-1851-2015-070616_with_header.txt" />
     <Content Include="Documentation\Hurricane\HURDAT\hurdat2-format-atlantic.pdf" />
     <Content Include="Documentation\Hurricane\NWS23\K_Factor.PNG" />
     <Content Include="Documentation\Hurricane\NWS23\NOAA_NWS23_Inflow_Calcs.xlsx" />
@@ -146,6 +147,7 @@
     <Content Include="static\leaflet\leaflet_draw-master\leaflet.draw.js" />
     <Content Include="static\scripts\hello.js" />
     <Content Include="static\scripts\inits.js" />
+    <Content Include="templates\html\hurricane_table_test.html" />
     <Content Include="templates\js\leaflet_test.js" />
     <Content Include="static\scripts\unit_conversions.js" />
     <Content Include="templates\html\asteroid.html" />

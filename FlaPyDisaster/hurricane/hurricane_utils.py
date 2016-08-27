@@ -2,6 +2,7 @@
 from collections import namedtuple
 import pandas as pd
 import csv 
+import copy
 def load_hurdat():
     pass
 
@@ -176,6 +177,7 @@ class HurdatCatalog:
 
         def __init__(self, storm_data = None, fspeed_kts = 10, rmax_nmi = 15, gwaf = 0.9):
             """
+            Initializer function
             :param list of list storm_data: list of list representing the raw data rows of the storm import file
             :param int fspeed_kts: forward speed of the storm.  This will eventually be calculated at each track point
             :param int rmax_nmi: radius of maximum winds of the storm.  constant for the entiere storm
@@ -191,11 +193,17 @@ class HurdatCatalog:
             self.name = None
             self.track_point_count = None
             self.track_points = []
+            self.source_data = None
 
             if(storm_data != None):
                 self.parse_storm_data(storm_data)
 
         def parse_storm_data(self, storm_data):
+            """
+            Parse a storm data set, formatted as list of lists.  The input data is not altered
+            """
+            # todo cache the list data
+            self.source_data = copy.deepcopy(storm_data)
             # parse storm level parameters from first row of data table
             self.parse_header_row(storm_data[0])
 
@@ -204,10 +212,13 @@ class HurdatCatalog:
             storm_data.pop(0)
 
             # parse data rows
-            for row in storm_data.iterrows():
+            for row in storm_data[1:]:
                parse_data_row(row)
 
         def parse_header_row(self, header_row):
+            """
+            Parse the header row of the hurdat format
+            """
             self.basin = header_row[0][:2]
             self.cyclone_number = int(header_row[0][2:4])
             self.year = int(header_row[0][4:])
@@ -215,6 +226,9 @@ class HurdatCatalog:
             self.track_point_count = int(header_row[2])
 
         def parse_data_row(self, data_row, sequence):
+            """
+            Parse a track point data row of the hurdat format
+            """
             # Time
             year = int(data_row[0][:4])
             month = int(data_row[0][4:6])
@@ -257,6 +271,9 @@ class HurdatCatalog:
             self.track_points.append(self.TrackPoint(year, month, day, hour, minute, record_identifier, status, lat_y, hemisphere_ns, lon_x, hemisphere_ew, max_wind_kts, min_pressure_mb, r34_ne_nmi, r34_se_nmi, r34_sw_nmi, r34_nw_nmi, r50_ne_nmi, r50_se_nmi, r50_sw_nmi, r50_nw_nmi, r64_ne_nmi, r64_se_nmi, r64_sw_nmi, r64_nw_nmi, sequence))
 
         def header_to_list(self, pad=False):
+            """
+            Returns the header as a list.  Optionally pads the list to the correct length to put into a hurdat format csv file
+            """
             ret =[self.basin + str(self.cyclone_number).zfill(2) + str(self.year)
                   ,self.name
                   ,str(self.track_point_count)]
@@ -267,10 +284,18 @@ class HurdatCatalog:
             return ret
 
         def to_hurdat_dataframe(self):
+            """
+            returns the source hurdat data as a dataframe.  Data is constructed from track points if needed.
+            """
             data = []
-            data.append(self.header_to_list(True))
-            for point in self.track_points:
-                data.append(point.to_hurdat_list())
+            #if(self.source_data == None):
+            #    data.append(self.header_to_list(True))
+            #    for point in self.track_points:
+            #        data.append(point.to_hurdat_list())
+            #else:
+            #    data = self.source_data
+
+            data = self.source_data
             return pd.DataFrame(data, columns=self.df_hurdat_headers)
    
         def to_model_dataframe(self):

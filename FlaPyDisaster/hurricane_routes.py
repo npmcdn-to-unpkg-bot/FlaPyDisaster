@@ -13,8 +13,12 @@ def hurricane_page():
 @app.route('/hurricane/main_file', methods = ['POST'])
 def hurricane_file_form():
     filename = request.form['file_uri']
+    catalog = hu.HurdatCatalog(filename)
+    #storm_data_table = catalog.storm_catalog[0].to_model_dataframe().to_html()
+    storm_data_table = catalog.storm_catalog[0].to_hurdat_dataframe().to_html()
     print(filename)
-    return redirect(url_for('hurricane_page'))
+    return render_template("html/hurricane_table_test.html", name="Catalog Data Frame", data=storm_data_table)
+    #return redirect(url_for('hurricane_page'))
 
 @app.route('/hurricane/main_function', methods = ['POST'])
 def hurricane_function_form():

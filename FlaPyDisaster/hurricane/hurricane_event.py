@@ -4,19 +4,18 @@ import csv
 ###########################################
 # struct like classes for hurricane event #
 ###########################################
-class track_point():
-    def __init__(self, season_year, storm_num, storm_name, timestamp, lat, lon, MaxWind, Cp, Rmax, Fspeed, bearing, seq, GWAF):
-        pass
 
-class output_point():
-    def __init__(self, windspeed_nws23, friction):
-        pass
 
 #########################
 # hurricane event class #
 #########################
-class hurricane_event():
-    def __init__(self, name, track_filetrack_file_uri, bbox, block_per_deg_x = 10, block_per_deg_y = 10):
+class ModelHurricaneEvent():
+    class TrackPoint():
+        def __init__(self, catalog_number, storm_name, basin, timestamp, lat_y, lon_x, MaxWindmax_wind_kts, min_cp_mb, sequence, rmax_nmi, bearing, fspeed_kts, GWAF):
+            pass
+        pass
+    model_headers = ["catalog_number", "name", "basin", "timestamp", "lat_y", "lon_x", "max_wind_kts", "min_cp_mb", "sequence", "rmax_nmi", "fspeed_kts", "gwaf"]
+    def __init__(self, name, track_file_uri, bbox, block_per_deg_x = 10, block_per_deg_y = 10):
         """
         :param geno.BoundingBox bbox: input bounding box
         """
@@ -26,12 +25,21 @@ class hurricane_event():
         self.track_points = []
         self.grid = geno.LatLonGrid(bbox.top_lat_y, bbox.bot_lat_y, bbox.left_lon_x, bbox.right_lon_x, block_per_deg_x, block_per_deg_y)
     
-    def load(self):
+    def load_track_file(self, track_file_uri = None):
+        if track_file_uri != None:
+            self.track_file_uri = track_file_uri
+
         with open(self.track_file_uri, 'r') as tsv:
             tsv_reader = csv.reader(tsv, delimiter = '\t')
             for row in tsv_reader:
                 # process row into track
                 pass
+        pass
+
+    def parse_data_row(self):
+        pass
+
+    def from_hurdat_source(self):
         pass
 
     def get_2d_grid(self):

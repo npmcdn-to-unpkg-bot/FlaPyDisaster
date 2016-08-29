@@ -26,3 +26,6 @@ Things to do:
 	- Science
 		-) validate asteroid calculations with something?
 		-) implement math for a hurricane model
+			-] Inflow angle needs to be done
+			-] make sure units are consistent (m/s, mph, km/h, nauts, miles, km, nautical miles ... so many)
+			-] Validate

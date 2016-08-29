@@ -11,6 +11,7 @@ FlaPyDisaster/web.config
 FlaPyDisaster/web.debug.config
 *.pyproj
 FlaPyDisaster/env
+*.sln
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs

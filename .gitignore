@@ -7,11 +7,11 @@
 *.userosscache
 *.sln.docstates
 *.pyc
-FlaPyDisaster/web.config
-FlaPyDisaster/web.debug.config
+web.config
+web.debug.config
 *.pyproj
-FlaPyDisaster/env
 *.sln
+ptvs_virtualenv_proxy.py
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs

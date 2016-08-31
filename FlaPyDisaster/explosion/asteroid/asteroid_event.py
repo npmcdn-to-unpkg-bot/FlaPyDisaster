@@ -1,10 +1,11 @@
 ﻿import explosion.asteroid.asteroid_math as astr_math
 import explosion.explosion_math as expl_math
-from general.general_objects import BoundingBox, LatLonGrid
+# from general.general_objects import BoundingBox, LatLonGrid
 from general import unit_conversions, general_geometry
 import math
 import os
 import mapping.leaflet_map as lm
+
 
 class AsteroidEvent:
     """
@@ -38,7 +39,7 @@ class AsteroidEvent:
     def get_newmark_overpressure(self, radius_gz_m):
         """
         Get the overpressure of the event at a given radius from ground zero, using the Newmark overpressure equation.
-        :param radius_gz_m: radius from ground zero in meters
+        :param float radius_gz_m: radius from ground zero in meters
         :returns: peak overpressure in bars
         """
         airburst_mttnt = unit_conversions.energy_conversion(self.airburst_energy_j, unit_conversions.EnergyUnits.joules, unit_conversions.EnergyUnits.Megaton_TNT)
@@ -47,14 +48,14 @@ class AsteroidEvent:
         hyp_distance_m = general_geometry.FindHypotenuseRightTriangle(radius_gz_m, self.airburst_alt_m)
         return expl_math.NewmarkOverpressure(airburst_mttnt, hyp_distance_m)
 
-    def get_effect_2d_grid(self, as_string = False, num_digits = 2, force_calc = False):
+    def get_effect_2d_grid(self, as_string=False, num_digits=2, force_calc=False):
         """
         Get the peak overpressure at each point of the event grid in a 2d structure (list of list).
         :param as_string: makes the outpu values strings instead of floats
         :param num_digits: rounds the string values to the specified number of digits.  default is 2
         :returns: peak overpressure in a list of lists (list of rows)
         """
-        if(self.effect_2d_grid != None and as_string == False and force_calc == False):
+        if self.effect_2d_grid is not None and as_string == False and force_calc == False:
             return self.effect_2d_grid
 
         block_grid = []
@@ -80,7 +81,7 @@ class AsteroidEvent:
             print(e)
 
         self.effect_2d_grid = block_grid
-        
+
         #if(as_string):
         #    for block_y_2 in range(y_max):
         #        for block_x_2 in range(x_max):
@@ -131,12 +132,12 @@ class AsteroidEvent:
                 out_str = out_str + "Block per degree y: " + str(self.grid.block_per_degree_t)
                 write_file.write(out_str + "\n")
 
-            for row in grid_res:
-                out = ""
-                for val in row:
-                    out = out + val + "\t"
-                out.rstrip()
-                write_file.write(out + "\n")
+            # for row in grid_res:
+            #     out = ""
+            #     for val in row:
+            #         out = out + val + "\t"
+            #     out.rstrip()
+            #     write_file.write(out + "\n")
 
         with open(file_uri_no_ext + ".inf", "w") as write_file_inf:
             write_file_inf.write("Top Lat\t" + str(self.grid.top_lat_y) + "\n")
@@ -162,11 +163,11 @@ class AsteroidEvent:
         min <= value < max
         geojson val is max of bin
         """
-        flat_grid = self.get_effect_flat_grid()    
+        flat_grid = self.get_effect_flat_grid()
 
         if(max_val == None or min_val == None):
             val_list = list(map((lambda x: x[0]), flat_grid))
-        
+
         if(max_val == None):
             max_val = max(val_list)
         if(min_val == None):
@@ -183,11 +184,11 @@ class AsteroidEvent:
                 geojson_collection.append(curr_geojson['geojson'])
             curr_max = curr_max + step
             curr_min = curr_min + step
-        
+
         return geojson_collection
 
     def grid_to_geojson_collection(self):
-        flat_grid = self.get_effect_flat_grid()    
+        flat_grid = self.get_effect_flat_grid()
 
         geojson_collection = list(map((lambda x: lm.create_feature(x[1], lm.geojson_geometry.point, x[0])['geojson']), flat_grid))
 

@@ -11,6 +11,7 @@
     :method get_height: Returns the height of the bounding box in degrees (top minus bottom)
     :method translate: STUB Returns a copy of the current bounding box, translated by x, y degrees 
     """
+
     def __init__(self, top_lat_y, bot_lat_y, right_lon_x, left_lon_x):
         self.top_lat_y = top_lat_y
         self.bot_lat_y = bot_lat_y
@@ -19,8 +20,10 @@
 
     def get_width(self):
         return self.right_lon_x - self.left_lon_x
+
     def get_height(self):
         return self.top_lat_y - self.bot_lat_y
+
 
 class LatLonGrid(BoundingBox):
     """
@@ -33,6 +36,7 @@ class LatLonGrid(BoundingBox):
     :method get_block_width: Get the block width in degrees (all blocks are the same width)
     :method get_block_height: Get the block height in degrees (all blocks are the same height)
     """
+
     def __init__(self, top_lat_y, bot_lat_y, left_lon_x, right_lon_x, block_per_degree_x, block_per_degree_y):
         self.block_per_degree_y = block_per_degree_y
         self.block_per_degree_x = block_per_degree_x
@@ -43,13 +47,13 @@ class LatLonGrid(BoundingBox):
         block_x = (lon_x - self.left_lon_x) * self.block_per_degree_x
         block_y = (lat_y - self.bot_lat_y) * self.block_per_degree_y
 
-        return (block_x, block_y)
+        return [block_x, block_y]
 
     def get_lat_lon(self, block_x, block_y):
         lat_y = self.bot_lat_y + (block_y / self.block_per_degree_y)
         lon_x = self.left_lon_x + (block_x / self.block_per_degree_x)
 
-        return (lat_y, lon_x)
+        return [lat_y, lon_x]
 
     def get_block_width_x(self):
         return self.get_width() * self.block_per_degree_x

@@ -1,24 +1,22 @@
-from general.general_objects import BoundingBox
+# from general.general_objects import BoundingBox
 import geojson
 
-# class to mirror javascript leaflet layer server side
-class leaflet_layer:
-    def __init__(self, **kwargs):
-        
-        geojson = []
 
-        return super().__init__(**kwargs)
+# class to mirror javascript leaflet layer server side
+class LeafletLayer:
+    def __init__(self):
+        self.geo_json = []
+
 
 # Class to mirror javascript leaflet map server side
-class leaflet_map:
-    def __init__(self, **kwargs):
+class LeafletMap:
+    def __init__(self):
+        self.center_latlng = (0, 0)
+        self.zoom = 13
+        self.layers = {}
 
-        center_latlng = (0,0)
-        zoom = 13
-        layers = {}
-        return super().__init__(**kwargs)
-    
-class geojson_geometry:
+
+class GeojsonGeometry:
     """
     Container enum-like class containing the different GeoJSON geometry types
     """
@@ -31,12 +29,13 @@ class geojson_geometry:
     geo_feature = 'feature'
     geo_featurecollection = 'featurecollection'
 
-    def get_geometry_names():
-        return [point, multipoint, line, multiline, polygon, multipolygon, geo_feature, geo_featurecollection]
+    def get_geometry_names(self):
+        return [self.point, self.multipoint, self.line, self.multiline, self.polygon, self.multipolygon, self.geo_feature, self.geo_featurecollection]
 
-def create_feature(geometry, geo_type, val, id = None, color = (255, 0,0), weight = 10, opacity = 1.0):
+
+def create_feature(geometry, geo_type, val, id=None, color=(255, 0, 0), weight=10, opacity=1.0):
     """
-    :param geometry: Geometry struture that creates geojson string.  Options are:
+    :param geometry: Geometry structure that creates geojson string.  Options are:
                      Point: (lng, lat) as tuple
                      MultiPoint: [Point, Point] as array of points
                      Line(string): [Point, Point, Point] as array of points
@@ -48,36 +47,35 @@ def create_feature(geometry, geo_type, val, id = None, color = (255, 0,0), weigh
                     Multipolygon: [Polygon, Polygon] as array of polygons (must confirm...?)
     :param geo_type: string indicating the geometry type, must match id strings from class geojson_geometry
     :param val: value to put into properties.value for mapping and style color matching
-    :param id - optional: id for the geojson string
+    :param id: id for the geojson string
     :param color: a 3 value tuple containing an rgb value
     :param weight: for lines/polygons, line width; for points, point size
     :param opacity: opacity of layer in leaflet, 1.0 = 100%, 0 = 0%
     :returns: dictionary with geojson feature string and a leaflet style created from input parameters
     """
 
-    geo = None
     try:
-        if (geo_type == geojson_geometry.point):
+        if geo_type == GeojsonGeometry.point:
             geo = geojson.Point(geometry)
-        elif (geo_type == geojson_geometry.multipoint):
+        elif geo_type == GeojsonGeometry.multipoint:
             geo = geojson.MultiPoint(geometry)
-        elif (geo_type == geojson_geometry.line):
+        elif geo_type == GeojsonGeometry.line:
             geo = geojson.LineString(geometry)
-        elif (geo_type == geojson_geometry.multiline):
+        elif geo_type == GeojsonGeometry.multiline:
             geo = geojson.MultiLineString(geometry)
-        elif (geo_type == geojson_geometry.polygon):
+        elif geo_type == GeojsonGeometry.polygon:
             geo = geojson.Polygon(geometry)
-        elif (geo_type == geojson_geometry.multipolygon):
+        elif geo_type == GeojsonGeometry.multipolygon:
             geo = geojson.MultiPolygon(geometry)
         else:
-            print ("Unsupported geometry type: " + geo_type)
+            print("Unsupported geometry type: " + geo_type)
             return
     except Exception as e:
-        print (e + "\n probably wrong input data structure for " + geo_type)
+        print(e, "\n probably wrong input data structure for " + geo_type)
         return
-    
-    style = None # leaflet_style_creator()
-    geo = geojson.Feature(id = id, geometry = geo, properties = {"value":val})
+
+    style = None  # leaflet_style_creator()
+    geo = geojson.Feature(id=id, geometry=geo, properties={"value": val})
 
     ret = {}
     ret['geojson'] = geo

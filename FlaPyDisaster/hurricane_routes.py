@@ -1,4 +1,4 @@
-﻿from flask import url_for, request, render_template, redirect
+﻿import flask as fl
 from app import app
 from hurricane import hurricane_utils as hu
 
@@ -6,22 +6,22 @@ from hurricane import hurricane_utils as hu
 # hurricane main
 @app.route('/hurricane', methods=['GET'])
 def hurricane_page():
-    return render_template('html/hurricane.html')
+    return fl.render_template('html/hurricane.html')
 
 
 @app.route('/hurricane/main_file', methods=['POST'])
 def hurricane_file_form():
-    filename = request.form['file_uri']
+    filename = fl.request.form['file_uri']
     catalog = hu.HurdatCatalog(filename)
     storm_data_table = catalog.storm_catalog[0].to_model_dataframe().to_html()
     # storm_data_table = catalog.storm_catalog[0].to_hurdat_dataframe().to_html()
     print(filename)
-    return render_template("html/hurricane_table_test.html", name="Catalog Data Frame", data=storm_data_table)
+    return fl.render_template("html/hurricane_table_test.html", name="Catalog Data Frame", data=storm_data_table)
 
 
 @app.route('/hurricane/main_function', methods=['POST'])
 def hurricane_function_form():
-    return redirect(url_for('hurricane_page'))
+    return fl.redirect(fl.url_for('hurricane_page'))
 
 
 @app.route('/hurricane/table_test', methods=['GET'])
@@ -30,4 +30,4 @@ def table_test():
 
     # data_table = catalog.storm_data.head().to_html()
     storm_data_table = catalog.storm_catalog[0].to_model_dataframe().to_html()
-    return render_template("html/hurricane_table_test.html", name="Catalog Data Frame", data=storm_data_table)
+    return fl.render_template("html/hurricane_table_test.html", name="Catalog Data Frame", data=storm_data_table)

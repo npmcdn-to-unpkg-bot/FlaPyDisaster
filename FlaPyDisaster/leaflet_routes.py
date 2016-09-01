@@ -1,4 +1,4 @@
-﻿from flask import request, render_template, jsonify
+﻿import flask as fl
 from app import app
 import geojson
 import mapping.leaflet_map as lm
@@ -6,14 +6,14 @@ import mapping.leaflet_map as lm
 
 @app.route('/leaflet')
 def leaflet_redirect():
-    return render_template('html/leaflet_test.html')
+    return fl.render_template('html/leaflet_test.html')
 
 
 @app.route('/leaflet/test_latlng', methods=['POST'])
 def leaflet_test_latlng():
     print("leaflet test in Flask.")
-    lat = request.json['lat']
-    lng = request.json['lng']
+    lat = fl.request.json['lat']
+    lng = fl.request.json['lng']
     print("lat: " + lat)
     print("lng: " + lng)
     return "Success"
@@ -21,7 +21,7 @@ def leaflet_test_latlng():
 
 @app.route('/leaflet/test_js')
 def leaflet_test_js():
-    return render_template('/js/leaflet_test.js')
+    return fl.render_template('/js/leaflet_test.js')
 
 
 @app.route('/leaflet/geojson_test')
@@ -33,7 +33,7 @@ def leaflet_geojson_test():
 
     line_feature = geojson.Feature(geometry=line_str, properties={"value": 5})
 
-    return jsonify(result=line_feature, max=10, min=2)
+    return fl.jsonify(result=line_feature, max=10, min=2)
 
 
 @app.route('/leaflet/geojson_points_test')
@@ -47,4 +47,4 @@ def leaflet_geojson_points_test():
 
     pt_feature_dict = lm.create_feature(points, lm.GeojsonGeometry.multipoint, 1)
 
-    return jsonify(result=pt_feature_dict['geojson'], max=10, min=2)
+    return fl.jsonify(result=pt_feature_dict['geojson'], max=10, min=2)

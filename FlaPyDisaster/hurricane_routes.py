@@ -27,10 +27,13 @@ def hurricane_file_form():
     global catalog
     catalog = hu.HurdatCatalog(file_uri)
 
-    storm_data_table = catalog.storm_catalog[0].to_model_dataframe().to_html()
+    storm_data_table = catalog.storm_catalog[0].to_model_dataframe().to_html(classes='track_table')
     # storm_data_table = catalog.storm_catalog[0].to_hurdat_dataframe().to_html()
     # print(catalog.storm_catalog[0].track_to_geojson())
-    return fl.render_template("html/hurricane_table_test.html", name="Catalog Data Frame", data=storm_data_table)
+    return fl.render_template("html/hurricane_table_test.html"
+                              , table_name="Catalog Data Frame"
+                              , data=storm_data_table
+                              , catalog_names=catalog.get_names())
 
 
 @app.route('/hurricane/hurdat_track_geojson', methods=['GET'])
@@ -51,8 +54,26 @@ def hurricane_function_form():
 
 @app.route('/hurricane/table_test', methods=['GET'])
 def table_test():
-    catalog = hu.HurdatCatalog(r'Documentation\Hurricane\HURDAT\hurdat2-1851-2015-070616_with_header.txt')
+    storm_catalog = hu.HurdatCatalog(r'Documentation\Hurricane\HURDAT\hurdat2-1851-2015-070616_with_header.txt')
 
-    # data_table = catalog.storm_data.head().to_html()
-    storm_data_table = catalog.storm_catalog[0].to_model_dataframe().to_html()
+    # data_table = storm_catalog.storm_data.head().to_html()
+    storm_data_table = storm_catalog.storm_catalog[0].to_model_dataframe().to_html()
     return fl.render_template("html/hurricane_table_test.html", name="Catalog Data Frame", data=storm_data_table)
+
+
+@app.route('/hurricane/hurricane_table_js')
+def hurricane_tables_js():
+    return fl.render_template('/js/hurricane_tables.js')
+
+
+@app.route('/hurricane/change_table')
+def change_table():
+    name = fl.request.args.get('name', '', type=str)
+
+    global catalog
+    ret_list = catalog.get_storm_by_name(name)
+    ret_list.reverse()
+    print(len(ret_list))
+    ret_data = ret_list[0].to_model_dataframe().to_html(classes='track_table')
+
+    return fl.jsonify(table=ret_data)

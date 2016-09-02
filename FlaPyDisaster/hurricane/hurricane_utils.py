@@ -199,6 +199,8 @@ class HurdatCatalog:
             self.track_points = []
             self.source_data = None
 
+            self.unique_name = ''
+
             if storm_data is not None:
                 self.parse_storm_data(storm_data)
 
@@ -214,10 +216,11 @@ class HurdatCatalog:
             # drop first row from local copy of the dataframe
             # storm_data.drop(storm_data.index[[0]], inplace = True)
             storm_data.pop(0)
-
+            seq = 0
             # parse data rows
             for row in storm_data[1:]:
-                self.parse_data_row(row)
+                self.parse_data_row(row, seq)
+                seq += 1
 
         def parse_header_row(self, header_row):
             """
@@ -228,6 +231,8 @@ class HurdatCatalog:
             self.year = int(header_row[0][4:])
             self.name = header_row[1]
             self.track_point_count = int(header_row[2])
+
+            self.unique_name = str(self.year) + "_" + str(self.cyclone_number) + "_" + self.name + "_" + self.basin
 
         def parse_data_row(self, data_row, sequence):
             """
@@ -392,3 +397,10 @@ class HurdatCatalog:
                     catalog_iter += 1
 
             self.storm_catalog.append(storm_temp)
+
+    def get_names(self):
+        return list(map((lambda x: x.unique_name), self.storm_catalog))
+
+    def get_storm_by_name(self, name):
+        storm = list(filter((lambda x: x.unique_name == name), self.storm_catalog))
+        return storm

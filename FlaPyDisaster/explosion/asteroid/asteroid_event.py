@@ -191,7 +191,7 @@ class AsteroidEvent:
     def grid_to_geojson_collection(self):
         flat_grid = self.get_effect_flat_grid()
 
-        geojson_collection = list(map((lambda x: lm.create_feature(x[1], lm.GeojsonGeometry.point, x[0])['geojson']), flat_grid))
+        geojson_collection = list(map((lambda x: lm.create_feature(x[0], lm.GeojsonGeometry.point, x[1])['geojson']), flat_grid))
 
         return geojson_collection
 

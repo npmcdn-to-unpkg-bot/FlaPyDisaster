@@ -7,6 +7,8 @@ It contains the definition of routes and views for the application.
 from flask import Flask
 
 app = Flask(__name__)
+UPLOAD_FOLDER = r'tmp/'
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 # routes.py after app is created
 from routes import *
 

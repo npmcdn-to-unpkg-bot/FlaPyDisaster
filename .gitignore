@@ -11,6 +11,8 @@ web.config
 web.debug.config
 *.pyproj
 *.sln
+FlaPyDisaster/tmp/*
+!*.keep
 ptvs_virtualenv_proxy.py
 
 # IntelliJ

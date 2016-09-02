@@ -274,6 +274,43 @@ function geojson_asteroid_points_test_style() {
     )
 }
 
+/*
+ * TEST METHOD
+ * funtion to get a geoJSON multipoint layer from the hurdat hurricane event and plot it on the leaflet map with a dynamic point style
+ */
+function geojson_hurdat_track() {
+    $.getJSON("{{ url_for('hurricane_geojson_test') }}", {},
+        function (data) {
+            // Add with static style.  Need to implement dynamic styles somehow
+
+            if (!layers.hasOwnProperty('point_geoJSON_style')) {
+                var pointsLayer = L.geoJson([], {
+                    pointToLayer: function (feature, latlng) {
+                        var geojsonMarkerOptions = {
+                            radius: 8,
+                            //fillColor: "#ff7800",
+                            //fillColor: get_interpolated_color(feature.properties.value, data.max, data.min),
+                            fillColor: color_pretty_breaks(feature.properties.value, data.colors, data.bins),
+                            color: "#000",
+                            weight: 1,
+                            opacity: 1,
+                            fillOpacity: 1.0
+                        };
+                        return L.circleMarker(latlng, geojsonMarkerOptions);
+                    }
+                }).addTo(mymap)
+                layers['point_geoJSON_style'] = pointsLayer
+            }
+
+            for (var i = 0; i < data.result.length; i++) {
+                var geojson = data.result[i]
+                layers['point_geoJSON_style'].addData(geojson)
+            }
+
+        }
+    )
+}
+
 
 /*****************
  * Style methods *

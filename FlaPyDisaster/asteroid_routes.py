@@ -99,7 +99,7 @@ def asteroid_map_event():
     return fl.jsonify(result=geo, max=10, min=2)
 
 
-@app.route('/asteroid/map_event_geojsoncollection')
+@app.route('/asteroid/map_event_geojsoncollection', methods=['GET'])
 def asteroid_map_event_geojsoncollection():
     color_ramp = general_colors.ColorPalettes.hex_to_rgb(general_colors.ColorPalettes.simple_escalating_5, 255)
 

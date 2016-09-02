@@ -2,6 +2,7 @@
 # from collections import namedtuple
 import pandas as pd
 # import csv
+import leaflet_map as lm
 import copy
 import math
 
@@ -127,6 +128,19 @@ class HurdatCatalog:
                 self.r64_nw_nmi = r64_nw_nmi
 
                 self.sequence = sequence
+
+            def point_to_xyz(self):
+                ret_val = []
+                lat = self.lat_y if self.hemisphere_ns == 'N' else self.lat_y * -1
+                lon = self.lon_x if self.hemisphere_ew == 'E' else self.lon_x * -1
+                val = self.max_wind_kts
+                return [lat, lon, val]
+
+            def for_geojson_point(self):
+                lon = self.lon_x if self.hemisphere_ew == 'E' else self.lon_x * -1
+                lat = self.lat_y if self.hemisphere_ns == 'N' else self.lat_y * -1
+                val = self.max_wind_kts
+                return [[lon, lat], val]
 
             def to_hurdat_list(self):
                 """
@@ -334,9 +348,14 @@ class HurdatCatalog:
                 data.append(temp_row)
             return pd.DataFrame(data, columns=self.model_headers)
 
-        def track_to_geojson(self):
-            # map((lambda x: lm self.source_data
+        def track_to_xyz_list(self):
+            print(str(self.track_points[0].lon_x))
             pass
+
+        def track_to_geojson(self):
+            temp_list = list(map((lambda x: x.for_geojson_point()), self.track_points))
+            geojson_collection = list(map((lambda x: lm.create_feature(x[0], lm.GeojsonGeometry.point, x[1])['geojson']), temp_list))
+            return geojson_collection
 
     def __init__(self, catalog_file_uri):
         self.catalog_file_uri = catalog_file_uri

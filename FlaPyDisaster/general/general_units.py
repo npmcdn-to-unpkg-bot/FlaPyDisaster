@@ -24,6 +24,7 @@ class DistanceUnits:
     feet = 'ft'
     meter = 'm'
     kilometer = 'km'
+    degrees = 'deg'
 
     def get_units_list(self):
         return [self.feet, self.meter, self.kilometer, self.degrees]
@@ -62,7 +63,7 @@ class EnergyUnits:
     Kiloton_TNT = 'kt_tnt'
 
     def get_units_list(self):
-        return [self.kmps, self.mps, self.mph]
+        return [self.joules, self.Megaton_TNT, self.Kiloton_TNT]
 
     @staticmethod
     def get_pretty_units():

@@ -1,10 +1,9 @@
-﻿import flask as fl
-from app import app
+﻿from app import app
 # needed for Flask to run
 from hurricane_routes import *
 from asteroid_routes import *
 from leaflet_routes import *
-from general import unit_conversions
+from general import general_units
 
 
 # server root
@@ -25,7 +24,7 @@ def unit_conversion_route():
     number = fl.request.args.get('number', 0, type=float)
     unit_in = fl.request.args.get('unit_in', '', type=str)
     unit_out = fl.request.args.get('unit_out', '', type=str)
-    new_num = unit_conversions.distance_conversion(number, unit_in, unit_out)
+    new_num = general_units.distance_conversion(number, unit_in, unit_out)
     return fl.jsonify(result=new_num)
 
 

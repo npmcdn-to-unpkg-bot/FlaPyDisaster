@@ -1,8 +1,6 @@
 ﻿import explosion.asteroid.asteroid_math as astr_math
 import explosion.explosion_math as expl_math
-# from general.general_objects import BoundingBox, LatLonGrid
-from general import unit_conversions, general_geometry
-import math
+from general import general_units, general_geometry
 import os
 import mapping.leaflet_map as lm
 
@@ -29,7 +27,7 @@ class AsteroidEvent:
         self.airburst_alt_m = astr_math.airburst_altitude(self.breakup_alt_m, self.diameter_m, self.density_kgpm3, self.angle_rad)
         self.is_airburst = self.airburst_alt_m > 0
         self.initial_energy_j = astr_math.kenetic_energy(self.density_kgpm3, self.diameter_m, self.init_velocity_mps)
-        self.ret_period_yr = astr_math.return_period_earth(unit_conversions.energy_conversion(self.initial_energy_j, unit_conversions.EnergyUnits.joules, unit_conversions.EnergyUnits.Megaton_TNT))
+        self.ret_period_yr = astr_math.return_period_earth(general_units.energy_conversion(self.initial_energy_j, general_units.EnergyUnits.joules, general_units.EnergyUnits.Megaton_TNT))
         self.breakup_velocity_mps = astr_math.velocity_at_altitude_pre_breakup(self.breakup_alt_m, self.init_velocity_mps, self.diameter_m, self.density_kgpm3, self.angle_rad)
         self.airburst_velocity_mps = astr_math.post_breakup_velocity(self.breakup_alt_m, self.breakup_velocity_mps, self.diameter_m, self.density_kgpm3, self.angle_rad, self.is_airburst)
         self.airburst_energy_j = astr_math.kenetic_energy(self.density_kgpm3, self.diameter_m, self.airburst_velocity_mps)
@@ -42,7 +40,7 @@ class AsteroidEvent:
         :param float radius_gz_m: radius from ground zero in meters
         :returns: peak overpressure in bars
         """
-        airburst_mttnt = unit_conversions.energy_conversion(self.airburst_energy_j, unit_conversions.EnergyUnits.joules, unit_conversions.EnergyUnits.Megaton_TNT)
+        airburst_mttnt = general_units.energy_conversion(self.airburst_energy_j, general_units.EnergyUnits.joules, general_units.EnergyUnits.Megaton_TNT)
         if radius_gz_m == 0:
             radius_gz_m = 0.1
         hyp_distance_m = general_geometry.find_hypotenuse_right_triangle(radius_gz_m, self.airburst_alt_m)
@@ -66,7 +64,7 @@ class AsteroidEvent:
                 grid_row = []
                 for block_x in range(x_max):
                     lat_lon = self.grid.get_lat_lon(block_x, block_y)
-                    radius_gz_m = unit_conversions.haversine_degrees_to_meters(lat_lon[0], lat_lon[1], self.ground_zero_latlon[0], self.ground_zero_latlon[1])
+                    radius_gz_m = general_units.haversine_degrees_to_meters(lat_lon[0], lat_lon[1], self.ground_zero_latlon[0], self.ground_zero_latlon[1])
                     newmark_pressure = self.get_newmark_overpressure(radius_gz_m)
                     earth_impacts = 0
                     point_info = newmark_pressure
@@ -165,6 +163,7 @@ class AsteroidEvent:
         geojson val is max of bin
         """
         flat_grid = self.get_effect_flat_grid()
+        val_list = []
 
         if max_val is None or min_val is None:
             val_list = list(map((lambda x: x[0]), flat_grid))
@@ -191,7 +190,7 @@ class AsteroidEvent:
     def grid_to_geojson_collection(self):
         flat_grid = self.get_effect_flat_grid()
 
-        geojson_collection = list(map((lambda x: lm.create_feature(x[0], lm.GeojsonGeometry.point, x[1])['geojson']), flat_grid))
+        geojson_collection = list(map((lambda x: lm.create_feature(x[1], lm.GeojsonGeometry.point, x[0])['geojson']), flat_grid))
 
         return geojson_collection
 

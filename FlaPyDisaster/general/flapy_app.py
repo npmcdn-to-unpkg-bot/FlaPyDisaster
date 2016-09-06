@@ -11,11 +11,13 @@ from hurricane import hurricane_utils as hu
 import math
 import geojson
 import mapping.leaflet_map as lm
+import time
 
 
 class FlaPyApp:
     def __init__(self):
         self.hurricane_catalog = None
+        self.current_hurricane_name = None
         self.asteroid_catalog = None
         self.asteroid_event = None
         pass
@@ -41,7 +43,7 @@ class FlaPyApp:
                                   , catalog_names=self.hurricane_catalog.get_names())
 
     def hurricane_geojson_test(self):
-        geo_collect = self.hurricane_catalog.storm_catalog[0].track_to_geojson()
+        geo_collect = self.hurricane_catalog.get_storm_by_name(self.current_hurricane_name)[0].track_to_geojson()
         color_ramp = genc.ColorPalettes.hex_to_rgb(genc.ColorPalettes.simple_escalating_5, 255)
         sorted_values = list(map((lambda x: x.properties['value']), geo_collect))
         sorted_values.sort()
@@ -63,12 +65,29 @@ class FlaPyApp:
         return fl.render_template('/js/hurricane_tables.js')
 
     def change_table(self, name):
-        ret_list = self.hurricane_catalog.get_storm_by_name(name)
-        ret_list.reverse()
-        print(len(ret_list))
-        ret_data = ret_list[0].to_model_dataframe().to_html(classes='track_table')
+        self.current_hurricane_name = name
+        storm = self.hurricane_catalog.get_storm_by_name(name)[0]
+        # ret_list = self.hurricane_catalog.get_storm_by_name(name)
+        print("Start")
+        start = time.time()
+        print(start)
+        storm.calculate_grid(10, 10, 15, 15)
+        end = time.time()
+        print("made It!")
+        print(end)
+        print(end - start)
+        ret_data = storm.to_model_dataframe().to_html(classes='track_table')
 
         return fl.jsonify(table=ret_data)
+
+    def map_hurricane_event(self):
+        storm = self.hurricane_catalog.get_storm_by_name(self.current_hurricane_name)[0]
+        geo_collect = storm.grid_to_geojson()
+        sorted_values = list(map((lambda x: x.properties['value']), geo_collect))
+        sorted_values.sort()
+        color_ramp = genc.ColorPalettes.hex_to_rgb(genc.ColorPalettes.simple_escalating_5, 255)
+        value_bins = genc.ColorPalettes.even_value_breaks(sorted_values, len(color_ramp))
+        return fl.jsonify(result=geo_collect, colors=color_ramp, bins=value_bins)
 
     #######################
     # Asteroid Interfaces #

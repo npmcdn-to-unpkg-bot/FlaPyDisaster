@@ -2,9 +2,13 @@
 # from collections import namedtuple
 import pandas as pd
 # import csv
-import leaflet_map as lm
+import mapping.leaflet_map as lm
 import copy
 import math
+import general.general_objects as geno
+import general.general_mapping as genm
+import general.general_units as genu
+import hurricane.hurricane_nws23 as hm
 
 
 # import mapping.leafletmap as lm
@@ -136,6 +140,11 @@ class HurdatCatalog:
                 val = self.max_wind_kts
                 return [lat, lon, val]
 
+            def point_lat_lon(self):
+                lat = self.lat_y if self.hemisphere_ns == 'N' else self.lat_y * -1
+                lon = self.lon_x if self.hemisphere_ew == 'E' else self.lon_x * -1
+                return [lat, lon]
+
             def for_geojson_point(self):
                 lon = self.lon_x if self.hemisphere_ew == 'E' else self.lon_x * -1
                 lat = self.lat_y if self.hemisphere_ns == 'N' else self.lat_y * -1
@@ -198,6 +207,8 @@ class HurdatCatalog:
             self.track_point_count = None
             self.track_points = []
             self.source_data = None
+            self.lat_lon_grid = None
+            self.result_grid = None
 
             self.unique_name = ''
 
@@ -360,6 +371,46 @@ class HurdatCatalog:
         def track_to_geojson(self):
             temp_list = list(map((lambda x: x.for_geojson_point()), self.track_points))
             geojson_collection = list(map((lambda x: lm.create_feature(x[0], lm.GeojsonGeometry.point, x[1])['geojson']), temp_list))
+            return geojson_collection
+
+        def calculate_grid(self, px_per_deg_x, px_per_deg_y, fspeed_kts, rmax_nmi, bbox = None):
+            if bbox is None:
+                lat_list = list(map(lambda x: x.point_lat_lon()[0], self.track_points))
+                lon_list = list(map(lambda x: x.point_lat_lon()[1], self.track_points))
+                # diff_lat = max(int(max(lat_list) - min(lat_list)), 1)
+                # diff_lon = max(int(max(lon_list) - min(lon_list)), 1)
+                diff_lat = 2
+                diff_lon = 2
+                bbox = geno.BoundingBox(max(lat_list) + diff_lat, min(lat_list) - diff_lat, max(lon_list) + diff_lon, min(lon_list) - diff_lon)
+            self.lat_lon_grid = geno.LatLonGrid(bbox.top_lat_y, bbox.bot_lat_y, bbox.left_lon_x, bbox.right_lon_x, px_per_deg_x, px_per_deg_y)
+
+            self.result_grid = []
+
+            x_max = int(self.lat_lon_grid.get_block_width_x())
+            y_max = int(self.lat_lon_grid.get_block_height_y())
+
+            for y in range(y_max):
+                temp_row = []
+                for x in range(x_max):
+                    lat_lng = self.lat_lon_grid.get_lat_lon(x, y)
+                    windspeed = 0
+                    for track_point in self.track_points:
+                        eye_lat_lon = track_point.point_lat_lon()
+                        distance = genu.haversine_degrees_to_meters(lat_lng[0], lat_lng[1], eye_lat_lon[0], eye_lat_lon[1]) / 1000 * 0.539957
+                        leftright = 1 if eye_lat_lon[1] < lat_lng[1] else -1
+                        windspeed_temp = hm.calc_windspeed(track_point.min_pressure_mb, distance, eye_lat_lon[0], fspeed_kts, rmax_nmi, leftright, vmax_kts=track_point.max_wind_kts)
+                        windspeed = max(windspeed, windspeed_temp)
+
+                    temp_row.append([lat_lng[0], lat_lng[1], windspeed])
+                self.result_grid.append(temp_row)
+
+        def grid_to_geojson(self):
+            if self.result_grid is None:
+                return None
+            flat_grid = [item for sublist in self.result_grid for item in sublist]
+            for_geojson_list = list(map((lambda x: [[x[1], x[0]], x[2]]), flat_grid))
+            geojson_collection = list(map((lambda x: lm.create_feature(x[0], lm.GeojsonGeometry.point, x[1])['geojson']), for_geojson_list))
+            #print(geojson_collection)
             return geojson_collection
 
     def __init__(self, catalog_file_uri):

@@ -57,7 +57,7 @@ class AsteroidEvent:
             return self.effect_2d_grid
 
         block_grid = []
-        y_max = self.grid.get_block_width_y()
+        y_max = self.grid.get_block_height_y()
         x_max = self.grid.get_block_width_x()
         try:
             for block_y in range(y_max):
@@ -100,7 +100,7 @@ class AsteroidEvent:
 
         twod_grid = self.get_effect_2d_grid(as_string, num_digits, force_calc)
 
-        y_max = self.grid.get_block_width_y()
+        y_max = self.grid.get_block_height_y()
         x_max = self.grid.get_block_width_x()
 
         out_grid = []

@@ -311,6 +311,39 @@ function geojson_hurdat_track() {
     )
 }
 
+function geojson_hurdat_event() {
+    $.getJSON("{{ url_for('map_hurricane_event') }}", {},
+        function (data) {
+            // Add with static style.  Need to implement dynamic styles somehow
+
+            if (!layers.hasOwnProperty('point_geoJSON_style')) {
+                var pointsLayer = L.geoJson([], {
+                    pointToLayer: function (feature, latlng) {
+                        var geojsonMarkerOptions = {
+                            radius: 2,
+                            //fillColor: "#ff7800",
+                            //fillColor: get_interpolated_color(feature.properties.value, data.max, data.min),
+                            fillColor: color_pretty_breaks(feature.properties.value, data.colors, data.bins),
+                            color: "#000",
+                            weight: 1,
+                            opacity: 0,
+                            fillOpacity: 1.0
+                        };
+                        return L.circleMarker(latlng, geojsonMarkerOptions);
+                    }
+                }).addTo(mymap)
+                layers['point_geoJSON_style'] = pointsLayer
+            }
+
+            for (var i = 0; i < data.result.length; i++) {
+                var geojson = data.result[i]
+                layers['point_geoJSON_style'].addData(geojson)
+            }
+
+        }
+    )
+}
+
 
 /*****************
  * Style methods *

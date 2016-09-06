@@ -42,3 +42,7 @@ def hurricane_tables_js():
 @app.route('/hurricane/change_table')
 def change_table():
     return flapy_app.change_table(fl.request.args.get('name', '', type=str))
+
+@app.route('/hurricane/geojson_event_map')
+def map_hurricane_event():
+    return flapy_app.map_hurricane_event()

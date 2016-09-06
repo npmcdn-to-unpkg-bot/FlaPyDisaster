@@ -29,6 +29,7 @@ Rho0_kPa = 101.325  # Mean Sea Level Pressure
 KmToNmi = 0.539957
 MpsToKts = 1.94384
 KpaToInhg = 0.2953
+MbToInhg = 0.02953
 
 
 def radial_decay(r_nmi, rmax_nmi):
@@ -130,37 +131,33 @@ def inflow_angle(rmax_nmi, r_nmi):
     return phi
 
 
-def calc_windspeed(cp_kpa, r_km, lat_deg, fspeed_mps, rmax_km, anglecenter_deg, pw_kpa=Pw_PMH_kPa, vmax_mps=None, gwaf=0.9):
+def calc_windspeed(cp_mb, r_nmi, lat_deg, fspeed_kts, rmax_nmi, leftright_factor, pw_kpa=Pw_PMH_kPa, vmax_kts=None, gwaf=0.9):
     """
-    :param cp_kpa: Central Pressure in kPa
-    :param r_km: Point radius from center of storm in kilometers
+    :param cp_mb: Central Pressure in kPa
+    :param r_nmi: Point radius from center of storm in kilometers
     :param lat_deg: Latitude of hurricane eye
-    :param fspeed_mps: Forward speed of the storm in m/s
+    :param fspeed_kts: Forward speed of the storm in m/s
     :param pw_kpa: Peripheral Pressure, pressure at edge of storm, should be near MSLP
-    :param rmax_km: Radius of maximum winds in km
-    :param anglecenter_deg: Bearing from the eye to the current point in deg
-    :param vmax_mps: Input max windspeed to skip the calculation for it.  Useful when Vmax is know for a storm. m/s
+    :param rmax_nmi: Radius of maximum winds in km
+    :param leftright_factor: 1 or -1, depending on if the point is on the left or right side of the storm
+    :param vmax_kts: Input max windspeed to skip the calculation for it.  Useful when Vmax is know for a storm. m/s
     :param gwaf: Gradient Wind Adjustment Factor, semi-emprical adjustment to the Gradient Wind. Range 0.75-1.05, Generally between 0.9 and 1. NWS 23 pdf page 50, page 24, 2.2.7.2.1
     :return: Windspeed at a given radius for the storm in mps
     """
-
-    r_nmi = r_km * KmToNmi
-    rmax_nmi = rmax_km * KmToNmi
-    fspeed_kts = fspeed_mps * MpsToKts
-    cp_inhg = cp_kpa * KpaToInhg
+    cp_inhg = cp_mb * KpaToInhg
     pw_inhg = pw_kpa * KpaToInhg
 
     # Step 1: Calculate Maximum Gradient Windspeed if unknown, 10m-10min Average
     vgx = 0
-    if vmax_mps is None:
+    if vmax_kts is None:
         vgx = gradient_wind_at_radius(pw_inhg, cp_inhg, rmax_nmi, lat_deg)
     else:
-        vgx = vmax_mps * MpsToKts
+        vgx = vmax_kts
     # Step 2: Calculate the Radial Decay
-    radial_decay_factor = radial_decay(r_km, rmax_km)  # need to convert to nmi
+    radial_decay_factor = radial_decay(r_nmi, rmax_nmi)  # need to convert to nmi
     # Step 3: Calculate the Asymmetry Factor
-    asym = asymmetry_factor(fspeed_kts, r_nmi, anglecenter_deg)
+    asym = asymmetry_factor(fspeed_kts, r_nmi, rmax_nmi)
 
     # apply all factors and return windspeed at point
-    windspeed_kts = (vgx * gwaf * radial_decay_factor) + asym
-    return windspeed_kts / MpsToKts
+    windspeed_kts = (vgx * gwaf * radial_decay_factor) + (leftright_factor * asym)
+    return windspeed_kts

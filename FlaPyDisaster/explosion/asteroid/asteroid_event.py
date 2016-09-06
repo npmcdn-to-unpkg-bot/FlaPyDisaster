@@ -178,7 +178,7 @@ class AsteroidEvent:
         curr_max = min_val + step
         curr_min = min_val
         while curr_max < max_val:
-            curr_points = list(map((lambda y: y[1]), filter((lambda x: x[0] >= curr_min and x[0] < curr_max), flat_grid)))
+            curr_points = list(map((lambda y: y[1]), filter((lambda x: curr_min <= x[0] < curr_max), flat_grid)))
             if len(curr_points) > 0:
                 curr_geojson = lm.create_feature(curr_points, lm.GeojsonGeometry.multipoint, curr_max)
                 geojson_collection.append(curr_geojson['geojson'])

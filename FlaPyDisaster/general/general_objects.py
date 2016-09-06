@@ -41,7 +41,7 @@ class LatLonGrid(BoundingBox):
         self.block_per_degree_y = block_per_degree_y
         self.block_per_degree_x = block_per_degree_x
 
-        return super().__init__(top_lat_y, bot_lat_y, right_lon_x, left_lon_x)
+        super().__init__(top_lat_y, bot_lat_y, right_lon_x, left_lon_x)
 
     def get_block_index(self, lat_y, lon_x):
         block_x = (lon_x - self.left_lon_x) * self.block_per_degree_x

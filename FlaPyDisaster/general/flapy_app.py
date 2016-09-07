@@ -12,6 +12,7 @@ import math
 import geojson
 import mapping.leaflet_map as lm
 import time
+import mapping.gdal_mapping as gdm
 
 
 class FlaPyApp:
@@ -87,6 +88,10 @@ class FlaPyApp:
         sorted_values.sort()
         color_ramp = genc.ColorPalettes.hex_to_rgb(genc.ColorPalettes.simple_escalating_5, 255)
         value_bins = genc.ColorPalettes.even_value_breaks(sorted_values, len(color_ramp))
+
+        gdm_list = list(list(map((lambda y: y[2]), x)) for x in storm.result_grid)
+        gdm.list_to_raster(gdm_list, r'tmp/test_out.png')
+
         return fl.jsonify(result=geo_collect, colors=color_ramp, bins=value_bins)
 
     #######################

@@ -50,6 +50,10 @@ function leaflet_init() {
     }).addTo(mymap)
     layers['point_geoJSON'] = pointsLayer
 
+
+    var canvas = L.canvasLayer().delegate(this).addTo(mymap)
+    layers['canvas'] = canvas
+
     // call a function that handles adding any required event handlers
     add_handlers()
 
@@ -91,7 +95,9 @@ function init_map() {
         {
             zoomControl: 'True'
             //}).setView([42.39, -71.11], 13);
-        }).setView([25, 20], 13);
+        }
+    ).setView([30, 20], 13);
+
 }
 
 
@@ -344,6 +350,36 @@ function geojson_hurdat_event() {
     )
 }
 
+/*
+ * HeatMap Functions
+ */
+var glob_data = []
+function onDrawLayer(info) {
+    var ctx = info.canvas.getContext('2d');
+    ctx.clearRect(0, 0, info.canvas.width, info.canvas.height);
+    ctx.fillStyle = "rgba(255,116,0, 1.0)";
+    for (var i = 0; i < glob_data.length; i++) {
+        var d = glob_data[i];
+        if (info.bounds.contains([d[0], d[1]])) {
+            dot = info.layer._map.latLngToContainerPoint([d[0], d[1]]);
+            ctx.beginPath();
+            ctx.arc(dot.x, dot.y, 3, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.closePath();
+        }
+    }
+};
+
+function geojson_hurdat_event_heatmap() {
+
+    $.getJSON("{{ url_for('map_hurricane_event_heatmap') }}", {},
+        function (data) {
+            //Add with static style.  Need to implement dynamic styles somehow
+            glob_data = data.data
+            layers['canvas'].needRedraw()
+        }
+    )
+}
 
 /*****************
  * Style methods *
@@ -379,7 +415,7 @@ function get_interpolated_color(value, max, min) {
  * if no colors are supplied, the default is from blue to red
  */
 function color_interp(value, max, min, color_max, color_min, incl_a) {
-    incl_a = typeof incl_a !== 'undefined' ? color_max : false
+    incl_a = typeof incl_a !== 'undefined' ? incl_a : false
     color_max = typeof color_max !== 'undefined' ? color_max : { a: 255, r: 255, g: 0, b: 0 }
     color_min = typeof color_min !== 'undefined' ? color_min : { a: 255, r: 0, g: 0, b: 255 }
     max = typeof max !== 'undefined' ? max : 100
@@ -404,7 +440,8 @@ function color_interp(value, max, min, color_max, color_min, incl_a) {
 /*
  * returns a color for a value given a list of colors and corrosponding list of value bins
  */
-function color_pretty_breaks(value, colors, bins) {
+function color_pretty_breaks(value, colors, bins, opacity) {
+    opacity = typeof opacity !== 'undefined' ? opacity : 1.0
     var color = [0, 0, 0]
     for (var pos = 0; pos < bins.length ; pos++) {
         if (value <= bins[pos]) {
@@ -413,7 +450,7 @@ function color_pretty_breaks(value, colors, bins) {
         }
     }
 
-    return "rgb(" + color[0].toString() + ", " + color[1].toString() + ", " + color[2].toString() + ")"
+    return "rgb(" + color[0].toString() + ", " + color[1].toString() + ", " + color[2].toString() + opacity.toString() + ")"
 }
 
 

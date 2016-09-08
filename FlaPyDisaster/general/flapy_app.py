@@ -96,20 +96,15 @@ class FlaPyApp:
 
     def map_hurricane_event_heatmap(self):
         storm = self.hurricane_catalog.get_storm_by_name(self.current_hurricane_name)[0]
-        #geo_collect = storm.grid_to_geojson()
 
         flat_grid = [item for sublist in storm.result_grid for item in sublist]
-        max_val = max(list(map((lambda x: x[2]), flat_grid)))
+        print("num points:" + str(len(flat_grid)))
+        sorted_values = list(map((lambda x: x[2]), flat_grid))
+        sorted_values.sort()
+        color_ramp = genc.ColorPalettes.hex_to_rgb(genc.ColorPalettes.simple_escalating_5, 255)
+        value_bins = genc.ColorPalettes.even_value_breaks(sorted_values, len(color_ramp))
 
-        # gdm_list = list(map((lambda x: 'x': x[0], 'y': x[1], 'value': x[2]}), flat_grid))
-        # gdm.list_to_raster(gdm_list, r'tmp/test_out.png')
-        # out_data = [{'y': 23.6681520914, 'x': 90.0811805, 'value': 3},
-        #             {'y': 23.9010258772, 'x': 90.2883834839, 'value': 9},
-        #             {'y': 23.7930778593, 'x': 90.423535, 'value': 7},
-        #             {'y': 24.0279042498, 'x': 90.371648, 'value': 5},
-        #             {'y': 24.1049427335, 'x': 90.2680428995, 'value': 8}]
-
-        return fl.jsonify(max=40, min=0, data=flat_grid)
+        return fl.jsonify(colors=color_ramp, bins=value_bins, data=flat_grid)
 
     #######################
     # Asteroid Interfaces #

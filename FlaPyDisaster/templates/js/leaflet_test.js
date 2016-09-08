@@ -353,17 +353,20 @@ function geojson_hurdat_event() {
 /*
  * HeatMap Functions
  */
-var glob_data = []
+var heat_data = []
+var heat_colors = []
+var heat_bins = []
 function onDrawLayer(info) {
     var ctx = info.canvas.getContext('2d');
     ctx.clearRect(0, 0, info.canvas.width, info.canvas.height);
     ctx.fillStyle = "rgba(255,116,0, 1.0)";
-    for (var i = 0; i < glob_data.length; i++) {
-        var d = glob_data[i];
+    for (var i = 0; i < heat_data.length; i++) {
+        var d = heat_data[i];
         if (info.bounds.contains([d[0], d[1]])) {
             dot = info.layer._map.latLngToContainerPoint([d[0], d[1]]);
             ctx.beginPath();
             ctx.arc(dot.x, dot.y, 3, 0, Math.PI * 2);
+            ctx.fillStyle = color_pretty_breaks(d[2], heat_colors, heat_bins)
             ctx.fill();
             ctx.closePath();
         }
@@ -371,11 +374,12 @@ function onDrawLayer(info) {
 };
 
 function geojson_hurdat_event_heatmap() {
-
     $.getJSON("{{ url_for('map_hurricane_event_heatmap') }}", {},
         function (data) {
             //Add with static style.  Need to implement dynamic styles somehow
-            glob_data = data.data
+            heat_data = data.data
+            heat_colors = data.colors
+            heat_bins = data.bins
             layers['canvas'].needRedraw()
         }
     )

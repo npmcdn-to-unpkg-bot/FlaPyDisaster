@@ -46,9 +46,13 @@ def change_table():
 
 @app.route('/hurricane/geojson_event_map')
 def map_hurricane_event():
-    return flapy_app.map_hurricane_event_heatmap()
+    return flapy_app.map_hurricane_event()
 
 
-@app.route('/hurricane/geojson_event_heatmap')
-def map_hurricane_event_heatmap():
-    return flapy_app.map_hurricane_event_heatmap()
+@app.route('/hurricane/geojson_event_canvas')
+def map_hurricane_event_canvas():
+    return flapy_app.map_hurricane_event_canvas()
+
+@app.route('/hurricane/geojson_event_d3')
+def map_hurricane_event_d3():
+    return flapy_app.map_hurricane_event_d3()

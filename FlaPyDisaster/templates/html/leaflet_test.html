@@ -8,6 +8,7 @@
     <script type=text/javascript src="../static/leaflet/leaflet.js"></script>
     <script type=text/javascript src="../static/leaflet/L.CanvasLayer.js"></script>
     <script type=text/javascript src="{{ url_for('leaflet_test_js') }}"></script>
+    <script type=text/javascript src="../static/d3/d3.js"></script>
     <script type=text/javascript src="../static/JQuery/jquery-3.0.0.js"></script>
     <script type=text/javascript>
         var $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
@@ -27,7 +28,9 @@
         <button type="button" onclick="geojson_asteroid_points_test()">Asteroid Test</button>
         <button type="button" onclick="geojson_asteroid_points_test_style()">Asteroid Test Style</button>
         <button type="button" onclick="geojson_hurdat_track()">Hurdat Track Test Style</button>
-        <button type="button" onclick="geojson_hurdat_event_heatmap()">Hurdat Event Test Style</button>
+        <button type="button" onclick="geojson_hurdat_event()">Hurdat Event Test Style Leaflet</button>
+        <button type="button" onclick="hurdat_event_canvas()">Hurdat Event Test Style Canvas</button>
+        <button type="button" onclick="hurdat_event_d3()">Hurdat Event Test Style D3</button>
     </div>
     <div id="mapid" style="height: 80vh"></div>
 </body>

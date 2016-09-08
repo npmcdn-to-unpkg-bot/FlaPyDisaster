@@ -94,7 +94,7 @@ class FlaPyApp:
 
         return fl.jsonify(result=geo_collect, colors=color_ramp, bins=value_bins)
 
-    def map_hurricane_event_heatmap(self):
+    def map_hurricane_event_canvas(self):
         storm = self.hurricane_catalog.get_storm_by_name(self.current_hurricane_name)[0]
 
         flat_grid = [item for sublist in storm.result_grid for item in sublist]
@@ -105,6 +105,10 @@ class FlaPyApp:
         value_bins = genc.ColorPalettes.even_value_breaks(sorted_values, len(color_ramp))
 
         return fl.jsonify(colors=color_ramp, bins=value_bins, data=flat_grid)
+
+    def map_hurricane_event_d3(self):
+        data = []
+        return fl.jsonify(data=data)
 
     #######################
     # Asteroid Interfaces #

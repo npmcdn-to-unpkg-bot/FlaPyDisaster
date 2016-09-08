@@ -54,6 +54,9 @@ function leaflet_init() {
     var canvas = L.canvasLayer().delegate(this).addTo(mymap)
     layers['canvas'] = canvas
 
+    var svg = d3.select(leafletMap.getPanes().overlayPane).append("svg");
+    layers['svg'] = svg
+
     // call a function that handles adding any required event handlers
     add_handlers()
 
@@ -350,9 +353,9 @@ function geojson_hurdat_event() {
     )
 }
 
-/*
- * HeatMap Functions
- */
+/********************
+ * Canvas Functions *
+ ********************/
 var heat_data = []
 var heat_colors = []
 var heat_bins = []
@@ -373,8 +376,8 @@ function onDrawLayer(info) {
     }
 };
 
-function geojson_hurdat_event_heatmap() {
-    $.getJSON("{{ url_for('map_hurricane_event_heatmap') }}", {},
+function hurdat_event_canvas() {
+    $.getJSON("{{ url_for('map_hurricane_event_canvas') }}", {},
         function (data) {
             //Add with static style.  Need to implement dynamic styles somehow
             heat_data = data.data
@@ -384,6 +387,28 @@ function geojson_hurdat_event_heatmap() {
         }
     )
 }
+
+/****************
+ * D3 Functions *
+ ****************/
+function hurdat_event_d3(){
+    var geoData = {}
+    $.getJSON("{{ url_for('map_hurricane_event_d3') }}", {},
+                function (data) {
+                    geoData = data
+                }
+            )
+
+    var qtree = d3.geom.quadtree(geoData.features.map(function (data, i) {
+                                                                           return {
+                                                                               x: data.geometry.coordinates[0],
+                                                                               y: data.geometry.coordinates[1],
+                                                                               all: data
+                                                                           };
+                                                                          }
+                                                   );
+}
+
 
 /*****************
  * Style methods *

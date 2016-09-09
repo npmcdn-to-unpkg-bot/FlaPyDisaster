@@ -90,9 +90,10 @@ def k_wind_gradient(lat_deg):
     return 70.1 + -0.185714286 * (lat_deg - 24.0)
 
 
-def asymmetry_factor(fspeed_kts, r_nmi, rmax_nmi):
+def asymmetry_factor(fspeed_kts, r_nmi, rmax_nmi, track_bearing, bearing_from_center):
     """
     NWS 23 pdf page 51, page 25, equation 2.5
+    NWS 23 pdf page 263, page 269
     NWS 23 pdf page 281, page 257
     Factor for a moving hurricane, accounts for effect of forward speed on hurricane winds
     To conversion factors: 1 kt, 0.514791 mps, 1.853248 kph, 1.151556 mph
@@ -102,8 +103,11 @@ def asymmetry_factor(fspeed_kts, r_nmi, rmax_nmi):
     :return: Asymmetry factor
     """
     to = 1
-    beta = inflow_angle(rmax_nmi, r_nmi)  # need to figure out direction
-    return 1.5 * (fspeed_kts ** 0.63) * (to ** 0.37) * math.cos(math.radians(beta))
+    phi_r = inflow_angle(rmax_nmi, r_nmi)  # need to figure out direction
+    phi_rmax = inflow_angle(rmax_nmi, rmax_nmi)  # need to figure out direction
+    beta = (phi_r - phi_rmax) % 360
+    # return 1.5 * (fspeed_kts ** 0.63) * (to ** 0.37) * math.cos(math.radians(beta))
+    return beta
 
 
 def inflow_angle(rmax_nmi, r_nmi):
@@ -156,8 +160,9 @@ def calc_windspeed(cp_mb, r_nmi, lat_deg, fspeed_kts, rmax_nmi, leftright_factor
     # Step 2: Calculate the Radial Decay
     radial_decay_factor = radial_decay(r_nmi, rmax_nmi)  # need to convert to nmi
     # Step 3: Calculate the Asymmetry Factor
-    asym = asymmetry_factor(fspeed_kts, r_nmi, rmax_nmi)
+    asym = asymmetry_factor(fspeed_kts, r_nmi, rmax_nmi, 0, 0)
 
     # apply all factors and return windspeed at point
     windspeed_kts = (vgx * gwaf * radial_decay_factor) + (leftright_factor * asym)
-    return windspeed_kts
+    # return windspeed_kts
+    return asym

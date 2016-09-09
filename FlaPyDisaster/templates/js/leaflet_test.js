@@ -356,25 +356,75 @@ function geojson_hurdat_event() {
 /********************
  * Canvas Functions *
  ********************/
+ //http://stackoverflow.com/questions/13916066/speed-up-the-drawing-of-many-points-on-a-html5-canvas-element
+ //http://bl.ocks.org/sumbera/11114288
+ //https://github.com/Sumbera/gLayers.Leaflet
+
 var heat_data = []
 var heat_colors = []
 var heat_bins = []
 function onDrawLayer(info) {
+    var t0 = Date.now();
     var ctx = info.canvas.getContext('2d');
     ctx.clearRect(0, 0, info.canvas.width, info.canvas.height);
-    ctx.fillStyle = "rgba(255,116,0, 1.0)";
-    for (var i = 0; i < heat_data.length; i++) {
-        var d = heat_data[i];
-        if (info.bounds.contains([d[0], d[1]])) {
-            dot = info.layer._map.latLngToContainerPoint([d[0], d[1]]);
-            ctx.beginPath();
-            ctx.arc(dot.x, dot.y, 3, 0, Math.PI * 2);
-            ctx.fillStyle = color_pretty_breaks(d[2], heat_colors, heat_bins)
-            ctx.fill();
-            ctx.closePath();
-        }
+
+    // color info
+    var n = heat_colors.length;
+    var r = 5;
+    var d = r * 2;
+
+    var offScreen = document.createElement('canvas')
+    offScreen.width = n * d;
+    offScreen.height = d;
+    var offCtx = offScreen.getContext('2d')
+    //offCtx.fillStyle = "black";
+    //offCtx.fillRect(0, 0, offScreen.width, offScreen.height);
+    for (var i = 0; i < n; ++i) {
+        var color = heat_colors[i];
+        offCtx.fillStyle = "rgb(" + color[0].toString() + ", " + color[1].toString() + ", " + color[2].toString() + ")";
+        console.log("rgb(" + color[0].toString() + ", " + color[1].toString() + ", " + color[2].toString() + ")");
+        offCtx.beginPath();
+        offCtx.arc(i * d + r, r, r, 0, 2 * Math.PI);
+        offCtx.closePath();
+        offCtx.fill();
     }
+
+
+    for (var i = 0; i < heat_data.length; ++i) {
+        var p = heat_data[i];
+        c = 0
+        for (pos = 0; pos < heat_bins.length; ++pos){
+            if(p[2] <= heat_bins[pos]){
+                c = pos
+                break;
+            }
+        }
+        dot = info.layer._map.latLngToContainerPoint([p[0], p[1]]); //can move this out of loop
+        ctx.drawImage(offScreen, c * d, 0, d, d, dot.x - r, dot.y - r, d, d);
+    }
+//    if (heat_data.length > 0){
+//        ctx.drawImage(offScreen, 0, 0, d * n, d, 60 , 60, d * n, d);
+//    }
+
+
+//    for (var i = 0; i < heat_data.length; i++) {
+//        var d = heat_data[i];
+//        if (info.bounds.contains([d[0], d[1]])) {
+//            dot = info.layer._map.latLngToContainerPoint([d[0], d[1]]);
+//            ctx.beginPath();
+//            ctx.arc(dot.x, dot.y, 3, 0, Math.PI * 2);
+//            ctx.fillStyle = color_pretty_breaks(d[2], heat_colors, heat_bins)
+//            ctx.fill();
+//            ctx.closePath();
+//        }
+//    }
+
+    var t1 = Date.now();
+//    if(heat_data.length > 0){
+//        alert((t1 - t0) + "ms");
+//    }
 };
+
 
 function hurdat_event_canvas() {
     $.getJSON("{{ url_for('map_hurricane_event_canvas') }}", {},

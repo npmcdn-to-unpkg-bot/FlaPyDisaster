@@ -23,20 +23,15 @@ def calc_bearing_north_zero(lat_ref, lon_ref, lat_loc, lon_loc):
     lat_delta = lat_loc - lat_ref
     angle_deg = 0
 
-    if math.fabs(lon_delta) < 0.0001:
-        angle_deg = 180 if lat_loc < lat_ref else 0
-    else:
-        if math.fabs(lat_delta) < 0.0001:
-            angle_deg = -90 if lon_loc < lon_ref else 90
-        else:
-            angle_deg = math.degrees(math.atan(lon_delta / lat_delta))
+    angle_deg = math.degrees(math.atan2(lon_delta, lat_delta))
+    return (angle_deg + 360) % 360
 
-            if angle_deg > 0:
-                angle_deg = (angle_deg - 180) if (lat_loc < lat_ref) else angle_deg
-            else:
-                angle_deg = (angle_deg + 180) if (lat_loc < lat_ref) else angle_deg
 
-    return angle_deg
+def calc_bearing_great_circle(lat_ref, lon_ref, lat_loc, lon_loc):
+    y = math.sin(lon_loc - lon_ref) * math.cos(lat_loc)
+    x = math.cos(lat_ref) * math.sin(lat_loc) - math.sin(lat_ref) * math.cos(lat_loc) * math.cos(lon_loc - lon_ref)
+    brng = math.degrees(math.atan2(y, x))
+    return (brng + 360) % 360
 
 
 def great_circle_distance():
@@ -132,7 +127,7 @@ class HurdatCatalog:
                 self.r64_nw_nmi = r64_nw_nmi
 
                 self.sequence = sequence
-                self.bearing_to_next_point = None
+                self.heading_to_next_point = None
 
             def point_to_xyz(self):
                 ret_val = []
@@ -234,18 +229,18 @@ class HurdatCatalog:
                 self.parse_data_row(row, seq)
                 seq += 1
 
-        def calc_trackpoint_bearings(self):
+        def calc_trackpoint_heading(self):
+            if len(self.track_points) == 1:
+                self.track_points[0].heading_to_next_point = 0
             for i in range(len(self.track_points)):
-                if(i == len(self.track_points) - 1):
-                    self.track_points[i].bearing_to_next_point = self.track_points[i-1].bearing_to_next_point
+                if i == len(self.track_points) - 1:
+                    self.track_points[i].heading_to_next_point = self.track_points[i-1].heading_to_next_point
                     continue
 
                 next_lat_lng = self.track_points[i+1].point_lat_lon()
                 curr_lat_lng = self.track_points[i].point_lat_lon()
-                bearing = calc_bearing_north_zero(curr_lat_lng[0], curr_lat_lng[1], next_lat_lng[0], next_lat_lng[1])
-                self.track_points[i].bearing_to_next_point = bearing
-
-            pass
+                heading = calc_bearing_north_zero(curr_lat_lng[0], curr_lat_lng[1], next_lat_lng[0], next_lat_lng[1])
+                self.track_points[i].heading_to_next_point = heading
 
         def parse_header_row(self, header_row):
             """
@@ -403,6 +398,7 @@ class HurdatCatalog:
             x_max = int(self.lat_lon_grid.get_block_width_x())
             y_max = int(self.lat_lon_grid.get_block_height_y())
 
+            print(len(self.track_points))
             for y in range(y_max):
                 temp_row = []
                 for x in range(x_max):
@@ -410,10 +406,9 @@ class HurdatCatalog:
                     windspeed = 0
                     for track_point in self.track_points:
                         eye_lat_lon = track_point.point_lat_lon()
-                        bearing_to_center = calc_bearing_north_zero(eye_lat_lon[0], eye_lat_lon[1], lat_lng[0], lat_lng[1])
+                        angle_to_center = calc_bearing_north_zero(eye_lat_lon[0], eye_lat_lon[1], lat_lng[0], lat_lng[1])
                         distance = genu.haversine_degrees_to_meters(lat_lng[0], lat_lng[1], eye_lat_lon[0], eye_lat_lon[1]) / 1000 * 0.539957
-                        leftright = 1 if eye_lat_lon[1] < lat_lng[1] else -1
-                        windspeed_temp = hm.calc_windspeed(track_point.min_pressure_mb, distance, eye_lat_lon[0], fspeed_kts, rmax_nmi, leftright, vmax_kts=track_point.max_wind_kts)
+                        windspeed_temp = hm.calc_windspeed(track_point.min_pressure_mb, distance, eye_lat_lon[0], fspeed_kts, rmax_nmi, angle_to_center, track_point.heading_to_next_point, vmax_kts=track_point.max_wind_kts)
                         windspeed = max(windspeed, windspeed_temp)
 
                     temp_row.append([lat_lng[0], lat_lng[1], windspeed])
@@ -461,7 +456,7 @@ class HurdatCatalog:
                     storm_temp.parse_data_row(storm_list[catalog_iter], seq)
                     seq += 1
                     catalog_iter += 1
-            storm_temp.calc_trackpoint_bearings()
+            storm_temp.calc_trackpoint_heading()
             self.storm_catalog.append(storm_temp)
 
     def get_names(self):

@@ -90,7 +90,7 @@ def k_wind_gradient(lat_deg):
     return 70.1 + -0.185714286 * (lat_deg - 24.0)
 
 
-def asymmetry_factor(fspeed_kts, r_nmi, rmax_nmi, track_bearing, bearing_from_center):
+def asymmetry_factor(fspeed_kts, r_nmi, rmax_nmi, angle_from_center, track_bearing):
     """
     NWS 23 pdf page 51, page 25, equation 2.5
     NWS 23 pdf page 263, page 269
@@ -106,8 +106,12 @@ def asymmetry_factor(fspeed_kts, r_nmi, rmax_nmi, track_bearing, bearing_from_ce
     phi_r = inflow_angle(rmax_nmi, r_nmi)  # need to figure out direction
     phi_rmax = inflow_angle(rmax_nmi, rmax_nmi)  # need to figure out direction
     beta = (phi_r - phi_rmax) % 360
-    # return 1.5 * (fspeed_kts ** 0.63) * (to ** 0.37) * math.cos(math.radians(beta))
-    return beta
+    bearing_shift = (90 - angle_from_center + track_bearing) % 360
+    beta = (beta + bearing_shift) % 360
+    asym = 1.5 * (fspeed_kts ** 0.63) * (to ** 0.37) * math.cos(math.radians(beta))
+
+    return asym
+    # return beta
 
 
 def inflow_angle(rmax_nmi, r_nmi):
@@ -135,7 +139,7 @@ def inflow_angle(rmax_nmi, r_nmi):
     return phi
 
 
-def calc_windspeed(cp_mb, r_nmi, lat_deg, fspeed_kts, rmax_nmi, leftright_factor, pw_kpa=Pw_PMH_kPa, vmax_kts=None, gwaf=0.9):
+def calc_windspeed(cp_mb, r_nmi, lat_deg, fspeed_kts, rmax_nmi, angle_to_center, track_heading, pw_kpa=Pw_PMH_kPa, vmax_kts=None, gwaf=0.9):
     """
     :param cp_mb: Central Pressure in kPa
     :param r_nmi: Point radius from center of storm in kilometers
@@ -143,7 +147,8 @@ def calc_windspeed(cp_mb, r_nmi, lat_deg, fspeed_kts, rmax_nmi, leftright_factor
     :param fspeed_kts: Forward speed of the storm in m/s
     :param pw_kpa: Peripheral Pressure, pressure at edge of storm, should be near MSLP
     :param rmax_nmi: Radius of maximum winds in km
-    :param leftright_factor: 1 or -1, depending on if the point is on the left or right side of the storm
+    :param angle_to_center: Simple angle from point to center of storm, in bearing notation (North = 0)
+    :param track_heading: Heading of track from current point to next point, except for the last point, which usees the previous heading
     :param vmax_kts: Input max windspeed to skip the calculation for it.  Useful when Vmax is know for a storm. m/s
     :param gwaf: Gradient Wind Adjustment Factor, semi-emprical adjustment to the Gradient Wind. Range 0.75-1.05, Generally between 0.9 and 1. NWS 23 pdf page 50, page 24, 2.2.7.2.1
     :return: Windspeed at a given radius for the storm in mps
@@ -160,9 +165,9 @@ def calc_windspeed(cp_mb, r_nmi, lat_deg, fspeed_kts, rmax_nmi, leftright_factor
     # Step 2: Calculate the Radial Decay
     radial_decay_factor = radial_decay(r_nmi, rmax_nmi)  # need to convert to nmi
     # Step 3: Calculate the Asymmetry Factor
-    asym = asymmetry_factor(fspeed_kts, r_nmi, rmax_nmi, 0, 0)
+    asym = asymmetry_factor(fspeed_kts, r_nmi, rmax_nmi, angle_to_center, track_heading)
 
     # apply all factors and return windspeed at point
-    windspeed_kts = (vgx * gwaf * radial_decay_factor) + (leftright_factor * asym)
-    # return windspeed_kts
-    return asym
+    windspeed_kts = (vgx * gwaf * radial_decay_factor) + asym
+    return windspeed_kts
+    # return asym + 100

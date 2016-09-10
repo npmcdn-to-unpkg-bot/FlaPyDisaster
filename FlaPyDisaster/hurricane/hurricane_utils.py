@@ -9,6 +9,8 @@ import general.general_objects as geno
 import general.general_mapping as genm
 import general.general_units as genu
 import hurricane.hurricane_nws23 as hm
+import numpy as np
+import multiprocessing as mp
 
 
 # import mapping.leafletmap as lm
@@ -393,26 +395,41 @@ class HurdatCatalog:
                 bbox = geno.BoundingBox(max(lat_list) + diff_lat, min(lat_list) - diff_lat, max(lon_list) + diff_lon, min(lon_list) - diff_lon)
             self.lat_lon_grid = geno.LatLonGrid(bbox.top_lat_y, bbox.bot_lat_y, bbox.left_lon_x, bbox.right_lon_x, px_per_deg_x, px_per_deg_y)
 
-            self.result_grid = []
-
             x_max = int(self.lat_lon_grid.get_block_width_x())
             y_max = int(self.lat_lon_grid.get_block_height_y())
 
-            print(len(self.track_points))
-            for y in range(y_max):
-                temp_row = []
-                for x in range(x_max):
-                    lat_lng = self.lat_lon_grid.get_lat_lon(x, y)
-                    windspeed = 0
-                    for track_point in self.track_points:
-                        eye_lat_lon = track_point.point_lat_lon()
-                        angle_to_center = calc_bearing_north_zero(eye_lat_lon[0], eye_lat_lon[1], lat_lng[0], lat_lng[1])
-                        distance = genu.haversine_degrees_to_meters(lat_lng[0], lat_lng[1], eye_lat_lon[0], eye_lat_lon[1]) / 1000 * 0.539957
-                        windspeed_temp = hm.calc_windspeed(track_point.min_pressure_mb, distance, eye_lat_lon[0], fspeed_kts, rmax_nmi, angle_to_center, track_point.heading_to_next_point, vmax_kts=track_point.max_wind_kts)
-                        windspeed = max(windspeed, windspeed_temp)
+            # self.result_grid = []
+            #
+            # for y in range(y_max):
+            #     temp_row = []
+            #     for x in range(x_max):
+            #         lat_lng = self.lat_lon_grid.get_lat_lon(x, y)
+            #         windspeed = 0
+            #         for track_point in self.track_points:
+            #             eye_lat_lon = track_point.point_lat_lon()
+            #             angle_to_center = calc_bearing_north_zero(eye_lat_lon[0], eye_lat_lon[1], lat_lng[0], lat_lng[1])
+            #             distance = genu.haversine_degrees_to_meters(lat_lng[0], lat_lng[1], eye_lat_lon[0], eye_lat_lon[1]) / 1000 * 0.539957
+            #             windspeed_temp = hm.calc_windspeed(track_point.min_pressure_mb, distance, eye_lat_lon[0], fspeed_kts, rmax_nmi, angle_to_center, track_point.heading_to_next_point, vmax_kts=track_point.max_wind_kts)
+            #             windspeed = max(windspeed, windspeed_temp)
+            #
+            #         temp_row.append([lat_lng[0], lat_lng[1], windspeed])
+            #     self.result_grid.append(temp_row)
 
-                    temp_row.append([lat_lng[0], lat_lng[1], windspeed])
-                self.result_grid.append(temp_row)
+            temp_array = np.zeros((y_max, x_max, 3))
+            for track_point in self.track_points:
+                eye_lat_lon = track_point.point_lat_lon()
+                for y in range(y_max):
+                    lat_y = self.lat_lon_grid.get_lat(y)
+                    for x in range(x_max):
+                        lon_x = self.lat_lon_grid.get_lon(x)
+                        angle_to_center = calc_bearing_north_zero(eye_lat_lon[0], eye_lat_lon[1], lat_y, lon_x)
+                        distance = genu.haversine_degrees_to_meters(lat_y, lon_x, eye_lat_lon[0], eye_lat_lon[1]) / 1000 * 0.539957
+                        windspeed_temp = hm.calc_windspeed(track_point.min_pressure_mb, distance, eye_lat_lon[0], fspeed_kts, rmax_nmi, angle_to_center, track_point.heading_to_next_point, vmax_kts=track_point.max_wind_kts)
+                        temp_array[y, x, 0] = lat_y  # move this out of loops
+                        temp_array[y, x, 1] = lon_x  # move this out of loops
+                        temp_array[y, x, 2] = max(temp_array[y, x, 2], windspeed_temp)
+
+            self.result_grid = temp_array.tolist()
 
         def grid_to_geojson(self):
             if self.result_grid is None:

@@ -54,6 +54,7 @@ class FlaPyApp:
         return fl.jsonify(result=geo_collect, colors=color_ramp, bins=value_bins)
 
     def hurricane_function_form(self):
+        print("Hello Hurricane")
         return fl.redirect(fl.url_for('hurricane_page'))
 
     def table_test(self):
@@ -127,8 +128,7 @@ class FlaPyApp:
                                   , velocity_units=gen_units.VelocityUnits.get_units_pair())
 
     def asteroid_function_form(self):
-        explosion_math.hello()
-        asteroid_math.hello()
+        print("Hello Asteroid")
         return fl.redirect(fl.url_for('asteroid_page'))
 
     def asteroid_input_params_form(self, diameter_in, diameter_unit, angle_in, angle_unit, velocity_in, velocity_unit, density_kgpm3, target_density_kgpm3, radius_obs_in,radius_obs_unit):

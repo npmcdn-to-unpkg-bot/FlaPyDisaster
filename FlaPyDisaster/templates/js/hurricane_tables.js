@@ -12,3 +12,10 @@ function change_table(source_id, target_class) {
         target.empty().append(data.table)
     });
 }
+
+function save_event_to_raster(){
+    $.ajax({
+        url: "{{ url_for('hurricane_save_event_to_raster') }}",
+        method: "POST"
+    });
+}

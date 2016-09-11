@@ -70,12 +70,12 @@ class FlaPyApp:
         self.current_hurricane_name = name
         storm = self.hurricane_catalog.get_storm_by_name(name)[0]
         # ret_list = self.hurricane_catalog.get_storm_by_name(name)
-        print("Start")
+        print("Start Event Calculation")
         start = time.time()
-        storm.calculate_grid(10, 10, 15, 15, do_parallel=False)
+        storm.calculate_grid(10, 10, 15, 15, do_parallel=True)
         end = time.time()
-        print("Calculation Time:" + str(end - start))
-        print("num points:" + str(len(storm.result_array)))
+        print("Calculation Time: " + str(end - start))
+        print("num points: " + str(len(storm.result_array)))
         ret_data = storm.to_model_dataframe().to_html(classes='track_table')
 
         return fl.jsonify(table=ret_data)
@@ -94,8 +94,6 @@ class FlaPyApp:
     def map_hurricane_event_canvas(self):
         storm = self.hurricane_catalog.get_storm_by_name(self.current_hurricane_name)[0]
 
-        # flat_grid = [item for sublist in storm.result_grid for item in sublist]
-
         sorted_values = list(map((lambda x: x[2]), storm.result_array))
         sorted_values.sort()
         color_ramp = genc.ColorPalettes.hex_to_rgb(genc.ColorPalettes.simple_escalating_5, 255)
@@ -109,9 +107,11 @@ class FlaPyApp:
 
         start = time.time()
         two_d_gdm_list = np.flipud(np.array(list(map((lambda x: x[2]), storm.result_array))).reshape(storm.lat_lon_grid.get_block_height_y(), storm.lat_lon_grid.get_block_width_x()))
-        gdm.list_to_raster(two_d_gdm_list, r'tmp/test_out.png', True)
+        file_uri = r'tmp/' + storm.unique_name + ".png"
+        print("raster file uri: " + file_uri)
+        gdm.list_to_raster(two_d_gdm_list, file_uri, True)
         end = time.time()
-        print("Raster Save Time:" + str(end - start))
+        print("Raster Save Time: " + str(end - start))
 
     def map_hurricane_event_d3(self):
         data = []

@@ -1,12 +1,5 @@
-﻿<!DOCTYPE html>
-
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
-<head>
-    <meta charset="utf-8" />
-    <script src="../static/scripts/hello.js"></script>
-    <title>Home</title>
-</head>
-<body>
+﻿{% extends "html/base.html" %}
+{% block content %}
     <div>
         <ul>
             <li><a href="{{ url_for('hurricane_page') }}">Hurricane</a></li>
@@ -23,5 +16,4 @@
         <br />
         <a href="{{ url_for('leaflet_redirect') }}">leaflet test</a>
     </div>
-</body>
-</html>
+{% endblock  %}

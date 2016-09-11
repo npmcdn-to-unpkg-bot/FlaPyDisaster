@@ -31,7 +31,7 @@ class FlaPyApp:
     # Hurricane Interfaces #
     ########################
     def hurricane_page(self):
-        return fl.render_template('html/hurricane.html')
+        return fl.render_template('html/hurricane.html', title="Hurricane")
 
     def hurricane_file_form(self, hurdat_file):
         file_uri = genu.Web.get_web_file_uri(hurdat_file)
@@ -61,7 +61,7 @@ class FlaPyApp:
 
         # data_table = storm_catalog.storm_data.head().to_html()
         storm_data_table = self.hurricane_catalog.storm_catalog[0].to_model_dataframe().to_html()
-        return fl.render_template("html/hurricane_table_test.html", name="Catalog Data Frame", data=storm_data_table)
+        return fl.render_template("html/hurricane_table_test.html", title="Hurricane Table Test", name="Catalog Data Frame", data=storm_data_table)
 
     def hurricane_tables_js(self):
         return fl.render_template('/js/hurricane_tables.js')
@@ -122,6 +122,7 @@ class FlaPyApp:
     #######################
     def asteroid_page(self):
         return fl.render_template('html/asteroid.html'
+                                  , title="Asteroid"
                                   , distance_units=gen_units.DistanceUnits.get_units_pair()
                                   , velocity_units=gen_units.VelocityUnits.get_units_pair())
 
@@ -158,6 +159,7 @@ class FlaPyApp:
                     write_file.write(out + "\n")
 
         return fl.render_template('html/asteroid_results.html'
+                                  , title="Asteroid Results"
                                   , t_diameter_m=(diameter_in + " " + diameter_unit)
                                   , t_angle_deg=(angle_in + " " + angle_unit)
                                   , t_velocity_kms=(velocity_in + " " + velocity_unit)
@@ -190,7 +192,7 @@ class FlaPyApp:
     # Leaflet Interfaces #
     ######################
     def leaflet_redirect(self):
-        return fl.render_template('html/leaflet_test.html')
+        return fl.render_template('html/leaflet_test.html', title="Leaflet")
 
     def leaflet_test_latlng(self, lat, lng):
         print("leaflet test in Flask.")

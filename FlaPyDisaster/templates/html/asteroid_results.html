@@ -1,17 +1,5 @@
-﻿<!DOCTYPE html>
-
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
-<head>
-    <meta charset="utf-8" />
-    <title>Asteroid results</title>
-    <script src="../static/scripts/unit_conversions.js"></script>
-    <script src="../static/scripts/inits.js"></script>
-    <script type=text/javascript src="../static/JQuery/jquery-3.0.0.js"></script>
-    <script type=text/javascript>
-        var $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
-    </script>
-</head>
-<body onload="asteroid_result_init()">
+﻿{% extends "html/base.html" %}
+{% block content %}
     <h2>Input</h2>
     <p>Diameter: {{ t_diameter_m }}</p>
     <p>Angle: {{ t_angle_deg }}</p>
@@ -42,7 +30,13 @@
             <option value="ft">Feet</option>
         </select>
     </div>
-    
-    
-</body>
-</html>
+    <script src="../static/scripts/unit_conversions.js"></script>
+    <script src="../static/scripts/inits.js"></script>
+    <script type=text/javascript src="../static/JQuery/jquery-3.0.0.js"></script>
+    <script type=text/javascript>
+        var $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+    </script>
+    <script>
+        asteroid_result_init();
+    </script>
+{% endblock  %}

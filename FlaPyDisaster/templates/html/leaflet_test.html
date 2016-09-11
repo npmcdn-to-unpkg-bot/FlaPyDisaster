@@ -1,20 +1,5 @@
-﻿<!DOCTYPE html>
-
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
-<head>
-    <meta charset="utf-8" />
-    <title>Leaflet Test</title>
-    <link rel="stylesheet" href="../static/leaflet/leaflet.css" />
-    <script type=text/javascript src="../static/leaflet/leaflet.js"></script>
-    <script type=text/javascript src="../static/leaflet/L.CanvasLayer.js"></script>
-    <script type=text/javascript src="{{ url_for('leaflet_test_js') }}"></script>
-    <script type=text/javascript src="../static/d3/d3.js"></script>
-    <script type=text/javascript src="../static/JQuery/jquery-3.0.0.js"></script>
-    <script type=text/javascript>
-        var $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
-    </script>
-</head>
-<body onload="leaflet_init()">
+﻿{% extends "html/base.html" %}
+{% block content %}
     <h1>Leaflet Test</h1>
     <div id="controls">
         <button type="button" onclick="place_last_marker_test()">Add maker at last point</button>
@@ -33,5 +18,16 @@
         <button type="button" onclick="hurdat_event_d3()">Hurdat Event Test Style D3</button>
     </div>
     <div id="mapid" style="height: 80vh"></div>
-</body>
-</html>
+    <link rel="stylesheet" href="../static/leaflet/leaflet.css" />
+    <script type=text/javascript src="../static/leaflet/leaflet.js"></script>
+    <script type=text/javascript src="../static/leaflet/L.CanvasLayer.js"></script>
+    <script type=text/javascript src="{{ url_for('leaflet_test_js') }}"></script>
+    <script type=text/javascript src="../static/d3/d3.js"></script>
+    <script type=text/javascript src="../static/JQuery/jquery-3.0.0.js"></script>
+    <script type=text/javascript>
+        var $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+    </script>
+    <script>
+        leaflet_init();
+    </script>
+{% endblock  %}

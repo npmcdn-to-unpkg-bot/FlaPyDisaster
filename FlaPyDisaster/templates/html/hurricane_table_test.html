@@ -1,16 +1,5 @@
-﻿<!DOCTYPE html>
-
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
-<head>
-    <meta charset="utf-8" />
-    <title>Hurricane Table Test</title>
-    <script type=text/javascript src="{{ url_for('hurricane_tables_js') }}"></script>
-    <script type=text/javascript src="../static/JQuery/jquery-3.0.0.js"></script>
-    <script type=text/javascript>
-        var $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
-    </script>
-</head>
-<body>
+﻿{% extends "html/base.html" %}
+{% block content %}
     <h1>Table Test</h1>
     <div>
         <select id="table_selector" name="catalog_names" onchange="change_table('table_selector', 'track_table')">
@@ -29,5 +18,10 @@
     <div>
         <a href="{{ url_for('leaflet_redirect') }}">To Map</a>
     </div>
-</body>
-</html>
+
+    <script type=text/javascript src="{{ url_for('hurricane_tables_js') }}"></script>
+    <script type=text/javascript src="../static/JQuery/jquery-3.0.0.js"></script>
+    <script type=text/javascript>
+        var $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+    </script>
+{% endblock  %}

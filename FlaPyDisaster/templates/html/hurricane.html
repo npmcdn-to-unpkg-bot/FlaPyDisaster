@@ -1,11 +1,5 @@
-﻿<!DOCTYPE html>
-
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
-<head>
-    <meta charset="utf-8" />
-    <title>Hurricane</title>
-</head>
-<body>
+﻿{% extends "html/base.html" %}
+{% block content %}
     <form name="file_form" method="POST" action="{{ url_for('hurricane_file_form') }}" enctype = "multipart/form-data">
         <div>
             <h2>File Load</h2>
@@ -25,5 +19,4 @@
     </form>
 
     <a href="{{ url_for('table_test') }}">Table Test</a>
-</body>
-</html>
+{% endblock  %}

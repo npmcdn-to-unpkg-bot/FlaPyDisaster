@@ -4,7 +4,7 @@ It contains the definition of routes and views for the application.
 
 """
 from flask import Flask
-
+import socket
 
 app = Flask(__name__)
 UPLOAD_FOLDER = r'tmp/'
@@ -25,4 +25,10 @@ if __name__ == '__main__':
         PORT = int(os.environ.get('SERVER_PORT', '5555'))
     except ValueError:
         PORT = 5555
-    app.run(HOST, PORT)
+    local_only = True
+    if local_only:
+        app.run(HOST, PORT)
+    else:
+        accept_remote_host = "0.0.0.0"
+        app.run(accept_remote_host, PORT)
+

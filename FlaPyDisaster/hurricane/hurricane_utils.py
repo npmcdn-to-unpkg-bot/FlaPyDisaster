@@ -11,7 +11,8 @@ import general.general_units as genu
 import hurricane.hurricane_nws23 as hm
 import numpy as np
 import multiprocessing as mp
-
+import joblib as job
+import time as time
 
 # import mapping.leafletmap as lm
 
@@ -206,7 +207,7 @@ class HurdatCatalog:
             self.track_points = []
             self.source_data = None
             self.lat_lon_grid = None
-            self.result_grid = None
+            self.result_array = None
 
             self.unique_name = ''
 
@@ -384,7 +385,7 @@ class HurdatCatalog:
             geojson_collection = list(map((lambda x: lm.create_feature(x[0], lm.GeojsonGeometry.point, x[1])['geojson']), temp_list))
             return geojson_collection
 
-        def calculate_grid(self, px_per_deg_x, px_per_deg_y, fspeed_kts, rmax_nmi, bbox = None):
+        def calculate_grid(self, px_per_deg_x, px_per_deg_y, fspeed_kts, rmax_nmi, bbox=None, do_parallel=False):
             if bbox is None:
                 lat_list = list(map(lambda x: x.point_lat_lon()[0], self.track_points))
                 lon_list = list(map(lambda x: x.point_lat_lon()[1], self.track_points))
@@ -415,29 +416,53 @@ class HurdatCatalog:
             #         temp_row.append([lat_lng[0], lat_lng[1], windspeed])
             #     self.result_grid.append(temp_row)
 
-            temp_array = np.zeros((y_max, x_max, 3))
-            for track_point in self.track_points:
-                eye_lat_lon = track_point.point_lat_lon()
-                for y in range(y_max):
-                    lat_y = self.lat_lon_grid.get_lat(y)
-                    for x in range(x_max):
-                        lon_x = self.lat_lon_grid.get_lon(x)
-                        angle_to_center = calc_bearing_north_zero(eye_lat_lon[0], eye_lat_lon[1], lat_y, lon_x)
-                        distance = genu.haversine_degrees_to_meters(lat_y, lon_x, eye_lat_lon[0], eye_lat_lon[1]) / 1000 * 0.539957
-                        windspeed_temp = hm.calc_windspeed(track_point.min_pressure_mb, distance, eye_lat_lon[0], fspeed_kts, rmax_nmi, angle_to_center, track_point.heading_to_next_point, vmax_kts=track_point.max_wind_kts)
-                        temp_array[y, x, 0] = lat_y  # move this out of loops
-                        temp_array[y, x, 1] = lon_x  # move this out of loops
-                        temp_array[y, x, 2] = max(temp_array[y, x, 2], windspeed_temp)
+            #do_parallel = False
+            #if not do_parallel:
+            #temp_array = np.zeros((y_max, x_max, 3))
+            #for track_point in self.track_points:
+                #pass
+                #self.lat_lon_calc_loop(track_point, y_max, x_max, fspeed_kts, rmax_nmi, temp_array)
+            # else:
+            # temp_array = np.zeros((y_max, x_max, 3))
+            # num_procs = max(job.cpu_count() - 1, 1)
+            # print(num_procs)
+            # #results = job.Parallel(n_jobs=num_procs)(job.delayed(HurdatCatalog.HurdatStormSystem.temp_parallel)(tp) for tp in self.track_points)
+            # results = job.Parallel(n_jobs=num_procs)(job.delayed(self.lat_lon_calc_loop_parallel)(tp, y_max, x_max, fspeed_kts, rmax_nmi) for tp in self.track_points)
+            # first = results[0].tolist()
+            # print(first)
+                #pass
 
-            self.result_grid = temp_array.tolist()
+            lat_lon_list = self.lat_lon_grid.get_lat_lon_list()
+
+            results = []
+
+            if not do_parallel:
+                results = [HurdatCatalog.HurdatStormSystem.lat_lon_calc_loop(self.track_points, point[0], point[1], fspeed_kts, rmax_nmi) for point in lat_lon_list]
+            else:
+                num_procs = max(job.cpu_count() - 1, 1)
+
+                results = job.Parallel(n_jobs=num_procs)(job.delayed(HurdatCatalog.HurdatStormSystem.lat_lon_calc_loop)(self.track_points, point[0], point[1], fspeed_kts, rmax_nmi) for point in lat_lon_list)
+            print(results[0])
+            self.result_array = results
+
+        @staticmethod
+        def lat_lon_calc_loop(tps, lat_y, lon_x, fspeed_kts, rmax_nmi):
+            max_wind = 0
+            for track_point in tps:
+                eye_lat_lon = track_point.point_lat_lon()
+                angle_to_center = calc_bearing_north_zero(eye_lat_lon[0], eye_lat_lon[1], lat_y, lon_x)
+                distance = genu.haversine_degrees_to_meters(lat_y, lon_x, eye_lat_lon[0], eye_lat_lon[1]) / 1000 * 0.539957
+                windspeed_temp = hm.calc_windspeed(track_point.min_pressure_mb, distance, eye_lat_lon[0], fspeed_kts, rmax_nmi, angle_to_center, track_point.heading_to_next_point, vmax_kts=track_point.max_wind_kts)
+                max_wind = max(max_wind, windspeed_temp)
+            return [lat_y, lon_x, max_wind]
 
         def grid_to_geojson(self):
-            if self.result_grid is None:
+            if self.result_array is None:
                 return None
-            flat_grid = [item for sublist in self.result_grid for item in sublist]
-            for_geojson_list = list(map((lambda x: [[x[1], x[0]], x[2]]), flat_grid))
+            # flat_grid = [item for sublist in self.result_array for item in sublist]
+            for_geojson_list = list(map((lambda x: [[x[1], x[0]], x[2]]), self.result_array))
             geojson_collection = list(map((lambda x: lm.create_feature(x[0], lm.GeojsonGeometry.point, x[1])['geojson']), for_geojson_list))
-            #print(geojson_collection)
+            # print(geojson_collection)
             return geojson_collection
 
     def __init__(self, catalog_file_uri):

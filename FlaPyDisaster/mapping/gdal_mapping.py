@@ -3,11 +3,10 @@ import numpy
 import os
 
 
-def list_to_raster(val_list, file_uri, overwrite=False):
+def list_to_raster(val_array, file_uri, overwrite=False):
     if overwrite:
         os.remove(file_uri)
 
-    val_array = numpy.array(val_list)
     cols = val_array.shape[1]
     rows = val_array.shape[0]
 

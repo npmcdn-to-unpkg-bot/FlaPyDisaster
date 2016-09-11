@@ -12,6 +12,7 @@ import math
 import geojson
 import mapping.leaflet_map as lm
 import time
+import numpy as np
 import mapping.gdal_mapping as gdm
 
 
@@ -71,12 +72,10 @@ class FlaPyApp:
         # ret_list = self.hurricane_catalog.get_storm_by_name(name)
         print("Start")
         start = time.time()
-        print(start)
-        storm.calculate_grid(10, 10, 15, 15)
+        storm.calculate_grid(10, 10, 15, 15, do_parallel=False)
         end = time.time()
-        print("made It!")
-        print(end)
-        print(end - start)
+        print("Calculation Time:" + str(end - start))
+        print("num points:" + str(len(storm.result_array)))
         ret_data = storm.to_model_dataframe().to_html(classes='track_table')
 
         return fl.jsonify(table=ret_data)
@@ -89,22 +88,30 @@ class FlaPyApp:
         color_ramp = genc.ColorPalettes.hex_to_rgb(genc.ColorPalettes.simple_escalating_5, 255)
         value_bins = genc.ColorPalettes.even_value_breaks(sorted_values, len(color_ramp))
 
-        gdm_list = list(list(map((lambda y: y[2]), x)) for x in storm.result_grid)
-        gdm.list_to_raster(gdm_list, r'tmp/test_out.png')
-
+        print("sending geojson events")
         return fl.jsonify(result=geo_collect, colors=color_ramp, bins=value_bins)
 
     def map_hurricane_event_canvas(self):
         storm = self.hurricane_catalog.get_storm_by_name(self.current_hurricane_name)[0]
 
-        flat_grid = [item for sublist in storm.result_grid for item in sublist]
-        print("num points:" + str(len(flat_grid)))
-        sorted_values = list(map((lambda x: x[2]), flat_grid))
+        # flat_grid = [item for sublist in storm.result_grid for item in sublist]
+
+        sorted_values = list(map((lambda x: x[2]), storm.result_array))
         sorted_values.sort()
         color_ramp = genc.ColorPalettes.hex_to_rgb(genc.ColorPalettes.simple_escalating_5, 255)
         value_bins = genc.ColorPalettes.even_value_breaks(sorted_values, len(color_ramp))
 
-        return fl.jsonify(colors=color_ramp, bins=value_bins, data=flat_grid)
+        print("sending canvas events")
+        return fl.jsonify(colors=color_ramp, bins=value_bins, data=storm.result_array)
+
+    def hurricane_save_event_to_raster(self):
+        storm = self.hurricane_catalog.get_storm_by_name(self.current_hurricane_name)[0]
+
+        start = time.time()
+        two_d_gdm_list = np.flipud(np.array(list(map((lambda x: x[2]), storm.result_array))).reshape(storm.lat_lon_grid.get_block_height_y(), storm.lat_lon_grid.get_block_width_x()))
+        gdm.list_to_raster(two_d_gdm_list, r'tmp/test_out.png', True)
+        end = time.time()
+        print("Raster Save Time:" + str(end - start))
 
     def map_hurricane_event_d3(self):
         data = []

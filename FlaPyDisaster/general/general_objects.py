@@ -62,7 +62,15 @@ class LatLonGrid(BoundingBox):
         return self.left_lon_x + (block_x / self.block_per_degree_x)
 
     def get_block_width_x(self):
-        return self.get_width() * self.block_per_degree_x
+        return int(self.get_width() * self.block_per_degree_x)
 
     def get_block_height_y(self):
-        return self.get_height() * self.block_per_degree_y
+        return int(self.get_height() * self.block_per_degree_y)
+
+    def get_lat_lon_list(self):
+        ret_list = []
+        for y in range(self.get_block_height_y()):
+            for x in range(self.get_block_width_x()):
+                ret_list.append([self.get_lat(y), self.get_lon(x)])
+
+        return ret_list

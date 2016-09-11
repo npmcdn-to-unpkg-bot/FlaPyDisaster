@@ -4,7 +4,6 @@ It contains the definition of routes and views for the application.
 
 """
 from flask import Flask
-import socket
 
 app = Flask(__name__)
 UPLOAD_FOLDER = r'tmp/'

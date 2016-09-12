@@ -15,6 +15,7 @@ https://conda.anaconda.org/ioos/win-64/geos-3.4.2-vc14_1.tar.bz2
 https://repo.continuum.io/pkgs/free/win-64/hdf5-1.8.15.1-vc14_4.tar.bz2
 https://repo.continuum.io/pkgs/free/win-64/itsdangerous-0.24-py35_0.tar.bz2
 https://repo.continuum.io/pkgs/free/win-64/jinja2-2.8-py35_1.tar.bz2
+https://repo.continuum.io/pkgs/free/win-64/joblib-0.9.4-py35_0.tar.bz2
 https://repo.continuum.io/pkgs/free/win-64/jpeg-8d-vc14_0.tar.bz2
 https://repo.continuum.io/pkgs/free/win-64/krb5-1.13.2-0.tar.bz2
 https://repo.continuum.io/pkgs/free/win-64/libnetcdf-4.3.3.1-vc14_5.tar.bz2

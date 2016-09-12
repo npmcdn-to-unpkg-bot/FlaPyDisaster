@@ -11,6 +11,7 @@
             <button type="submit">Load File</button>
         </div>
     </form>
+    <img src="{{ url_for('static', filename='images/test_image.png') }}">
     <br />
     <form name="function_form" method="post"  action="{{ url_for('hurricane_function_form') }}">
         <div>

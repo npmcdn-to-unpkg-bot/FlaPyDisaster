@@ -12,6 +12,7 @@ web.debug.config
 *.pyproj
 *.sln
 FlaPyDisaster/tmp/*
+FlaPyDisaster/static/images/*
 !*.keep
 ptvs_virtualenv_proxy.py
 

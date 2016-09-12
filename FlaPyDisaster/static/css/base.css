@@ -18,7 +18,7 @@
     text-decoration: none;
 }
 
-.nav li p {
+.nav li h1 {
     display: inline ;
     color: white;
     text-align: center;
@@ -30,6 +30,6 @@
     background-color: #111;
 }
 
-.nav .active {
+.active {
     background-color: #4CAF50;
 }

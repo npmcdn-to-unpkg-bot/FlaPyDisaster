@@ -12,7 +12,7 @@ def list_to_raster(val_array, file_uri, overwrite=False, bands=1):
 
     # Create memory raster
     mem_driver = gdal.GetDriverByName('MEM')
-    mem_raster = mem_driver.Create('', cols, rows, 4, gdal.GDT_Byte)
+    mem_raster = mem_driver.Create('', cols, rows, bands, gdal.GDT_Byte)
 
     # Write array to memory raster
     outband = mem_raster.GetRasterBand(1)

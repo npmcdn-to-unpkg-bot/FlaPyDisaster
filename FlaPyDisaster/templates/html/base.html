@@ -18,7 +18,13 @@
     <body>
         <div class="nav">
             <ul>
-                <li><h1>FlaPy Disaster<h1></li>
+                <li>
+                    {% if title %}
+                    <h1>{{ title }}</h1>
+                    {% else %}
+                    <h1>FlaPy Disaster</h1>
+                    {% endif %}
+                </li>
                 <li><a href="{{ url_for('main_page') }}">Home</a></li>
                 <li><a href="{{ url_for('hurricane_page') }}">Hurricane</a></li>
                 <li><a href="{{ url_for('leaflet_redirect') }}">Leaflet</a></li>

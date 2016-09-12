@@ -54,8 +54,8 @@ function leaflet_init() {
     var canvas = L.canvasLayer().delegate(this).addTo(mymap)
     layers['canvas'] = canvas
 
-    var svg = d3.select(mymap.getPanes().overlayPane).append("svg");
-    layers['svg'] = svg
+//    var svg = d3.select(mymap.getPanes().overlayPane).append("svg");
+//    layers['svg'] = svg
 
     // call a function that handles adding any required event handlers
     add_handlers()
@@ -441,6 +441,7 @@ function hurdat_event_canvas() {
 /****************
  * D3 Functions *
  ****************/
+ /*
 function hurdat_event_d3(){
     var geoData = {}
     $.getJSON("{{ url_for('map_hurricane_event_d3') }}", {},
@@ -617,7 +618,7 @@ function hurdat_event_d3(){
         redrawSubset(subset);
     }
 }
-
+*/
 
 /*****************
  * Style methods *

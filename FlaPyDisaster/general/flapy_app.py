@@ -14,6 +14,9 @@ import mapping.leaflet_map as lm
 import time
 import numpy as np
 import mapping.gdal_mapping as gdm
+import io as io
+import re as re
+from PIL import Image
 
 
 class FlaPyApp:
@@ -108,11 +111,17 @@ class FlaPyApp:
 
         start = time.time()
         two_d_gdm_list = np.flipud(np.array(list(map((lambda x: x[2]), storm.result_array))).reshape(storm.lat_lon_grid.get_block_height_y(), storm.lat_lon_grid.get_block_width_x()))
-        file_uri = r'tmp/' + storm.unique_name + ".png"
+        file_uri = r'static/images/' + storm.unique_name + ".png"
         print("raster file uri: " + file_uri)
-        gdm.list_to_raster(two_d_gdm_list, file_uri, True)
+        gdm.list_to_raster(two_d_gdm_list, file_uri, True, 1)
         end = time.time()
         print("Raster Save Time: " + str(end - start))
+
+        # print(app.app.config['STATIC_FOLDER'])
+
+        static_uri = r"images/" + storm.unique_name + ".png"
+
+        return fl.jsonify(file_uri=fl.url_for('static', filename=static_uri))
 
     def map_hurricane_event_d3(self):
         data = []

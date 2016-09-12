@@ -7,16 +7,15 @@
             <option value="{{ name }}">{{ name }}</option>
             {% endfor %}
         </select>
-        <button type="button" onclick="save_event_to_raster()">Save To Raster Button</button>
+        <button type="button" onclick="save_event_to_raster()">Save To Raster</button>
+        <a href="{{ url_for('leaflet_redirect') }}">To Map</a>
     </div>
     <div>
-        {% block content %}
         <h1>{{name}}</h1>
         {{data | safe}}
-        {% endblock %}
     </div>
     <div>
-        <a href="{{ url_for('leaflet_redirect') }}">To Map</a>
+        <img id="event_pic">
     </div>
 
     <script type=text/javascript src="{{ url_for('hurricane_tables_js') }}"></script>

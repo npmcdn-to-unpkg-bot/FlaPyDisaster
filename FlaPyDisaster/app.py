@@ -8,6 +8,9 @@ from flask import Flask
 app = Flask(__name__)
 UPLOAD_FOLDER = r'tmp/'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+STATIC_FOLDER = r'static'
+app.config['STATIC_FOLDER'] = STATIC_FOLDER
+
 # routes.py after app is created, circular references
 from routes import *
 from globes import *

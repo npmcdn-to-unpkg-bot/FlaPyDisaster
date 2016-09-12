@@ -44,10 +44,9 @@ def change_table():
     return flapy_app.change_table(fl.request.args.get('name', '', type=str))
 
 
-@app.route('/hurricane/save_event_to_raster', methods=['POST'])
+@app.route('/hurricane/save_event_to_raster', methods=['POST', 'GET'])
 def hurricane_save_event_to_raster():
-    flapy_app.hurricane_save_event_to_raster()
-    return 'Success'
+    return flapy_app.hurricane_save_event_to_raster()
 
 
 @app.route('/hurricane/geojson_event_map')

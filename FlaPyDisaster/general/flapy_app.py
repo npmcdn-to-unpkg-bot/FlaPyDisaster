@@ -3,8 +3,6 @@ import general.general_utils as genu
 import general.general_colors as genc
 import general.general_units as gen_units
 import general.general_objects as geno
-from explosion import explosion_math
-from explosion.asteroid import asteroid_math
 from explosion.asteroid import asteroid_event
 import os
 from hurricane import hurricane_utils as hu
@@ -14,9 +12,6 @@ import mapping.leaflet_map as lm
 import time
 import numpy as np
 import mapping.gdal_mapping as gdm
-import io as io
-import re as re
-from PIL import Image
 
 
 class FlaPyApp:

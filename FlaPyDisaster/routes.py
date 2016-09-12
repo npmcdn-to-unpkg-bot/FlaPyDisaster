@@ -12,6 +12,7 @@ from general import general_units
 def main_page():
     return fl.render_template('html/HomePage.html')
 
+
 @app.route('/get_static_image')
 def get_static_image(file_uri):
     return fl.url_for('static', filename=file_uri)

@@ -51,9 +51,10 @@ class AsteroidEvent:
         Get the peak overpressure at each point of the event grid in a 2d structure (list of list).
         :param as_string: makes the outpu values strings instead of floats
         :param num_digits: rounds the string values to the specified number of digits.  default is 2
+        :param force_calc: bool
         :returns: peak overpressure in a list of lists (list of rows)
         """
-        if self.effect_2d_grid is not None and as_string == False and force_calc == False:
+        if self.effect_2d_grid is not None and as_string is False and force_calc is False:
             return self.effect_2d_grid
 
         block_grid = []
@@ -95,7 +96,7 @@ class AsteroidEvent:
         :param force_calc: whether to use the cached grid
         :returns: list of grid points with value as (val, (lng, lat))
         """
-        if self.effect_flat_grid is not None and as_string == False and force_calc == False:
+        if self.effect_flat_grid is not None and as_string is False and force_calc is False:
             return self.effect_flat_grid
 
         twod_grid = self.get_effect_2d_grid(as_string, num_digits, force_calc)
@@ -117,7 +118,7 @@ class AsteroidEvent:
 
     def save_grid_2d_text(self, file_name, file_dir="", delim='\t', with_inf=False, with_info_header=False, overwrite=False):
         file_uri_no_ext = file_dir + file_name
-        if os.path.isfile(file_uri_no_ext + ".txt") and overwrite == False:
+        if os.path.isfile(file_uri_no_ext + ".txt") and overwrite is False:
             raise FileExistsError
 
         os.remove(file_uri_no_ext + ".txt")

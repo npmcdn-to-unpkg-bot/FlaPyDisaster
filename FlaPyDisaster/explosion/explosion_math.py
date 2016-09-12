@@ -60,7 +60,7 @@ def radius_from_overpressure(overpressure_bar, energy_tnt, radius_upper_bound_km
         y_mid = newmark_overpressure(energy_tnt, x_mid)
 
         if x_mid != 0:
-            error_val = math.abs((x_mid - x_old) / x_mid) * 100
+            error_val = math.fabs((x_mid - x_old) / x_mid) * 100
 
         if y_mid < overpressure_bar:
             x_upper = x_mid

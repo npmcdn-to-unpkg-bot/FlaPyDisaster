@@ -1,5 +1,4 @@
 ﻿import math
-import explosion.explosion_math
 
 #############
 # Constants #

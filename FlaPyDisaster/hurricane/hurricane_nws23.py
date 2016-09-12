@@ -100,6 +100,8 @@ def asymmetry_factor(fspeed_kts, r_nmi, rmax_nmi, angle_from_center, track_beari
     :param fspeed_kts: Forward speed of the storm
     :param r_nmi: Radius from the center of the storm in nautical miles
     :param rmax_nmi: Radius of maximum winds in nautical miles
+    :param angle_from_center: int
+    :param track_bearing: int
     :return: Asymmetry factor
     """
     to = 1

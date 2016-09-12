@@ -22,6 +22,18 @@ function save_event_to_raster() {
         }
     );
 }
+
+function set_event_settings(){
+    $.ajax({
+               type: "POST",
+               url: "{{ url_for('hurricane_set_event_settings') }}",
+               data: $("#event_settings").serialize(),
+               success: function(data) {
+                   console.log(data)
+               }
+             });
+}
+
 //
 //function save_event_to_raster(){
 //    $.ajax({
